@@ -1,0 +1,36 @@
+<include file="User:head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>代理Id</th>
+            <th>代理昵称</th>
+            <th>平台抽水</th>
+            <th>捕鱼抽水</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>统计时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="select" item="record">
+            <tr class="content">
+                <td>{$record.proxy_id}</td>
+                <td>{$record.nickname}</td>
+                <td>{$record.money}</td>
+                <td>{$record.fish_money}</td>
+                <td>{$record.start_time}</td>
+                <td>{$record.end_time}</td>
+                <td>{$record.create_time}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+</html>

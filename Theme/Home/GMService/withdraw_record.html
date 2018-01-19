@@ -1,0 +1,38 @@
+<include file="User:Head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th>代理Id</th>
+            <th>代理昵称</th>
+            <th>转账金额</th>
+            <th>转账方式</th>
+            <th>对方账号</th>
+            <th>转账时间</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="select" item="record">
+            <tr class="content">
+                <td>{$record.order_id}</td>
+                <td>{$record.proxy_id}</td>
+                <td>{$record.nickname}</td>
+                <td>{$record.money_amount}</td>
+                <td>{$record.transfer_type}</td>
+                <td>{$record.transfer_account}</td>
+                <td>{$record.transfer_time}</td>
+                <td>{$record.remark}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+</html>

@@ -15,6 +15,7 @@ use Home\Model\WaterRecordModel;
 use Common\Controller\HomebaseController;
 use Think\Controller;
 use Think\Log;
+use Home\Model\ApplyProxyModel;
 class GMServiceController extends HomebaseController{
 	public function query_all_order(){
 		$get_money_record = new GetMoneyRecordModel();
@@ -535,5 +536,128 @@ class GMServiceController extends HomebaseController{
 		$fish_config = $config_model->where('type=2')->select();
 		$this->assign('select', $fish_config);
 		$this->display();
+	}
+
+	public function withdraw_record(){
+		$record_tag_model = new RecordTagModel();
+		$transfer_record_model = $record_tag_model->getRecordModel('transfer_record');
+		$count = $transfer_record_model->count('id');
+		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
+
+		$data_list = $transfer_record_model->order('id desc')
+		                                   ->limit($page->firstRow, $page->listRows)
+			                               ->select();
+		$cnt = count($data_list);
+		$user_model = new UserModel();
+		for($i = 0; $i < $cnt; ++$i){
+			$user_entity = $user_model->where('id='.$data_list[$i]['proxy_id'])->find();
+			$data_list[$i]['nickname'] = '';
+			if($user_entity){
+				$data_list[$i]['nickname'] = $user_entity['nickname'];
+			}
+		}
+		$this->assign('select', $data_list);
+		$this->assign('page', $page->show());
+		$this->display();
+	}
+
+	//代理收益汇总
+	public function general_proxy_profit(){
+		$record_tag_model = new RecordTagModel();
+		$proxy_profit_record = $record_tag_model->getRecordModel('proxy_profit');
+		$count = $proxy_profit_record->count('id');
+		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
+		$data_list = $proxy_profit_record->order('id desc')->limit($page->firstRow, $page->listRows)
+			->select();
+		$cnt = count($data_list);
+		$user_model = new UserModel();
+		for($i = 0; $i < $cnt; ++$i){
+			$data_list[$i]['start_time'] = date('Y-m-d H:i:s', $data_list[$i]['start_time']);
+			$data_list[$i]['end_time'] = date('Y-m-d H:i:s', $data_list[$i]['end_time']);
+			$data_list[$i]['create_time'] = date('Y-m-d H:i:s', $data_list[$i]['create_time']);
+			$user_entity = $user_model->where('id='.$data_list[$i]['proxy_id'])->find();
+			if($user_entity){
+				$data_list[$i]['nickname'] = $user_entity['nickname'];
+			}
+		}
+		$this->assign('select', $data_list);
+		$this->assign('page', $page->show());
+		$this->display();
+	}
+
+	public function general_system_profit(){
+		$record_tag_model = new RecordTagModel();
+		$system_profit_record = $record_tag_model->getRecordModel('system_profit');
+		$count = $system_profit_record->count('id');
+		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
+		$data_list = $system_profit_record->order('id desc')->limit($page->firstRow, $page->listRows)
+		                                 ->select();
+		$cnt = count($data_list);
+		$user_model = new UserModel();
+		for($i = 0; $i < $cnt; ++$i){
+			$data_list[$i]['start_time'] = date('Y-m-d H:i:s', $data_list[$i]['start_time']);
+			$data_list[$i]['end_time'] = date('Y-m-d H:i:s', $data_list[$i]['end_time']);
+			$data_list[$i]['create_time'] = date('Y-m-d H:i:s', $data_list[$i]['create_time']);
+		}
+		$this->assign('select', $data_list);
+		$this->assign('page', $page->show());
+		$this->display();
+	}
+
+	public function grant_proxy()
+	{
+		$player_id = I("post.player_id");
+		$op_type = I('post.op_type');
+		$user = session('user');
+		$user_entity = new UserModel();
+		if($user['user_type'] == $user_entity->EPlayer){
+			//普通玩家不可对代理授权
+			$data['status'] = 0;
+			trace("user type is not a proxy");
+			$this->ajaxReturn($data);
+		}else{
+			$user_data = $user_entity->where('id='.$player_id)->find();
+			if(!$user_data){
+				//玩家未找到
+				$data['status'] = 0;
+				$this->ajaxReturn($data);
+			}else{
+				$proxy_entity = new ApplyProxyModel();
+				if($op_type == $proxy_entity->ERefuse){
+					$proxy_entity->refuse_apply($player_id);
+				}else if($op_type == $proxy_entity->EAgreeStatus){
+					$proxy_entity->agree_apply($player_id);
+				}
+			}
+		}
+		$data['player_id'] = $player_id;
+		$data['status'] = 1;
+		$this->ajaxReturn($data);
+	}
+
+	public function proxy_grant(){
+		trace('======proxy_grant======');
+		$user = session('user');
+		$proxy_entity = new ApplyProxyModel();
+		$total_cnt = $proxy_entity->count('id');
+		$p = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
+		$list = $proxy_entity->field('apply_proxy.id, user_id, apply_proxy.parent_id, apply_time, nickname, status')
+		                     ->join('user on apply_proxy.user_id = user.id')
+		                     ->where('apply_proxy.parent_id=0')
+		                     ->order('id desc')->limit($p->firstRow, $p->listRows)->select();
+		$display_data = [];
+		foreach($list as $entity){
+			$data['id'] = $entity['id'];
+			$data['user_id'] = $entity['user_id'];
+			$data['parent_id'] = $entity['parent_id'];
+			$data['apply_time'] = date('Y-m-d H:i:s', $entity['apply_time']);
+			$data['status'] = $entity['status'];
+			$data['nickname'] = $entity['nickname'];
+			$display_data[] = $data;
+		}
+		$this->assign('select', $display_data);
+		$this->assign('page', $p->show());
+		$this->display();
+		trace('======proxy_grant end======');
 	}
 }
