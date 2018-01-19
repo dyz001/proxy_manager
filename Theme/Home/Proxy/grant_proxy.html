@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=0.8, user-scalable=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://192.168.1.36:8889/Public/my.js"></script>
+
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div style="display:flex;justify-content: center">
+    <h1>申请列表</h1>
+</div>
+<div class="container">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>昵称</th>
+            <th>类型</th>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>&nbsp;123</td>
+                <td>&nbsp;张三</td>
+                <td>普通玩家</td>
+                <td>
+                    <input type="button" class="btn btn-primary" value="拒绝" ontap="reject()">
+                    <input type="button" class="btn btn-primary" value="同意" ontap="agree()">&nbsp;
+                <!--<div style="display: flex;justify-content: center">-->
+
+                <!--</div>-->
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <!--{$page}-->
+</div>
+</body>
+<script>
+    init_tap_event();
+    function reject(){
+        alert("click reject");
+    }
+    function agree(){
+        alert("click agree");
+    }
+</script>
+</html>

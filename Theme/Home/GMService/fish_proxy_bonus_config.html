@@ -1,0 +1,21 @@
+<include file="User:Head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <form action="./gm_fish_proxy_config">
+        <h1 style="text-align: center">捕鱼分成配置</h1>
+        <foreach name="select" item="record">
+            <div class="input-group">
+                <span class="input-group-addon">{$record.remark}</span>
+                <input class="form-control" name="{$record.key}" value="{$record.value}"/>
+            </div>
+        </foreach>
+        <div style="display:flex;justify-content: center">
+            <input type="submit" class="btn-primary btn" value="保存">
+        </div>
+    </form>
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+</html>

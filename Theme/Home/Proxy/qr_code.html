@@ -1,0 +1,61 @@
+<include file="User:head"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3 col-md-3">
+            <span>ID:</span>
+        </div>
+        <div class="col-xs-7 col-md-7">
+            <span>{$user.id}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 col-md-3">
+            <span>昵称:</span>
+        </div>
+        <div class="col-xs-7 col-md-7">
+            <span>10001</span>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
+        <div style="width:150px;height:150px;background-color: grey">
+            <img src="{$qrcode}"/>
+        </div>
+    </div>
+    <div style="display:flex;justify-content: center;">
+        <span>玩家人数：</span>
+        <span>100人</span>
+    </div>
+    <div style="display:flex;justify-content: center;">
+        <span>代理人数：</span>
+        <span>100人</span>
+    </div>
+    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
+        <div style="width:90%;height:100px;background-color: grey">
+            <span>规则说明区域</span>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center" id="oper_area">
+        <switch name="proxy_tag">
+            <case value="0">
+                <input type="button" class="btn btn-success" ontap="apply_proxy({$user.id})" value="申请提升为代理">
+            </case>
+            <case value="1">
+                <span>请求已经提交，等待审核</span>
+            </case>
+            <case value="2"></case>
+        </switch>
+
+    </div>
+</div>
+</body>
+<script>
+    init_tap_event();
+function apply_proxy(user_id){
+    postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/apply_proxy', {user_id:user_id}, function(data){
+        $('#oper_area').html('<span>请求已经提交，等待审核</span>');
+    });
+}
+</script>
+</html>

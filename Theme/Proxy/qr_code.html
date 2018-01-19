@@ -1,0 +1,44 @@
+<include file="User:head"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3 col-md-3">
+            <span>ID:</span>
+        </div>
+        <div class="col-xs-7 col-md-7">
+            <span>{$user.pid}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 col-md-3">
+            <span>昵称:</span>
+        </div>
+        <div class="col-xs-7 col-md-7">
+            <span>{$user.nickname}</span>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
+        <div style="width:150px;height:150px;background-color: grey">
+            <img src="{$qrcode}" width="150" height="150"/>
+        </div>
+    </div>
+    <div style="display:flex;justify-content: center;">
+        <span>玩家人数：</span>
+        <span>{$player_cnt}人</span>
+    </div>
+    <div style="display:flex;justify-content: center;">
+        <span>代理人数：</span>
+        <span>{$proxy_cnt}人</span>
+    </div>
+    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
+        <div style="width:90%;height:100px;background-color: grey">
+            <span>规则说明区域</span>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center">
+        <input type="button" class="btn btn-success" value="申请提升为代理">
+    </div>
+</div>
+</body>
+</html>

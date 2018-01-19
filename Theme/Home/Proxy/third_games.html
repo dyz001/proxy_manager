@@ -1,0 +1,52 @@
+<include file="User:head"/>
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div class="container">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>游戏编码</th>
+            <th>游戏名称</th>
+            <th>是否坐庄</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>&nbsp;{$record.game_code}</td>
+                <td>&nbsp;{$record.game_name}</td>
+                <switch name="record.status">
+                    <case value="0">
+                        <td id="{$record.game_code}"><input type="button" class="btn" value="申请上庄" ontap="doBanker({$record.game_code});"></td>
+                    </case>
+                    <case value="1">
+                        <td id="{$record.game_code}"><span>申请中</span></td>
+                    </case>
+                    <case value="2">
+                        <td id="{$record.game_code}"><span>代理中</span></td>
+                    </case>
+                </switch>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+</div>
+</body>
+<script>
+    init_tap_event();
+    function doBanker(game_code){
+        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/do_banker',{game_code:game_code}, function (data) {
+            var json_obj = data;
+            if(json_obj.code == 0){
+                //申请中
+                $('#'+game_code).html('<span>申请中</span>');
+            }else if(json_obj.code == 1){
+                $('#'+game_code).html('<span>代理中</span>');
+            }else{
+                $('#'+game_code).html('<span>'+json_obj.msg+'</span>');
+            }
+        });
+    }
+</script>
+</html>

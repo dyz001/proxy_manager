@@ -1,0 +1,27 @@
+<include file="User:head"/>
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div class="container">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>提现时间</th>
+            <th>金额</th>
+            <th>提现状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>&nbsp;{$record.create_time}</td>
+                <td>&nbsp;{$record.money}</td>
+                <td>&nbsp;{$record.status}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+</body>
+</html>

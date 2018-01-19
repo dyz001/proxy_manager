@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单处理</title>
+    <script src="../../Public/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../../Public/bootstrap-3.3.7-dist/css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <form action="/gm/process_order">
+    <div class="row">
+    <div class="col-md-offset-2 col-md-2">
+        <label>代理Id:</label>
+    </div>
+        <div class="col-md-6">
+        <label name="name">asd</label>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-offset-2 col-md-2">
+        <label>提现时间</label>
+    </div><div class="col-md-6">
+        <label name="create_date">asdfasdf</label>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-2">
+        <label>待提现金额:</label>
+        </div><div class="col-md-6">
+        <label name="money_amount">asdfasfd</label>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-2">
+        <label>转账金额：</label>
+        </div><div class="col-md-6">
+        <input type="text" name="transfer_amount">
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-2">
+        <label>转账方式：</label>
+        </div><div class="col-md-8">
+        <input type="text" name="transfer_type">
+        <span>可填写：现金（不需要账号），微信（微信号），支付宝（账号），银行卡（卡号）</span>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-2">
+        <label>转账账号：</label>
+        </div><div class="col-md-6">
+        <input type="text" name="transfer_account">
+    </div>
+    </div>
+        <div style="display:flex;justify-content: center;margin-top:20px;">
+            <input type="submit" class="btn btn-success" value="提交">
+        </div>
+    </form>
+</div>
+</body>
+</html>

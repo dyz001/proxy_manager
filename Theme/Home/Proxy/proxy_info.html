@@ -1,0 +1,46 @@
+<include file="User:head"/>
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div class="container">
+<div class="row">
+    <table class="table table-bordered text-center">
+        <tbody>
+        <tr>
+            <td>ID</td>
+            <td>{$user_extra.user_id}</td>
+        </tr>
+        <tr>
+            <td>昵称</td>
+            <td>{$user.nickname}</td>
+        </tr>
+        <tr>
+            <td>微信号</td>
+            <td>{$user_extra.wx_identity}</td>
+        </tr>
+        <tr>
+            <td>手机号</td>
+            <td>{$user_extra.mobile}</td>
+        </tr>
+        <tr>
+            <td>真实姓名</td>
+            <td>{$user_extra.real_name}</td>
+        </tr>
+        <tr>
+            <td>提交时间</td>
+            <td><span id="create_date"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+</body>
+<script>
+    var date_time = new Date();
+    date_time.setTime(parseInt({$user_extra.create_time}) * 1000);
+    $('#create_date').text(date_time.Format('yyyy-MM-dd HH:mm:ss'));
+//    $('#create_date').text(date_time.getFullYear() + '-' + date_time.getMonth() + '-'
+//        + date_time.getDay() + ' ' + date_time.getHours() + ':' + date_time.getMinutes()
+//        + ':' + date.getSeconds());
+</script>
+</html>

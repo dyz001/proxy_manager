@@ -1,0 +1,58 @@
+<include file="User:head"/>
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div class="input-group">
+                <span class="input-group-addon">类型：</span>
+                <button class="btn btn-default dropdown-toggle form-control" type="button" id="btnTargetDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    所有 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="btnTargetDropdownMenu">
+                    <li><a href="/proxy_players">所有</a></li>
+                    <li><a href="/proxy_players_filter_proxy">代理</a></li>
+                    <li><a href="/proxy_players_filter_player">直接玩家</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-xs-8">
+            <div class=" input-group">
+                <span class="input-group-addon">ID:</span>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-2 col-xs-2">
+            <input type="button" value="搜索" class="btn btn-default">
+        </div>
+    </div>
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>昵称</th>
+            <th>类型</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>&nbsp;{$record.id}</td>
+                <td>&nbsp;{$record.nickname}</td>
+                <td>&nbsp;{$record.type}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+</body>
+<script>
+
+</script>
+</html>

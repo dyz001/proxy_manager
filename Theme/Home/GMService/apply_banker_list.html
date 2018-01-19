@@ -1,0 +1,65 @@
+<include file="User:head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>记录id</th>
+            <th>代理id</th>
+            <th>代理昵称</th>
+            <th>游戏编码</th>
+            <th>游戏名称</th>
+            <th>申请时间</th>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>{$record.id}</td>
+                <td>{$record.proxy_id}</td>
+                <td>{$record.nickname}</td>
+                <td>{$record.apply_game}</td>
+                <td>{$record.game_name}</td>
+                <td>{$record.apply_time}</td>
+                <td id="{$record.id}">
+                    <switch name="record.status">
+                        <case value="0">
+                            <input type="button" value="同意" class="btn btn-primary" onclick="process_request({$record.id}, 1);">
+                            <input type="button" value="拒绝" class="btn btn-primary" onclick="process_request({$record.id}, 2);">
+                        </case>
+                        <case value="1">
+                            <span>已同意</span>
+                        </case>
+                        <case value="2">
+                            <span>拒绝</span>
+                        </case>
+                    </switch>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+<script>
+    function process_request(record_id, op_type){
+        postJsonp('./process_apply_banker', {record_id:record_id, op_type:op_type}, function(data){
+           var json_obj = JSON.parse(data);
+           if(json_obj.code == 0){
+               if(json_obj.op_type == 1){
+                   $('#' + record_id).html('<span>已同意</span>')
+               }else{
+                   $('#' + record_id).html('<span>拒绝</span>')
+               }
+           }else{
+
+           }
+        });
+    }
+</script>
+</html>

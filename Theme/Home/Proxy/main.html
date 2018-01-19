@@ -1,0 +1,43 @@
+<include file="User:head"/>
+    <style>
+        .item{
+            height:100px;
+            background-color: #9d9d9d;
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+<a href="./logout">退出登录</a>
+<body>
+<div class="container">
+<div class="row">
+    <div class="col-xs-1 col-md-1"></div>
+    <div class="col-xs-4 item" ontap="open_url('./my_fee');">我的推广费（今日）</div>
+    <div class="col-xs-1 col-md-1"></div>
+    <div class="col-xs-4 item" ontap="open_url('./proxy_players');">总直接玩家</div>
+</div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-md-4 col-xs-4 item" ontap="open_url('./proxy_grant');">代理授权</div>
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-md-4 col-xs-4 item" ontap="open_url('./proxy_info');">代理商资料</div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-md-4 col-xs-4 item" ontap="open_url('./auto_getmoney');">自助提现</div>
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-md-4 col-xs-4 item" ontap="open_url('./qr_code');">我的二维码</div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-md-4 col-xs-4 item" ontap="open_url('./third_games');">三方游戏</div>
+        <!--<div class="col-md-1 col-xs-1"></div>-->
+        <!--<div class="col-md-4 col-xs-4 item" ontap="open_url('./qr_code');"></div>-->
+    </div>
+</div>
+</body>
+<script>
+    init_tap_event();
+</script>
+</html>

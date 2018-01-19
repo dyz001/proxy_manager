@@ -1,0 +1,23 @@
+<include file="User:head"/>
+</head>
+<body class="body-white">
+<div class="container tc-main">
+    <div class="row">
+        <div class="span4 offset4">
+            <h2 class="text-center">用户登录</h2>
+            <form class="form-horizontal js-ajax-form" action="/Home/User/dologin" method="post">
+                <div class="form-group">
+                    <label class="form-control">用户名：</label>
+                    <input type="text" class="form-control" name="username">
+                    <label class="form-control">密码：</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+                <div style="display:flex;justify-content: center">
+                    <input type="submit" class="btn btn-success" value="登录">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

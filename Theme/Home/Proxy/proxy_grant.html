@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=0.8, user-scalable=no">
+    <script src="http://192.168.1.36:8889/Public/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="http://192.168.1.36:8889/Public/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <script src="http://192.168.1.36:8889/Public/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="http://192.168.1.36:8889/Public/my.js"></script>
+
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div style="display:flex;justify-content: center">
+    <h3>申请列表</h3>
+</div>
+<div class="container">
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>昵称</th>
+            <th>上级代理Id</th>
+            <th>申请时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content" id="{$record.user_id}">
+                <td>{$record.user_id}</td>
+                <td>{$record.nickname}</td>
+                <td>{$record.parent_id}</td>
+                <td>{$record.apply_time}</td>
+                <td name="oper">
+                    <switch name="record.status">
+                        <case value="2">
+                            <span>已拒绝</span>
+                        </case>
+                        <case value="1">
+                            <span>已同意</span>
+                        </case>
+                        <case value="0">
+                            <input type="button" class="btn btn-primary" value="拒绝" ontap="reject({$record.user_id},{$record.parent_id})">
+                            <input type="button" class="btn btn-primary" value="同意" ontap="agree({$record.user_id},{$record.parent_id})">&nbsp;
+                        </case>
+                    </switch>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+</body>
+<script>
+    init_tap_event();
+    function reject(user_id, parent_id){
+        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy', {player_id:user_id, parent_id:parent_id, op_type:2}, function(data){
+            var json_obj = data;
+            if(json_obj.state == "success"){
+                $('#'+user_id).children('[name=\"oper\"]').html('<span>已拒绝</span>');
+            }
+        }, function(){
+
+        });
+        //var child=$('#'+user_id).children('[name=\"oper\"]').html('<span>已拒绝</span>');
+        //$('#'+user_id).removeChild(child);
+    }
+    function agree(user_id,parent_id){
+        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy', {player_id:user_id, parent_id:parent_id, op_type:1}, function(data){
+            var json_obj = data;
+            if(json_obj.state == "success"){
+                $('#'+user_id).children('[name=\"oper\"]').html('<span>已同意</span>');
+            }
+        }, function(){
+
+        });
+    }
+</script>
+</html>

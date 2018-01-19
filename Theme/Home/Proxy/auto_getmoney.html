@@ -1,0 +1,68 @@
+<include file="User:head"/>
+</head>
+<body>
+<a href="/main">返回主页</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-xs-4 col-md-4">
+            <input type="button" class="btn btn-success" value="提现记录">
+        </div>
+        <div class="col-md-1 col-xs-1"></div>
+        <div class="col-xs-4 col-md-4">
+            <input type="button" class="btn btn-success" value="忘记密码">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">游戏名称：</div>
+        <div class="col-xs-4 col-md-4">豆豆娱乐</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">可用余额：</div>
+        <div class="col-xs-4 col-md-4">{$money}元</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">冻结余额：</div>
+        <div class="col-xs-4 col-md-4">{$freeze_money}元</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-md-5">最后结算日期：</div>
+        <div class="col-xs-4 col-md-4"><span id="last_settle"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">提现金额：</div>
+        <div class="col-xs-4 col-md-4"><input type="text" id="ipt_money_cnt" name="ipt_money_cnt"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">填写备注：</div>
+        <div class="col-xs-4 col-md-4"><input type="text" id="ipt_remark" name="ipt_remark"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">提现密码：</div>
+        <div class="col-xs-4 col-md-4"><input type="password" id="ipt_password" name="ipt_password"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-4 col-md-4">您的微信号：</div>
+        <div class="col-xs-4 col-md-4"><span>{$wx_identity}</span></div>
+    </div>
+    <div style="background-color: gray; display: flex; justify-content: center; width: 90%;height: 80px; margin: 10px;">
+        <span>注意事项</span>
+    </div>
+    <div style="display:flex;text-align: center;justify-content:center">
+        <input type="button" class="btn btn-success" value="提现">
+    </div>
+</div>
+</body>
+<script>
+    var datetime = new Date();
+    datetime.setTime({$last_settle}*1000);
+    $('#last_settle').text(datetime.Format('yyyy-MM-dd HH:mm:ss'));
+</script>
+</html>

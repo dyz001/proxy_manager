@@ -1,0 +1,93 @@
+<!--<include file="User:head"/>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=0.8, user-scalable=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://192.168.1.36:8889/Public/my.js"></script>
+
+</head>
+<body>
+<a href="./main">返回主页</a>
+<div class="container">
+    <div class="row">
+        <span>请先完善您的资料：</span>
+    </div>
+    <form action="./fill_info" method="post">
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>微信号：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="text" name="wx_identity" id="wx_identity" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>银行卡号：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="text" id="bank_card_number" name="bank_card_number" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>真实姓名：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="text" id="real_name" name="real_name" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>手机号：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="text" class="form-control" id="mobile" name="mobile">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>密码：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="password" class="form-control" id="password1" name="password1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>确认密码：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>提现密码：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="password" class="form-control" id="withdraw_pass1" name="withdraw_pass1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <span>确认提现密码：</span>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <input type="password" class="form-control" id="withdraw_pass" name="withdraw_pass">
+        </div>
+    </div>
+    <div style="margin: 5%;height:60px;background-color: gray;">
+        <span>注意事项</span>
+    </div>
+    <div style="display:flex;justify-content: center;">
+        <input type="submit" class="btn btn-success" value="提交">
+    </div>
+    </form>
+</div>
+</body>
+</html>
