@@ -55,6 +55,8 @@ return array(
 
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
+		//data_process
+
 	), // 默认路由规则 针对模块
 	'THINK_SDK_WeixinSDK' => array(
 		'APP_SECRET' => '',

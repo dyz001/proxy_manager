@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2018-01-19 18:05:07
+Date: 2018-01-20 22:13:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,12 +30,6 @@ CREATE TABLE `apply_banker` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of apply_banker
--- ----------------------------
-INSERT INTO `apply_banker` VALUES ('1', '13', '101', '1516353246', '0', '');
-INSERT INTO `apply_banker` VALUES ('2', '3', '101', '1516355673', '0', '');
-
--- ----------------------------
 -- Table structure for apply_proxy
 -- ----------------------------
 DROP TABLE IF EXISTS `apply_proxy`;
@@ -47,23 +41,6 @@ CREATE TABLE `apply_proxy` (
   `status` tinyint(4) DEFAULT '0' COMMENT '0:申请中，1:已通过，2:拒绝',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of apply_proxy
--- ----------------------------
-INSERT INTO `apply_proxy` VALUES ('1', '4', '3', '1515403053', '1');
-INSERT INTO `apply_proxy` VALUES ('2', '5', '3', '1515403053', '1');
-INSERT INTO `apply_proxy` VALUES ('3', '6', '3', '1515403053', '2');
-INSERT INTO `apply_proxy` VALUES ('4', '7', '3', '1515403053', '2');
-INSERT INTO `apply_proxy` VALUES ('5', '8', '3', '1515403053', '2');
-INSERT INTO `apply_proxy` VALUES ('6', '9', '3', '1515403053', '0');
-INSERT INTO `apply_proxy` VALUES ('7', '10', '3', '1515403053', '1');
-INSERT INTO `apply_proxy` VALUES ('8', '11', '3', '1515403053', '0');
-INSERT INTO `apply_proxy` VALUES ('9', '12', '3', '1515403053', '2');
-INSERT INTO `apply_proxy` VALUES ('10', '13', '3', '1515403053', '1');
-INSERT INTO `apply_proxy` VALUES ('11', '14', '3', '1515403053', '1');
-INSERT INTO `apply_proxy` VALUES ('12', '15', '3', '1515403053', '2');
-INSERT INTO `apply_proxy` VALUES ('14', '3', '0', '1515463095', '1');
 
 -- ----------------------------
 -- Table structure for get_money_record
@@ -81,18 +58,6 @@ CREATE TABLE `get_money_record` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of get_money_record
--- ----------------------------
-INSERT INTO `get_money_record` VALUES ('1', '10', '15', '1516345695', '0', '0', '');
-INSERT INTO `get_money_record` VALUES ('2', '11', '20', '1516345695', '0', '0', '');
-INSERT INTO `get_money_record` VALUES ('3', '12', '100', '1516345695', '0', '0', '');
-INSERT INTO `get_money_record` VALUES ('4', '13', '200', '1516345695', '0', '0', '');
-INSERT INTO `get_money_record` VALUES ('5', '14', '250', '1516345695', '0', '1', '');
-INSERT INTO `get_money_record` VALUES ('6', '15', '280', '1516345695', '0', '1', '');
-INSERT INTO `get_money_record` VALUES ('7', '20', '130', '1516345695', '0', '1', '');
-INSERT INTO `get_money_record` VALUES ('8', '10', '25', '1516349081', '0', '1', '');
-
--- ----------------------------
 -- Table structure for option
 -- ----------------------------
 DROP TABLE IF EXISTS `option`;
@@ -104,11 +69,6 @@ CREATE TABLE `option` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `option_name` (`option_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='全站配置表';
-
--- ----------------------------
--- Records of option
--- ----------------------------
-INSERT INTO `option` VALUES ('1', '1', 'proxy_rule', '这是代理规则');
 
 -- ----------------------------
 -- Table structure for return_record
@@ -125,20 +85,18 @@ CREATE TABLE `return_record` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of return_record
+-- Table structure for spread_fee
 -- ----------------------------
-INSERT INTO `return_record` VALUES ('1', '1', '十三水', '20', '0', '');
-INSERT INTO `return_record` VALUES ('2', '1', '百人牛牛', '30', '0', '');
-INSERT INTO `return_record` VALUES ('3', '2', '百家乐', '15', '0', '');
-INSERT INTO `return_record` VALUES ('4', '2', '777', '5', '0', '');
-INSERT INTO `return_record` VALUES ('5', '1', '十三水', '1', '0', '');
-INSERT INTO `return_record` VALUES ('6', '1', '百家乐', '15', '0', '');
-INSERT INTO `return_record` VALUES ('7', '1', '百家乐', '8', '0', '');
-INSERT INTO `return_record` VALUES ('8', '2', '百家乐', '5', '0', '');
-INSERT INTO `return_record` VALUES ('9', '1', '百人牛牛', '1', '0', '');
-INSERT INTO `return_record` VALUES ('10', '1', '百家乐', '10', '0', '');
-INSERT INTO `return_record` VALUES ('11', '1', '777', '8', '0', '');
-INSERT INTO `return_record` VALUES ('12', '1', '金鲨银鲨', '6', '0', '');
+DROP TABLE IF EXISTS `spread_fee`;
+CREATE TABLE `spread_fee` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL DEFAULT '0',
+  `proxy_id` bigint(20) NOT NULL DEFAULT '0',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:主平台，1:捕鱼平台',
+  `money` double NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for transfer_record
@@ -157,10 +115,6 @@ CREATE TABLE `transfer_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of transfer_record
--- ----------------------------
-
--- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -176,26 +130,9 @@ CREATE TABLE `user` (
   `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '绑定id',
   `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '游戏账号',
   `wx_unionid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '微信应用间统一id',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of user
--- ----------------------------
-INSERT INTO `user` VALUES ('3', '0', '3', '1515228702', '1515228702', 'e10adc3949ba59abbe56e057f20f883e', 'douyanzhao', '', '0', 'dyz', '');
-INSERT INTO `user` VALUES ('4', '0', '3', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan', '', '3', 'xxx', '');
-INSERT INTO `user` VALUES ('5', '0', '3', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan1', '', '3', 'zhangsan1', '');
-INSERT INTO `user` VALUES ('6', '0', '4', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan2', '', '3', 'zhangsan2', '');
-INSERT INTO `user` VALUES ('7', '0', '4', '151230007', '151230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan3', '', '3', 'zhangsan3', '');
-INSERT INTO `user` VALUES ('8', '0', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan4', '', '3', 'zhangsan4', '');
-INSERT INTO `user` VALUES ('9', '0', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan5', '', '3', 'zhangsan5', '');
-INSERT INTO `user` VALUES ('10', '0', '3', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi', '', '3', 'lisi', '');
-INSERT INTO `user` VALUES ('11', '0', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi1', '', '3', 'lisi1', '');
-INSERT INTO `user` VALUES ('12', '0', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi2', '', '3', 'lisi2', '');
-INSERT INTO `user` VALUES ('13', '0', '3', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi3', '', '3', 'lisi3', '');
-INSERT INTO `user` VALUES ('14', '0', '3', '1515413570', '1515413570', '', 'lisi4', '', '3', 'lisi4', '');
-INSERT INTO `user` VALUES ('15', '0', '4', '1515413570', '1515413570', '', 'lisi5', '', '3', 'lisi5', '');
-INSERT INTO `user` VALUES ('20', '3', '4', '1516182513', '1516182513', '', '测试1', 'oJrSh1V6km5M61juwDq1EKytNLF0', '0', 'fish01', 'oyS9XwLx2-_vG96DOQqPnmRJ-kwM');
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pid` (`pid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user_extra_info
@@ -210,14 +147,9 @@ CREATE TABLE `user_extra_info` (
   `wx_identity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '玩家绑定的微信号',
   `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '代理手机号',
   `withdraw_pass` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '提现密码',
-  `banker_games` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '以|分隔的游戏编码',
+  `banker_games` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '以,分隔的游戏编码',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of user_extra_info
--- ----------------------------
-INSERT INTO `user_extra_info` VALUES ('1', '3', '123456789456123', '龙爱雨', '1515231785', 'douyanzhao', '15104267391', 'e10adc3949ba59abbe56e057f20f883e', '');
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user_with_draw
@@ -234,10 +166,6 @@ CREATE TABLE `user_with_draw` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of user_with_draw
--- ----------------------------
-
--- ----------------------------
 -- Table structure for water_record
 -- ----------------------------
 DROP TABLE IF EXISTS `water_record`;
@@ -252,5 +180,43 @@ CREATE TABLE `water_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of water_record
+-- Procedure structure for compute_proxy_frofit
 -- ----------------------------
+DROP PROCEDURE IF EXISTS `compute_proxy_frofit`;
+DELIMITER ;;
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `compute_proxy_frofit`()
+BEGIN
+
+declare d_fish_key_start INT DEFAULT 0;
+declare d_fish_key_end INT DEFAULT 0;
+declare d_i INT DEFAULT 0;
+
+declare s_member_id CHAR(255) DEFAULT 0;
+declare s_cost_sum FLOAT DEFAULT 0;
+declare s_bonus_sum FLOAT DEFAULT 0;
+
+declare s_profit FLOAT DEFAULT 0;
+declare s_pid INT DEFAULT 0;
+declare s_user_type INT DEFAULT 0;
+
+SELECT fish_key_start,fish_key_end into d_fish_key_start, d_fish_key_end from game_record.record_tag where id=4; 
+select d_fish_key_start, d_fish_key_end;
+
+set d_i = d_fish_key_start; 
+while d_i <= d_fish_key_end do  
+set s_member_id = "";
+set s_cost_sum = 0;
+set s_bonus_sum = 0;
+SELECT member_id, cost_sum,bonus_sum into s_member_id, s_cost_sum, s_bonus_sum from game_record.fish_record_sum_201801 where id = d_i;
+set d_i = d_i + 1;
+
+set s_profit = s_bonus_sum - s_cost_sum;
+select s_member_id,s_profit;
+
+select pid, user_type into s_pid, s_user_type from h5proxy.user where account = s_member_id;
+select s_pid, s_user_type;
+
+end while;
+END
+;;
+DELIMITER ;

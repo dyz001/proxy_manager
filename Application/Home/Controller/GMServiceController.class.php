@@ -376,6 +376,24 @@ class GMServiceController extends HomebaseController{
 		}while($curPage < $total_page);
 	}
 
+	public function sum_platform_profit(){
+		$record_tag_model = new RecordTagModel();
+		trace('=========sum_platform_profit===========');
+		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
+		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
+		$record_tag_model->procedure( ' call sum_platform_profit('.$start.','.$end.');', false);
+		trace('==============end sum_platform_profit==========');
+	}
+
+	public function sum_fish_profit(){
+		$record_tag_model = new RecordTagModel();
+		trace('=========sum_fish_profit===========');
+		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
+		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
+		$record_tag_model->procedure( ' call sum_fish_profit('.$start.','.$end.');', false);
+		trace('==============end sum_fish_profit==========');
+	}
+
 	protected function genRandomChar($num){
 		$ret = '';
 		$char_arr = '0123456789qwertyuiopasdfghjklzxcvbnm';
@@ -485,7 +503,7 @@ class GMServiceController extends HomebaseController{
 				'status'=>$op_type
 			));
 			$user_extra_info->where('user_id='.$entity['proxy_id'])->update(array(
-				'banker_games'=>$user_extra_entity['banker_games'].'|'.$entity['apply_game']
+				'banker_games'=>$entity['apply_game'].','.$user_extra_entity['banker_games']
 			));
 			$data['code'] = 0;
 			$data['op_type'] = $op_type;
@@ -500,13 +518,13 @@ class GMServiceController extends HomebaseController{
 		$record_tag_model = new RecordTagModel();
 		$config_model = $record_tag_model->getRecordModel('config');
 		if($system_first){
-			$config_model->where('type = 1 and key = system_first')->update(array(
+			$config_model->where('type = 1 and name = system_first')->update(array(
 				'value' => $system_first
 			));
-			$config_model->where('type = 1 and key = system_second')->update(array(
+			$config_model->where('type = 1 and name = system_second')->update(array(
 				'value' => $system_second
 			));
-			$config_model->where('type = 1 and key = system_third')->update(array(
+			$config_model->where('type = 1 and name = system_third')->update(array(
 				'value' => $system_third
 			));
 		}
@@ -522,13 +540,13 @@ class GMServiceController extends HomebaseController{
 		$record_tag_model = new RecordTagModel();
 		$config_model = $record_tag_model->getRecordModel('config');
 		if($fish_first){
-			$config_model->where('type = 2 and key = fish_first')->update(array(
+			$config_model->where('type = 2 and name = fish_first')->update(array(
 				'value' => $fish_first
 			));
-			$config_model->where('type = 2 and key = fish_second')->update(array(
+			$config_model->where('type = 2 and name = fish_second')->update(array(
 				'value' => $fish_second
 			));
-			$config_model->where('type = 2 and key = fish_third')->update(array(
+			$config_model->where('type = 2 and name = fish_third')->update(array(
 				'value' => $fish_third
 			));
 		}

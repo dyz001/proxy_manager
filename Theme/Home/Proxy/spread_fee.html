@@ -2,53 +2,38 @@
 </head>
 <body>
 <a href="/main">返回主页</a>
-<div class="container">
-    <span>月份选择:</span>
-    <input type="text" id="date1" name="date1"  class="form_datetime" />
-</div>
+<!--<div class="container">-->
+    <!--<span>月份选择:</span>-->
+    <!--<input type="text" id="date1" name="date1"  class="form_datetime" />-->
+<!--</div>-->
 <div class="table-responsive">
 
 <table class="table table-bordered text-center">
     <thead>
     <tr>
         <th>返利时间</th>
-        <th>返利代理</th>
+        <th>返利代理Id</th>
+        <!--<th>返利代理昵称</th>-->
         <th>游戏</th>
         <th>返利</th>
     </tr>
     </thead>
     <tbody>
+    <foreach name="select" item="record">
     <tr>
-        <td>001</td>
-        <td>Rammohan </td>
-        <td>Reddy</td>
-        <td>A+</td>
+        <td>{$record.create_time}</td>
+        <td>{$record.user_id} </td>
+        <if condition="$record.type eq 0">
+            <td>平台游戏</td>
+        <else/>
+            <td>捕鱼游戏</td>
+        </if>
+        <td>{$record.money}</td>
     </tr>
-    <tr>
-        <td>002</td>
-        <td>Smita</td>
-        <td>Pallod</td>
-        <td>A</td>
-    </tr>
-    <tr>
-        <td>003</td>
-        <td>Rabindranath</td>
-        <td>Sen</td>
-        <td>A+</td>
-    </tr>
+    </foreach>
     </tbody>
 </table>
-
-    <ul class="pagination center-block">
-        <li><a href="#">&laquo;</a></li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">&raquo;</a></li>
-    </ul>
-
+{$page}
 </div>
 </body>
 <script>

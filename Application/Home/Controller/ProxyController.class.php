@@ -47,7 +47,7 @@ class ProxyController extends AdminbaseController
 			vendor( "phpqrcode.phpqrcode" );
 			//$data = $_SERVER['HTTP_HOST'] . '/bind_code/code/' . $user['id'];
 			$data = C('WX_AUTH_URL') .'?appid=' . C('APP_ID') . '&redirect_uri=' . urlencode(C('GAME_URL')) .
-			        '&response_type=code&scope=snsapi_userinfo&state=pid|'.$user['pid'] . '#wechat_redirect';
+			        '&response_type=code&scope=snsapi_userinfo&state=pidXXX'.$user['pid'] . '#wechat_redirect';
 			// 纠错级别：L、M、Q、H
 			$level = 'L';
 			// 点的大小：1到10,用于手机端4就可以了
@@ -208,7 +208,18 @@ class ProxyController extends AdminbaseController
 	}
 
 	public function spread_fee(){
-
+		$user = session('user');
+		$spread_fee_model = D('spread_fee');
+		$count = $spread_fee_model->count('id');
+		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
+		$data_list = $spread_fee_model->where('proxy_id='.$user['pid'])->order('id desc')->limit($page->firstRow, $page->listRows)->select();
+		$cnt = count($data_list);
+		for($i = 0; $i < $cnt; ++$i){
+			$data_list[$i]['create_time'] = date('Y-m-d', $data_list[$i]['create_time']);
+			$data_list[$i]['money'] = round($data_list[$i]['money'],3);
+		}
+		$this->assign('select', $data_list);
+		$this->assign('page', $page->show());
 		$this->display();
 	}
 
@@ -413,7 +424,7 @@ class ProxyController extends AdminbaseController
 		$user_extra_model = new UserExtraInfoModel();
 		$user_extra_entity = $user_extra_model->where('user_id=' . $user['id'])->find();
 		if(!empty($user_extra_entity)){
-			$proxy_gamecodes = explode('|', $user_extra_entity['banker_games']);
+			$proxy_gamecodes = explode(',', $user_extra_entity['banker_games']);
 			if(in_array($game_code, $proxy_gamecodes)){
 				$data['code'] = 1;
 				$data['msg'] = 'already banker';
@@ -462,7 +473,7 @@ class ProxyController extends AdminbaseController
 			$this->error(L('_USER_INFO_NOT_BIND_'));
 		}
 		$apply_banker_model = D('apply_banker');
-		$game_codes = explode('|', $user_extra_info['banker_games']);
+		$game_codes = explode(',', $user_extra_info['banker_games']);
 		$apply_list = $apply_banker_model->where('proxy_id = '.$user['id'])->select();
 		$cnt = count($game_list);
 		for ($i = 0; $i < $cnt; ++$i){
