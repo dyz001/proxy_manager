@@ -54,7 +54,8 @@ return array(
 		'gm_general_system_profit'=>'Home/GMService/general_system_profit',
 		'gm_sum_platform_profit'=>'Home/GMService/sum_platform_profit',
 		'gm_sum_fish_profit'=>'Home/GMService/sum_fish_profit',
-
+		'gm_proxy_grant'=>'Home/GMService/proxy_grant',
+        'gm_withdraw_record'=>'Home/GMService/gm_withdraw_record',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process
