@@ -211,7 +211,6 @@ class GMServiceController extends HomebaseController{
 
 	public function gen_fish_sum_record(){
 		trace('gen_fish_record begin');
-		$data = [];
 		$data['status'] = 0;
 		$fish_record_url = C('FISH_SUM_RECORD_URL');
 		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));

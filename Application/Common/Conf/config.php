@@ -52,6 +52,8 @@ return array(
 		'gm_apply_banker_list'=>'Home/GMService/apply_banker_list',
 		'gm_general_proxy_profit'=>'Home/GMService/general_proxy_profit',
 		'gm_general_system_profit'=>'Home/GMService/general_system_profit',
+		'gm_sum_platform_profit'=>'Home/GMService/sum_platform_profit',
+		'gm_sum_fish_profit'=>'Home/GMService/sum_fish_profit',
 
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
