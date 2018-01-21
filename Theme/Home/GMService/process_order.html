@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>订单处理</title>
-    <script src="../../Public/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="../../Public/bootstrap-3.3.7-dist/css/bootstrap.css">
+<include file="User:head"/>
 </head>
 <body>
-<div class="container">
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
     <form action="/gm/process_order">
     <div class="row">
     <div class="col-md-offset-2 col-md-2">
@@ -58,5 +53,6 @@
         </div>
     </form>
 </div>
+<include file="Home:GMService:left_menu_tail"/>
 </body>
 </html>
