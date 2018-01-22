@@ -8,10 +8,12 @@
 namespace Home\Controller;
 use Common\Controller\AdminbaseController;
 use Home\Model\ApplyProxyModel;
+use Home\Model\GetMoneyRecordModel;
 use Home\Model\RecordTagModel;
 use Home\Model\UserModel;
 use Home\Model\UserWithDrawModel;
 use Home\Model\UserExtraInfoModel;
+use Common\Common\ErrorCode;
 
 class ProxyController extends AdminbaseController
 {
@@ -192,25 +194,25 @@ class ProxyController extends AdminbaseController
 		$password=I('post.password');
 		$withdraw_pass=I('post.withdraw_pass');
 		if(empty($wx_identity)){
-			return \ErrorCode::WX_IDENTITY_EMPTY;
+			return ErrorCode::WX_IDENTITY_EMPTY;
 		}else if(empty($bank_card_number)){
-			return \ErrorCode::BANK_CARD_EMPTY;
+			return ErrorCode::BANK_CARD_EMPTY;
 		}else if(empty($real_name)){
-			return \ErrorCode::REAL_NAME_EMPTY;
+			return ErrorCode::REAL_NAME_EMPTY;
 		}else if(empty($mobile)){
-			return \ErrorCode::MOBILE_EMPTY;
+			return ErrorCode::MOBILE_EMPTY;
 		}else if(empty($password)){
-			return \ErrorCode::PASSWORD_EMPTY;
+			return ErrorCode::PASSWORD_EMPTY;
 		}else if(empty($withdraw_pass)){
-			return \ErrorCode::WITH_DRAW_PASS_EMPTY;
+			return ErrorCode::WITH_DRAW_PASS_EMPTY;
 		}
-		return \ErrorCode::SUCCESS;
+		return ErrorCode::SUCCESS;
 	}
 
 	public function spread_fee(){
 		$user = session('user');
 		$spread_fee_model = D('spread_fee');
-		$count = $spread_fee_model->count('id');
+		$count = $spread_fee_model->where('proxy_id='.$user['id'])->count('id');
 		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
 		$data_list = $spread_fee_model->where('proxy_id='.$user['pid'])->order('id desc')->limit($page->firstRow, $page->listRows)->select();
 		$cnt = count($data_list);
@@ -298,7 +300,7 @@ class ProxyController extends AdminbaseController
 		trace('======proxy_grant======');
 		$user = session('user');
 		$proxy_entity = new ApplyProxyModel();
-		$total_cnt = $proxy_entity->count('id');
+		$total_cnt = $proxy_entity->where('parent_id='.$user['id'])->count('id');
 		$p = $this->page($total_cnt, 10);
 		$list = $proxy_entity->field('apply_proxy.id, user_id, apply_proxy.parent_id, apply_time, nickname, status')
 		                     ->join('user on apply_proxy.user_id = user.id')
@@ -359,6 +361,7 @@ class ProxyController extends AdminbaseController
 		$this->display();
 	}
 
+	//每日汇总需要更新withdraw
 	public function auto_getmoney(){
 		trace('======auto_getmoney======');
 		$with_draw_model = new UserWithDrawModel();
@@ -386,22 +389,54 @@ class ProxyController extends AdminbaseController
 		trace('======auto_getmoney end======');
 	}
 
+	public function do_getmoney(){
+		$ipt_money_cnt = I('post.ipt_money_cnt');
+		$ipt_remark = I('post.ipt_remark');
+		$ipt_password = I('post.ipt_password');
+		$user_extra_info = new UserExtraInfoModel();
+		$user = session('user');
+		$user_extra_entity = $user_extra_info->where('user_id='.$user['id'])->find();
+		if(!$user_extra_entity){
+			$this->error(L('_USER_INFO_NOT_BIND_'));
+		}
+		$with_draw_model = new UserWithDrawModel();
+		$with_draw_entity = $with_draw_model->where('user_id='.$user['id'])->find();
+		if(!$with_draw_entity){
+			$this->error(L('_USER_INFO_NOT_BIND_'));
+		}
+		if($with_draw_entity['with_draw'] + $with_draw_entity['third_with_draw'] < $ipt_money_cnt){
+			$this->error(L('_WITH_DRAW_NOT_ENOUGH_'));
+		}
+		if(md5($ipt_password) != $user_extra_entity['withdraw_pass']){
+			$this->error(L('_WITH_DRAW_PASS_ERROR_'));
+		}
+		$get_money_record = new GetMoneyRecordModel();
+		$get_money_record->add(array(
+			'proxy_id' => $user['id'],
+			'money' => $ipt_money_cnt,
+			'create_time' => time(),
+		));
+		redirect('http://'.$_SERVER['HTTP_HOST'].'/auto_getmoney_record');
+	}
+
 	public function auto_getmoney_record(){
 		trace('======auto_getmoney_record======');
 		$user = session('user');
 		$records = D('get_money_record');
-		$count = $records->count("id");
+		$count = $records->where('proxy_id='.$user['id'])->count("id");
 		$p = $this->page($count,10);
-		$list = $records->field(true)->where('user_id='.$user['id'])
+		$list = $records->field(true)->where('proxy_id='.$user['id'])
 		                             ->order('id')->limit($p->firstRow, $p->listRows)->select();
-		foreach($list as $entity){
-			$entity['create_time'] = date('Y-m-d H:i:s', $entity['create_time']);
-			if($entity['status'] === 1){
-				$entity['status'] = '已到账';
-			}else if($entity['status'] === 0){
-				$entity['status'] = '申请中';
+		$cnt = count($list);
+		for($i=0;$i<$cnt;++$i){
+			$list[$i]['create_time'] = date('Y-m-d H:i:s', $list[$i]['create_time']);
+			if($list[$i]['status'] == 1){
+				$list[$i]['status'] = '已到账';
+			}else if($list[$i]['status'] == 0){
+				$list[$i]['status'] = '申请中';
 			}
 		}
+
 		$this->assign('select', $list); // 赋值数据集
 		$this->assign('page', $p->show()); // 赋值分页输出
 		$this->display();

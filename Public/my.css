@@ -1,0 +1,18 @@
+body{
+    background-color: #3d3c44;
+}
+span{
+    color:white;
+}
+td{
+    color:white;
+}
+th{
+    color:white;
+}
+h1, h2, h3, h4, h5, h6{
+    color:white;
+}
+a{
+    font-size:20px;
+}

@@ -49,4 +49,11 @@ return array(
     '_PARAM_ERROR_'          => '参数错误或者未定义',
     '_ERROR_QUERY_EXPRESS_'  => '错误的查询条件',
 	'_USER_PASS_EMPTY_'      => '用户名或密码错误',
+    'PASSWORD_REQUIRED'      => '用户密码为空',
+    '_USER_INFO_NOT_BIND_'   => '用户信息未绑定',
+    '_USER_NOT_LOGON_'       =>'用户未登录',
+	'_ACCOUNT_EXIST_'        => '账号已经存在',
+	'_SUCCESS_TXT_'          => '操作成功',
+	'_WITH_DRAW_NOT_ENOUGH_'  => '金额不足，无法提现',
+	'_WITH_DRAW_PASS_ERROR_' => '提现密码错误',
 );

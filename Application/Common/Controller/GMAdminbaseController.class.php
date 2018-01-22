@@ -1,15 +1,11 @@
 <?php
-
 /**
- * 后台Controller
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/1/22
+ * Time: 10:56
  */
-namespace Common\Controller;
-use Common\Controller\AppframeController;
-use Think\Page;
-use Home\Model\UserModel;
-
-class AdminbaseController extends AppframeController {
-
+class GMAdminbaseController extends \Think\Controller{
 	public function __construct() {
 		hook('admin_begin');
 		$admintpl_path=C("SP_ADMIN_TMPL_PATH").C("SP_ADMIN_DEFAULT_THEME")."/";
@@ -23,55 +19,23 @@ class AdminbaseController extends AppframeController {
 	function _initialize(){
 		parent::_initialize();
 		define("TMPL_PATH", C("SP_ADMIN_TMPL_PATH"));
-
-		//暂时取消后台多语言
-		//$this->load_app_admin_menu_lang();
-
-		$session_admin_id=session('ADMIN_ID');
+		$session_admin_id=session('GM_USER_ID');
+		$record_tag_model = new \Home\Model\RecordTagModel();
 		if(!empty($session_admin_id)){
-			$users_obj= M("User");
+			$users_obj= $record_tag_model->getRecordModel("user");
 			$user=$users_obj->where(array('id'=>$session_admin_id))->find();
 			if(!$this->check_access($session_admin_id)){
 				$this->error("您没有访问权限！");
 			}
-			session("user", $user);
-			$this->assign("admin",$user);
+			session("gm_user", $user);
+			$this->assign("gm_user",$user);
 		}else{
-			$token = I('get.token');
-			if($token){
-				$redis = get_redis();
-				$user_model = new UserModel();
-				$user_id = $redis->get($token);
-				$redis->delete($token);
-				$redis->close();
-				if($user_id){
-					$user_entity = $user_model->where('id='.$user_id)->find();
-					if($user_entity){
-						session('ADMIN_ID', $user_entity['id']);
-						session("user", $user_entity);
-						if($user_model->EPlayer == (int)$user_entity['user_type']){
-							redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
-						}else{
-
-							$this->display();
-						}
-					}else{
-						return 'you cant login';
-					}
-				}else{
-					redirect('http://'.$_SERVER['HTTP_HOST'].'/login');
-					//$this->display("Login/login");
-				}
+			if(IS_AJAX){
+				$this->display("GMLogin/login");
 			}else{
-
-				if(IS_AJAX){
-					$this->display("Login/login");
-				}else{
-					$this->display("Login/login");
-					exit();
-				}
+				$this->display("GMLogin/login");
+				exit();
 			}
-
 		}
 	}
 
@@ -231,19 +195,18 @@ class AdminbaseController extends AppframeController {
 	 */
 	private function check_access($uid){
 		//如果用户角色是1，则无需判断
-//		if($uid == 1){
-//			return true;
-//		}
-//
-//		$rule=MODULE_NAME.CONTROLLER_NAME.ACTION_NAME;
-//		$no_need_check_rules=array("AdminIndexindex","AdminMainindex");
-//
-//		if( !in_array($rule,$no_need_check_rules) ){
-//			return sp_auth_check($uid);
-//		}else{
-//			return true;
-//		}
-		return true;
+		if($uid == 1){
+			return true;
+		}
+
+		$rule=MODULE_NAME.CONTROLLER_NAME.ACTION_NAME;
+		$no_need_check_rules=array("AdminIndexindex","AdminMainindex");
+
+		if( !in_array($rule,$no_need_check_rules) ){
+			return sp_auth_check($uid);
+		}else{
+			return true;
+		}
 	}
 
 	/**

@@ -6,58 +6,60 @@
     <div class="row">
         <div class="col-md-1 col-xs-1"></div>
         <div class="col-xs-4 col-md-4">
-            <input type="button" class="btn btn-success" value="提现记录">
+            <input type="button" class="btn btn-success" value="提现记录" onclick="open_url('./auto_getmoney_record');">
         </div>
         <div class="col-md-1 col-xs-1"></div>
         <div class="col-xs-4 col-md-4">
-            <input type="button" class="btn btn-success" value="忘记密码">
+            <input type="button" class="btn btn-success" value="忘记密码" >
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">游戏名称：</div>
-        <div class="col-xs-4 col-md-4">豆豆娱乐</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">可用余额：</div>
-        <div class="col-xs-4 col-md-4">{$money}元</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">冻结余额：</div>
-        <div class="col-xs-4 col-md-4">{$freeze_money}元</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-5 col-md-5">最后结算日期：</div>
-        <div class="col-xs-4 col-md-4"><span id="last_settle"></span></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">提现金额：</div>
-        <div class="col-xs-4 col-md-4"><input type="text" id="ipt_money_cnt" name="ipt_money_cnt"></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">填写备注：</div>
-        <div class="col-xs-4 col-md-4"><input type="text" id="ipt_remark" name="ipt_remark"></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">提现密码：</div>
-        <div class="col-xs-4 col-md-4"><input type="password" id="ipt_password" name="ipt_password"></div>
-    </div>
-    <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-xs-4 col-md-4">您的微信号：</div>
-        <div class="col-xs-4 col-md-4"><span>{$wx_identity}</span></div>
-    </div>
-    <div style="background-color: gray; display: flex; justify-content: center; width: 90%;height: 80px; margin: 10px;">
-        <span>注意事项</span>
-    </div>
-    <div style="display:flex;text-align: center;justify-content:center">
-        <input type="button" class="btn btn-success" value="提现">
-    </div>
+    <form role="form" action="./do_getmoney" method="post">
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>游戏名称：</span></div>
+            <div class="col-xs-4 col-md-4"><span>悦想娱乐</span></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>可用余额：</span></div>
+            <div class="col-xs-4 col-md-4"><span>{$money}元</span></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>冻结余额：</span></div>
+            <div class="col-xs-4 col-md-4"><span>{$freeze_money}元</span></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-5 col-md-5"><span>最后结算日期：</span></div>
+            <div class="col-xs-4 col-md-4"><span id="last_settle"></span></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>提现金额：</span></div>
+            <div class="col-xs-4 col-md-4"><input type="text" id="ipt_money_cnt" name="ipt_money_cnt"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>填写备注：</span></div>
+            <div class="col-xs-4 col-md-4"><input type="text" id="ipt_remark" name="ipt_remark"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>提现密码：</span></div>
+            <div class="col-xs-4 col-md-4"><input type="password" id="ipt_password" name="ipt_password"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-4 col-md-4"><span>您的微信号：</span></div>
+            <div class="col-xs-4 col-md-4"><span>{$wx_identity}</span></div>
+        </div>
+        <div style="background-color: gray; display: flex; justify-content: center; width: 90%;height: 80px; margin: 10px;">
+            <span><span>注意事项</span></span>
+        </div>
+        <div style="display:flex;text-align: center;justify-content:center">
+            <input type="submit" class="btn btn-success" value="提现">
+        </div>
+    </form>
 </div>
 </body>
 <script>

@@ -6,6 +6,7 @@
     <table class="table table-bordered text-center">
         <thead>
         <tr>
+            <th>单号</th>
             <th>提现时间</th>
             <th>金额</th>
             <th>提现状态</th>
@@ -14,6 +15,7 @@
         <tbody>
         <foreach name='select' item='record' >
             <tr class="content">
+                <td>{$record.id}</td>
                 <td>&nbsp;{$record.create_time}</td>
                 <td>&nbsp;{$record.money}</td>
                 <td>&nbsp;{$record.status}</td>

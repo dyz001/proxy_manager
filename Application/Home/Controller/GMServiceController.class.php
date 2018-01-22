@@ -73,12 +73,19 @@ class GMServiceController extends HomebaseController{
 		$this->display();
 	}
 	public function process_order(){
-
+		$record_tag_model = new RecordTagModel();
+		$ret_arr = $record_tag_model->procedure('call test_proc();', false);
+		var_dump($ret_arr);
 	}
 	public function check_account(){
-
+		//$this->display();
+		return '<html>hello world</html>';
 	}
 	public function reset_password(){
+		$user = session('gm_user');
+		if(!$user){
+			$this->error(L('_USER_NOT_LOGON_'));
+		}
 
 	}
 
@@ -143,154 +150,27 @@ class GMServiceController extends HomebaseController{
 		$this->display();
 	}
 
-	public function gen_proxy_profit(){
-		$data = [];
-		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
-		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$rowsPerPage = 1000;
-		$get_data_url = C('RECORD_URL');
-		$curPage = 1;
-		$first_id = -1;
-		$last_id = -1;
-		$record_tag_model = new RecordTagModel();
-		$ret = $record_tag_model->where('start='.$start.' and end='.$end.' and platform_tag=1')->find();
-		if($ret){
-			$data['msg'] = '记录已经汇总，请查看';
-			$this->ajaxReturn($data);
-			return;
-		}
-		$total_page = 0;
-		do{
-			$params = array(
-				'startTime'=>$start,
-				'endTime'=>$end,
-				'pageIndex'=>$curPage,
-				'rowPerPage'=>$rowsPerPage
-			);
-			$data_list = $this->http($get_data_url, $params, 'POST');
-			$data_list_obj = json_decode($data_list);
-			$curPage = $data_list_obj->curPage;
-			$record_cnt = $data_list_obj->count;
-			$record_list = $data_list_obj->info;
-			if(count($record_list) > 0){
-				foreach($record_list as $record){
-					$ret_record = $record_tag_model->procedure(
-						'CALL save_game_record('
-						.$record['pid'].'\''.$record['unionid'].'\', '.$record['water'].');', false);
-					if($first_id == -1){
-						$first_id = $ret_record[0]['id'];
-					}
-					$last_id = $ret_record[0]['id'];
-				}
-			}
-			$total_page = floor($record_cnt/$rowsPerPage) + 1;
-			$curPage += 1;
-		}while($curPage < $total_page);
-
-		$entity = $record_tag_model->where('start='.$start.' and end='.$end)->find();
-		if(empty($entity)){
-			$record_tag_model->add(array(
-				'start'=>$start,
-				'end'=>$end,
-				'platform_tag'=>true,
-				'platform_key_start'=>$first_id,
-				'platform_key_end'=>$last_id,
-				'platform_create_time'=>time()
-			));
-		}else{
-			$record_tag_model->where('start='.$start.' and end='.$end)->save(array(
-				'platform_tag'=>true,
-				'platform_key_start'=>$first_id,
-				'platform_key_end'=>$last_id,
-				'platform_create_time'=>time()
-			));
-		}
-		//statistic fish record
-		$this->ajaxReturn($data);
+	public function logout(){
+		session('GM_USER_ID', null);
+		redirect('http://'.$_SERVER['HTTP_HOST'].'/gm_login');
 	}
 
-	public function gen_fish_sum_record(){
-		trace('gen_fish_record begin');
-		$data['status'] = 0;
-		$fish_record_url = C('FISH_SUM_RECORD_URL');
-		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
-		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$total_page = 0;
+	public function create_user(){
+		$account = I('post.account');
+		$password=I('post.password');
+		$role_id = I('post.role_id');
 		$record_tag_model = new RecordTagModel();
-		$ret = $record_tag_model->where('start='.$start.' and end='.$end.' and fish_tag=1')->find();
-		if($ret){
-			$data['msg'] = '记录已经汇总，请查看';
-			$this->ajaxReturn($data);
-			return;
+		$user_model = $record_tag_model->getRecordModel('user');
+		if($user_model->where('account='.$account)->find()){
+			$this->error(L('_ACCOUNT_EXIST_'));
 		}
-		$curPage = 1;
-		$first_id = -1;
-		$last_id = 0;
-		$isOK = true;
-		do{
-			$param = array(
-				'StartTime'=>$start,
-				'EndTime'=>$end,
-				'Page'=>$curPage,
-				'PageLimit'=>C('FISH_PAGE_LIMIT')
-			);
-			$param['Sign'] = $this->genSign($param);
-			trace('url:'.$fish_record_url . http_build_query($param));
-			$json_str = $this->http($fish_record_url, $param);
-			$json_obj = json_decode($json_str);
-			if($json_obj->ErrorCode != 0){
-				trace('get record return error:'.$json_obj->ErrorCode.', msg:'.$json_obj->Message);
-				$isOK = false;
-				break;
-			}else{
-				$curPage = $json_obj->Data->Pagination->CurrentPage;
-				$total_page = $json_obj->Data->Pagination->TotalPages;
-				foreach($json_obj->Data->Result as $entity){
-					$member_id = $entity->MemberId;//unionid
-					$account_id = $entity->accountId;
-					$cost_sum = $entity->CostSum;
-					$bonus_sum = $entity->BonusSum;
-					$ret_id_tbs = $record_tag_model->procedure(
-						'CALL save_fish_game_sum_record(\''.$member_id.'\','.$account_id.','.$cost_sum.','.$bonus_sum.');',
-						false
-					);
-					if($first_id == -1){
-						$first_id = $ret_id_tbs[0][0]['id'];
-					}
-					$last_id = $ret_id_tbs[0][0]['id'];
-				}
-			}
-			$curPage += 1;
-		}while($curPage < $total_page);
-		if($isOK){
-			$entity = $record_tag_model->where('start='.$start.' and end='.$end)->find();
-			if(empty($entity)){
-				trace('platform tag 0');
-				$record_tag_model->add(array(
-					'start'=>$start,
-					'end'=>$end,
-					'fish_tag'=>true,
-					'platform_tag'=>false,
-					'fish_key_start'=>$first_id,
-					'fish_key_end'=>$last_id,
-					'fish_create_time'=>time()
-				));
-			}else{
-				trace('update record');
-				$record_tag_model->where('start='.$start.' and end='.$end)->save(array(
-					'fish_tag'=>true,
-					'fish_key_start'=>$first_id,
-					'fish_key_end'=>$last_id,
-					'fish_create_time'=>time()
-				));
-			}
-			$data['status'] = 1;
-			$data['msg'] = 'ok';
-		}else{
-			$data['status'] = 0;
-			$data['msg'] = 'error';
-		}
-		$this->ajaxReturn($data);
+		$user_model->add(array(
+			'account'=>$account,
+			'password'=>md5($password),
+			'role_id'=>$role_id,
+			'create_time'=>time(),
+		));
+		$this->success(L('_SUCCESS_TXT_'));
 	}
 
 	public function fish_detail(){
@@ -327,6 +207,14 @@ class GMServiceController extends HomebaseController{
 		$this->assign('select', $data_list);
 		$this->assign('page', $page->show());
 		$this->display();
+	}
+
+	public function platform_detail_2(){
+//		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
+//		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
+//		$record_tag_model = new RecordTagModel();
+//		$data_arr = $record_tag_model->query('select pid, sum(pump_water) as pump_water from platform_water_record where '.
+//		'create_time>='.$start.' and create_time <='.$end.' group by pid', false);
 	}
 
 	public function gen_fish_record(){
@@ -373,24 +261,6 @@ class GMServiceController extends HomebaseController{
 			}
 			$curPage += 1;
 		}while($curPage < $total_page);
-	}
-
-	public function sum_platform_profit(){
-		$record_tag_model = new RecordTagModel();
-		trace('=========sum_platform_profit===========');
-		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
-		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$record_tag_model->procedure( ' call sum_platform_profit('.$start.','.$end.');', false);
-		trace('==============end sum_platform_profit==========');
-	}
-
-	public function sum_fish_profit(){
-		$record_tag_model = new RecordTagModel();
-		trace('=========sum_fish_profit===========');
-		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
-		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$record_tag_model->procedure( ' call sum_fish_profit('.$start.','.$end.');', false);
-		trace('==============end sum_fish_profit==========');
 	}
 
 	protected function genRandomChar($num){

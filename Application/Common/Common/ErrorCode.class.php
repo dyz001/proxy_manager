@@ -5,6 +5,7 @@
  * Date: 2018/1/6
  * Time: 10:50
  */
+namespace Common\Common;
 class ErrorCode extends Enum
 {
 	const SUCCESS = 0;//成功

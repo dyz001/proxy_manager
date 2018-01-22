@@ -36,6 +36,7 @@ return array(
 		"get_token"=>"Home/Login/get_access_token",
 		'third_games'=>'Home/Proxy/third_games',
 		'do_banker'=>'Home/Proxy/do_banker',
+		'do_getmoney'=>'Home/Proxy/do_getmoney',
 		//GM
 		"gm_main"=>"Home/GMService/main",
 		"gm_record_query" => "Home/GMService/query_record",
@@ -88,7 +89,7 @@ return array(
 	'RECORD_NUM_PER_PAGE'=>20,
 	'FISH_KEY'=>'2eacd42073d0a1a7ade614fb4d6f733b',
 	'APP_SECRET_KEY'=>'cebd5797b878f251af304a8e693aee17',
-	'GAME_URL' => 'http://cdn.xk.quanjianyou.com/h5/index.html',
+	'GAME_URL' => 'http://auth.quanjianyou.com/redirect/v1/xkqp/H5/WEIXIN/redirect_uri/',
 	'WX_AUTH_URL' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
 	'APP_ID' => 'wxb1bc54f79905e4f7',
 	'redis_host'=>'192.168.1.36',

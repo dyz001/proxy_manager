@@ -17,6 +17,7 @@
  * @author Marijan Šuflaj <msufflaj32@gmail.com&gt
  * @link http://php4every1.com
  */
+namespace Common\Common;
 abstract class Enum {
 	/**
 	 * Constant with default value for creating enum object

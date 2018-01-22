@@ -1,37 +1,83 @@
 <include file="User:head"/>
     <style>
         .item{
+            height:120px;
+            color:white;
+            font-size: 100%;
+        }
+        .bkimg{
             height:100px;
-            background-color: #9d9d9d;
-            margin-top: 10px;
+            background-image: url("http://{$_SERVER['HTTP_HOST']}/Public/img/back_img.png");
+            background-repeat: no-repeat;
+            background-size: 80%;
+            text-align: center;
+            background-position: center;
+        }
+        .row{
+            height:0px;
+        }
+        div span{
+            text-align: center;
+        }
+        div img{
+            width:95px;
+            height:95px;
         }
     </style>
 
 </head>
-<a href="./logout">退出登录</a>
+<!--<a href="./logout">退出登录</a>-->
 <body>
 <div class="container">
 <div class="row">
-    <div class="col-xs-1 col-md-1"></div>
-    <div class="col-xs-4 item" ontap="open_url('./my_fee');">我的推广费（今日）</div>
-    <div class="col-xs-1 col-md-1"></div>
-    <div class="col-xs-4 item" ontap="open_url('./proxy_players');">总直接玩家</div>
+    <div class="col-xs-offset-1 col-xs-5 item text-center">
+        <div class="bkimg">
+            <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/spread_fee.png" ontap="open_url('./my_fee');"/>
+        </div>
+        <span>我的推广费</span>
+    </div>
+    <div class="col-xs-5 item text-center" ontap="open_url('./proxy_players');">
+        <div class="bkimg">
+            <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/spread_players.png" ontap="open_url('./proxy_players');"/>
+        </div>
+        <span>总直接玩家</span>
+    </div>
 </div>
     <div class="row">
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-md-4 col-xs-4 item" ontap="open_url('./proxy_grant');">代理授权</div>
-        <div class="col-xs-1 col-md-1"></div>
-        <div class="col-md-4 col-xs-4 item" ontap="open_url('./proxy_info');">代理商资料</div>
+        <div class="col-md-offset-1 col-xs-offset-1 col-md-5 col-xs-5 item text-center">
+            <div class="bkimg">
+                <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/grant_proxy.png" ontap="open_url('./proxy_grant');"/>
+            </div>
+            <span>代理授权</span>
+        </div>
+        <div class="col-md-5 col-xs-5 item text-center" ontap="open_url('./proxy_info');">
+            <div class="bkimg">
+                <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/proxy_info.png" ontap="open_url('./proxy_info');"/>
+            </div>
+            <span>代理商资料</span>
+        </div>
     </div>
     <div class="row">
-        <div class="col-md-1 col-xs-1"></div>
-        <div class="col-md-4 col-xs-4 item" ontap="open_url('./auto_getmoney');">自助提现</div>
-        <div class="col-md-1 col-xs-1"></div>
-        <div class="col-md-4 col-xs-4 item" ontap="open_url('./qr_code');">我的二维码</div>
+        <div class="col-md-offset-1 col-xs-offset-1 col-md-5 col-xs-5 item text-center">
+            <div class="bkimg">
+                <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/get_money.png" ontap="open_url('./auto_getmoney');"/>
+            </div>
+            <span>自助提现</span>
+        </div>
+        <div class="col-md-5 col-xs-5 item text-center" ontap="open_url('./qr_code');">
+            <div class="bkimg">
+                <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/qr_code.png"/>
+            </div>
+            <span>我的二维码</span>
+        </div>
     </div>
     <div class="row">
-        <div class="col-md-1 col-xs-1"></div>
-        <div class="col-md-4 col-xs-4 item" ontap="open_url('./third_games');">三方游戏</div>
+        <div class="col-md-offset-1 col-xs-offset-1 col-md-5 col-xs-5 item text-center">
+            <div class="bkimg">
+                <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/third_games.png"  ontap="open_url('./third_games');"/>
+            </div>
+            <span>三方游戏</span>
+        </div>
         <!--<div class="col-md-1 col-xs-1"></div>-->
         <!--<div class="col-md-4 col-xs-4 item" ontap="open_url('./qr_code');"></div>-->
     </div>
