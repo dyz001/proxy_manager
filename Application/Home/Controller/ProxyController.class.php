@@ -173,6 +173,7 @@ class ProxyController extends AdminbaseController
 		));
 		$user_extra = new UserExtraInfoModel();
 		$user_extra->add(array(
+			'user_id'=>$user['id'],
 			'wx_identity'=>$wx_identity,
 			'bank_card_number'=>$bank_card_number,
 			'real_name'=>$real_name,
@@ -181,7 +182,7 @@ class ProxyController extends AdminbaseController
 			'create_time'=>time()
 		));
 		$data['status'] = 0;
-		redirect('./proxy_info');
+		redirect('http://'.$_SERVER['HTTP_HOST'].'/proxy_info');
 		//$this->ajaxReturn($data);
 		trace('=======fill_info end=========');
 	}

@@ -5,7 +5,9 @@
  * Date: 2018/1/22
  * Time: 10:56
  */
-class GMAdminbaseController extends \Think\Controller{
+namespace Common\Controller;
+use Think\Page;
+class GMAdminbaseController extends AppframeController{
 	public function __construct() {
 		hook('admin_begin');
 		$admintpl_path=C("SP_ADMIN_TMPL_PATH").C("SP_ADMIN_DEFAULT_THEME")."/";
@@ -31,9 +33,9 @@ class GMAdminbaseController extends \Think\Controller{
 			$this->assign("gm_user",$user);
 		}else{
 			if(IS_AJAX){
-				$this->display("GMLogin/login");
+				redirect('http://'.$_SERVER['HTTP_HOST'].'/gm_login');
 			}else{
-				$this->display("GMLogin/login");
+				redirect('http://'.$_SERVER['HTTP_HOST'].'/gm_login');
 				exit();
 			}
 		}

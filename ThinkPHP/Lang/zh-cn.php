@@ -56,4 +56,5 @@ return array(
 	'_SUCCESS_TXT_'          => '操作成功',
 	'_WITH_DRAW_NOT_ENOUGH_'  => '金额不足，无法提现',
 	'_WITH_DRAW_PASS_ERROR_' => '提现密码错误',
+	'_PROXY_PASSWORD_RESET_' => '代理密码已经重置',
 );

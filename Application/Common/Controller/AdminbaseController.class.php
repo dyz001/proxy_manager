@@ -52,7 +52,6 @@ class AdminbaseController extends AppframeController {
 						if($user_model->EPlayer == (int)$user_entity['user_type']){
 							redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
 						}else{
-
 							$this->display();
 						}
 					}else{

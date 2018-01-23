@@ -7,5 +7,7 @@
  */
 namespace Common\Common;
 class iAuth{
-
+	public function check($uid, $name, $relation){
+		return true;
+	}
 }

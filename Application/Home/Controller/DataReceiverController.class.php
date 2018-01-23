@@ -41,7 +41,7 @@ class DataReceiverController extends HomebaseController{
 		$ret = $record_tag_model->where('start='.$start.' and end='.$end.' and fish_tag=1')->find();
 		if($ret){
 			$data['msg'] = '记录已经汇总，请查看';
-			$this->ajaxReturn($data);
+			$this->ajaxReturn($data, 'json');
 			return;
 		}
 		$curPage = 1;
@@ -111,11 +111,14 @@ class DataReceiverController extends HomebaseController{
 			$data['status'] = 0;
 			$data['msg'] = 'error';
 		}
-		$this->ajaxReturn($data);
+		$this->ajaxReturn($data, 'json');
 	}
 
 	public function gen_platform_sum_record(){
-
+		$this->ajaxReturn(array(
+			'status' => 1,
+			'code' => 0
+		),'json');
 	}
 
 	protected function genRandomChar($num){
@@ -184,7 +187,11 @@ class DataReceiverController extends HomebaseController{
 		trace('=========sum_platform_profit===========');
 		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
 		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$record_tag_model->procedure( ' call sum_platform_profit('.$start.','.$end.');', false);
+		$record_tag_model->procedure( 'call sum_platform_profit('.$start.','.$end.');', false);
+		$this->ajaxReturn(array(
+			'status' => 1,
+			'code' => 0
+		),'json');
 		trace('==============end sum_platform_profit==========');
 	}
 
@@ -193,8 +200,25 @@ class DataReceiverController extends HomebaseController{
 		trace('=========sum_fish_profit===========');
 		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
 		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$record_tag_model->procedure( ' call sum_fish_profit('.$start.','.$end.');', false);
+		$record_tag_model->procedure( 'call sum_fish_profit('.$start.','.$end.');', false);
 		trace('==============end sum_fish_profit==========');
+		$this->ajaxReturn(array(
+			'status' => 1,
+			'code' => 0
+		), 'json');
+	}
+
+	public function add_profit_for_proxy(){
+		$record_tag_model = new RecordTagModel();
+		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
+		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
+		trace('========add_profit_for_proxy begin==========');
+		$record_tag_model->procedure( 'call add_profit_for_proxy('.$start.','.$end.');', false);
+		trace('========add_profit_for_proxy end==========');
+		$this->ajaxReturn(array(
+			'status' => 1,
+			'code' => 0
+		),'json');
 	}
 
 

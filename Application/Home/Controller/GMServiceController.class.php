@@ -15,8 +15,9 @@ use Home\Model\WaterRecordModel;
 use Common\Controller\HomebaseController;
 use Think\Controller;
 use Think\Log;
+use Common\Controller\GMAdminbaseController;
 use Home\Model\ApplyProxyModel;
-class GMServiceController extends HomebaseController{
+class GMServiceController extends GMAdminbaseController {
 	public function query_all_order(){
 		$get_money_record = new GetMoneyRecordModel();
 		$count = $get_money_record->count('id');
@@ -78,15 +79,63 @@ class GMServiceController extends HomebaseController{
 		var_dump($ret_arr);
 	}
 	public function check_account(){
-		//$this->display();
-		return '<html>hello world</html>';
+		$file_content = file_get_contents('php://input');
+		$data_obj = json_decode($file_content);
+		$user = new UserModel();
+		$proxy_entity = $user->where('id='.$data_obj.account)->find();
+		if(!$proxy_entity){
+			$this->ajaxReturn(array(
+				'code'=>0,
+				'status'=>1
+			),'json');
+		}else{
+			$this->ajaxReturn(array(
+				'code'=>101,
+				'status'=>1
+			),'json');
+		}
 	}
+
+	public function reset_proxy_password(){
+		$proxy_id = I('post.proxy_id');
+		$password = I('post.password');
+		if($proxy_id){
+			$user_model = new UserModel();
+			$user_model->where('id='.$proxy_id)->save(array(
+				'password'=>md5($password)
+			));
+			$this->success(L('_PROXY_PASSWORD_RESET_'));
+		}else{
+			$this->display();
+		}
+	}
+
 	public function reset_password(){
+		$old_pass = I('post.old_pass');
+		$password = I('post.password');
 		$user = session('gm_user');
 		if(!$user){
 			$this->error(L('_USER_NOT_LOGON_'));
 		}
+		if($old_pass){
+			$record_tag_model = new RecordTagModel();
+			$user_model = $record_tag_model->getRecordModel('user');
+			$user_entity = $user_model->where('id='.$user['id'])->find();
+			if(md5($old_pass) == $user_entity['password']){
+				$user_model->where('id='.$user['id'])->save(array(
+					'password' => md5($password)
+				));
+				session('gm_user', null);
+				session('GM_USER_ID', 0);
+				session('[destroy]');
+				redirect('http://'.$_SERVER['HTTP_HOST'].'/gm_login');
+			}else{
+				$this->error(L('_USER_PASS_EMPTY_'));
+			}
+		}else{
 
+			$this->display();
+		}
 	}
 
 	public function transfer_order(){
@@ -152,6 +201,7 @@ class GMServiceController extends HomebaseController{
 
 	public function logout(){
 		session('GM_USER_ID', null);
+		session('[destroy]');
 		redirect('http://'.$_SERVER['HTTP_HOST'].'/gm_login');
 	}
 
@@ -161,16 +211,23 @@ class GMServiceController extends HomebaseController{
 		$role_id = I('post.role_id');
 		$record_tag_model = new RecordTagModel();
 		$user_model = $record_tag_model->getRecordModel('user');
-		if($user_model->where('account='.$account)->find()){
-			$this->error(L('_ACCOUNT_EXIST_'));
+		if($account){
+			if($user_model->where('account=\''.$account.'\'')->find()){
+				$this->error(L('_ACCOUNT_EXIST_'));
+			}
+			$user_model->add(array(
+				'account'=>$account,
+				'password'=>md5($password),
+				'role_id'=>$role_id,
+				'create_time'=>time(),
+			));
+			$this->success(L('_SUCCESS_TXT_'));
+		}else{
+			$role_model = $record_tag_model->getRecordModel('user_rule');
+			$data_list = $role_model->select();
+			$this->assign('role_list', $data_list);
+			$this->display();
 		}
-		$user_model->add(array(
-			'account'=>$account,
-			'password'=>md5($password),
-			'role_id'=>$role_id,
-			'create_time'=>time(),
-		));
-		$this->success(L('_SUCCESS_TXT_'));
 	}
 
 	public function fish_detail(){
@@ -368,10 +425,10 @@ class GMServiceController extends HomebaseController{
 			$this->ajaxReturn($data);
 		}else{
 			$user_extra_entity = $user_extra_info->where('user_id='.$entity['proxy_id'])->find();
-			$apply_banker_model->where('id='.$record_id)->update(array(
+			$apply_banker_model->where('id='.$record_id)->save(array(
 				'status'=>$op_type
 			));
-			$user_extra_info->where('user_id='.$entity['proxy_id'])->update(array(
+			$user_extra_info->where('user_id='.$entity['proxy_id'])->save(array(
 				'banker_games'=>$entity['apply_game'].','.$user_extra_entity['banker_games']
 			));
 			$data['code'] = 0;
@@ -382,18 +439,18 @@ class GMServiceController extends HomebaseController{
 
 	public function proxy_bonus_config(){
 		$system_first = I('post.system_first');
-		$system_second = I('post.system.second');
-		$system_third = I('post.system.third');
+		$system_second = I('post.system_second');
+		$system_third = I('post.system_third');
 		$record_tag_model = new RecordTagModel();
 		$config_model = $record_tag_model->getRecordModel('config');
 		if($system_first){
-			$config_model->where('type = 1 and name = system_first')->update(array(
+			$config_model->where('type = 1 and name = \'system_first\'')->save(array(
 				'value' => $system_first
 			));
-			$config_model->where('type = 1 and name = system_second')->update(array(
+			$config_model->where('type = 1 and name = \'system_second\'')->save(array(
 				'value' => $system_second
 			));
-			$config_model->where('type = 1 and name = system_third')->update(array(
+			$config_model->where('type = 1 and name = \'system_third\'')->save(array(
 				'value' => $system_third
 			));
 		}
@@ -409,13 +466,13 @@ class GMServiceController extends HomebaseController{
 		$record_tag_model = new RecordTagModel();
 		$config_model = $record_tag_model->getRecordModel('config');
 		if($fish_first){
-			$config_model->where('type = 2 and name = fish_first')->update(array(
+			$config_model->where('type = 2 and name = \'fish_first\'')->save(array(
 				'value' => $fish_first
 			));
-			$config_model->where('type = 2 and name = fish_second')->update(array(
+			$config_model->where('type = 2 and name = \'fish_second\'')->save(array(
 				'value' => $fish_second
 			));
-			$config_model->where('type = 2 and name = fish_third')->update(array(
+			$config_model->where('type = 2 and name = \'fish_third\'')->save(array(
 				'value' => $fish_third
 			));
 		}

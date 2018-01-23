@@ -38,6 +38,10 @@ return array(
 		'do_banker'=>'Home/Proxy/do_banker',
 		'do_getmoney'=>'Home/Proxy/do_getmoney',
 		//GM
+		'gm_logout' => 'Home/GMService/logout',
+		'gm_create_user' => 'Home/GMService/create_user',
+		'gm_login'=>'Home/GMLogin/login',
+		'gm_dologin'=>'Home/GMLogin/dologin',
 		"gm_main"=>"Home/GMService/main",
 		"gm_record_query" => "Home/GMService/query_record",
 		"gm_gen_fish_sum_record"=>"Home/GMService/gen_fish_sum_record",
@@ -60,6 +64,12 @@ return array(
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process
+		'data_gen_fish_sum_record' => 'Home/DataReceiver/gen_fish_sum_record',
+		'data_gen_fish_record'=>'Home/DataReceiver/gen_fish_record',
+		'data_sum_platform_profit'=>'Home/DataReceiver/sum_platform_profit',
+		'data_sum_fish_profit' => 'Home/DataReceiver/sum_fish_profit',
+		'data_add_profit_for_proxy' => 'Home/DataReceiver/add_profit_for_proxy',
+		'data_gen_platform_sum_record' => 'Home/DataReceiver/gen_platform_sum_record',
 
 	), // 默认路由规则 针对模块
 	'THINK_SDK_WeixinSDK' => array(
