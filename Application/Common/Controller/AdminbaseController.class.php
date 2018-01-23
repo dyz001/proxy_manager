@@ -48,6 +48,9 @@ class AdminbaseController extends AppframeController {
 					$user_entity = $user_model->where('id='.$user_id)->find();
 					if($user_entity){
 						session('ADMIN_ID', $user_entity['id']);
+						$user_model->where('id='.$user_entity['id'])->save(array(
+							'last_login_time'=>time()
+						));
 						session("user", $user_entity);
 						if($user_model->EPlayer == (int)$user_entity['user_type']){
 							redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
