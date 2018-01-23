@@ -50,6 +50,9 @@ class LoginController extends HomebaseController
 		}
 		if($user_data){
 			if($user_data[0]['password'] == $password){
+				$user_entity->where('id='.$user_data[0]['id'])->save(array(
+					'last_login_time'=>time()
+				));
 				session('ADMIN_ID', $user_data[0]['id']);
 				redirect('./main');
 				//$this->display("Proxy/main");
