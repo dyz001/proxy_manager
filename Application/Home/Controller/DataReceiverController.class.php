@@ -187,12 +187,12 @@ class DataReceiverController extends HomebaseController{
 		trace('=========sum_platform_profit===========');
 		$start = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
 		$end = mktime(23,59,59,date('m'), date('d') - 1, date('Y'));
-		$record_tag_model->procedure( 'call sum_platform_profit('.$start.','.$end.');', false);
+		$ret_array = $record_tag_model->procedure( 'call sum_platform_profit('.$start.','.$end.');', false);
+		trace('==============end sum_platform_profit==========');
 		$this->ajaxReturn(array(
 			'status' => 1,
-			'code' => 0
+			'code' => $ret_array[0][0]['code']
 		),'json');
-		trace('==============end sum_platform_profit==========');
 	}
 
 	public function sum_fish_profit(){

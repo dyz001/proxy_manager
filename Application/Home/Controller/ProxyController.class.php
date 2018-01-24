@@ -37,6 +37,11 @@ class ProxyController extends AdminbaseController
 		if($user_model->EPlayer == (int)$user['user_type']){
 			redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
 		}else{
+			if('H5' == C('USER_FROM')){
+				$this->assign('game_url', C('GAME_URL'));
+			}elseif('APP' == C('USER_FROM')){
+				$this->assign('game_url', C('APP_WAKE_UP'));
+			}
 			$this->display();
 		}
 	}
@@ -75,6 +80,11 @@ class ProxyController extends AdminbaseController
 		}
 		$player_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type = 4')->count('id');
 		$proxy_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type < 4')->count('id');
+		if('H5' == C('USER_FROM')){
+			$this->assign('game_url', C('GAME_URL'));
+		}elseif('APP' == C('USER_FROM')){
+			$this->assign('game_url', C('APP_WAKE_UP'));
+		}
 		$this->assign('qrcode', './Public/QRCode/'.$user['pid'].'.png');
 		$this->assign('user',$user);
 		$this->assign('player_cnt', $player_cnt);
@@ -367,6 +377,11 @@ class ProxyController extends AdminbaseController
 		trace('======auto_getmoney======');
 		$with_draw_model = new UserWithDrawModel();
 		$user = session('user');
+		$user_extra_info = new UserExtraInfoModel();
+		$user_extra_entity = $user_extra_info->where('user_id='.$user['id'])->find();
+		if(!$user_extra_entity || !$user_extra_entity['real_name']){
+			$this->error(L('_USER_INFO_NOT_BIND_'));
+		}
 		$money = 0;
 		$freeze_money = 0;
 		$wx_identity = '';

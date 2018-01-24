@@ -118,6 +118,36 @@ class LoginController extends HomebaseController
 		}
 	}
 
+	public function create_user(){
+		$user_id = I('post._id');
+		$nickname = I('post.name');
+		$openid = I('post.openid');
+		$unionid = I('post.unionid');
+		$mobile = I('post.mobile');
+		$spreader = I('post.spreader');
+		$account = I('post.account');
+		$headurl = I('post.headurl');
+
+		$user_model = new UserModel();
+		$user_data = $user_model->where('pid = '.$user_id)->find();
+		if(empty($user_data)){
+			$user_model->add(array(
+				'pid'=>$user_id,
+				'user_type'=>$user_model->EPlayer,
+				'create_time'=>time(),
+				'last_login_time'=>time(),
+				'nickname'=>$nickname,
+				'wx_open_id'=>$openid,
+				'parent_id'=>$spreader,
+				'account'=>$account,
+				'wx_unionid'=>$unionid
+			));
+		}
+		$this->ajaxReturn(array(
+			'status'=>1,
+		), 'json');
+	}
+
 	public function get_access_token(){
 		$user_id = I('post._id');
 		$nickname = I('post.name');

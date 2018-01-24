@@ -37,6 +37,7 @@ return array(
 		'third_games'=>'Home/Proxy/third_games',
 		'do_banker'=>'Home/Proxy/do_banker',
 		'do_getmoney'=>'Home/Proxy/do_getmoney',
+		'create_user' => 'Home/Login/create_user',
 		//GM
 		'gm_logout' => 'Home/GMService/logout',
 		'gm_create_user' => 'Home/GMService/create_user',
@@ -60,7 +61,9 @@ return array(
 		'gm_sum_platform_profit'=>'Home/GMService/sum_platform_profit',
 		'gm_sum_fish_profit'=>'Home/GMService/sum_fish_profit',
 		'gm_proxy_grant'=>'Home/GMService/proxy_grant',
-        'gm_withdraw_record'=>'Home/GMService/gm_withdraw_record',
+        'gm_withdraw_record'=>'Home/GMService/withdraw_record',
+		'gm_grant_proxy'=>'Home/GMService/grant_proxy',
+		'gm_reset_password'=>'Home/GMService/reset_password',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process
@@ -100,6 +103,8 @@ return array(
 	'FISH_KEY'=>'2eacd42073d0a1a7ade614fb4d6f733b',
 	'APP_SECRET_KEY'=>'cebd5797b878f251af304a8e693aee17',
 	'GAME_URL' => 'http://auth.quanjianyou.com/redirect/v1/xkqp/H5/WEIXIN/redirect_uri/',
+	'H5_ENTER_URL' => 'http://cdn.xk.quanjianyou.com/h5/2L/index.html?t=1516694463',
+	'APP_WAKE_UP' => 'yuexiangapp://link',
 	'WX_AUTH_URL' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
 	'APP_ID' => 'wxb1bc54f79905e4f7',
 	'redis_host'=>'192.168.1.36',

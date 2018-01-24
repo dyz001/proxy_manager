@@ -38,6 +38,8 @@ class AdminbaseController extends AppframeController {
 			$this->assign("admin",$user);
 		}else{
 			$token = I('get.token');
+			$from = I('get.from');
+
 			if($token){
 				$redis = get_redis();
 				$user_model = new UserModel();
@@ -52,10 +54,9 @@ class AdminbaseController extends AppframeController {
 							'last_login_time'=>time()
 						));
 						session("user", $user_entity);
+						C('USER_FROM', $from);
 						if($user_model->EPlayer == (int)$user_entity['user_type']){
 							redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
-						}else{
-							$this->display();
 						}
 					}else{
 						return 'you cant login';
@@ -65,11 +66,10 @@ class AdminbaseController extends AppframeController {
 					//$this->display("Login/login");
 				}
 			}else{
-
 				if(IS_AJAX){
-					$this->display("Login/login");
+					redirect('http://'.$_SERVER['HTTP_HOST'].'/login');
 				}else{
-					$this->display("Login/login");
+					redirect('http://'.$_SERVER['HTTP_HOST'].'/login');
 					exit();
 				}
 			}

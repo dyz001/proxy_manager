@@ -29,9 +29,9 @@
             <div class="col-xs-4 col-md-4"><span>冻结余额：</span></div>
             <div class="col-xs-4 col-md-4"><span>{$freeze_money}元</span></div>
         </div>
-        <div class="row">
-            <div class="col-xs-5 col-md-5"><span>最后结算日期：</span></div>
-            <div class="col-xs-4 col-md-4"><span id="last_settle"></span></div>
+        <div class="row text-left">
+            <div class="col-md-offset-1 col-xs-offset-1 col-xs-4 col-md-4"><span>结算日期：</span></div>
+            <div class="col-xs-7 col-md-7"><span id="last_settle"></span></div>
         </div>
         <div class="row">
             <div class="col-xs-1 col-md-1"></div>
@@ -49,12 +49,20 @@
             <div class="col-xs-4 col-md-4"><input type="password" id="ipt_password" name="ipt_password"></div>
         </div>
         <div class="row">
-            <div class="col-xs-1 col-md-1"></div>
-            <div class="col-xs-4 col-md-4"><span>您的微信号：</span></div>
+            <div class="col-xs-5 col-md-5"><span>您的微信号：</span></div>
             <div class="col-xs-4 col-md-4"><span>{$wx_identity}</span></div>
         </div>
-        <div style="background-color: gray; display: flex; justify-content: center; width: 90%;height: 80px; margin: 10px;">
-            <span><span>注意事项</span></span>
+        <div class="row text-left center-block">
+        <div style="background-color: gray; margin: 10px;">
+            <span>1、	请确认您的微信号为登陆游戏的微信号，提现金额将打入该微信号账户中！<br/>
+2、	如因微信号的错误带来的损失，公司不承担任何责任！<br/>
+3、	如果微信号错误，请立即联系客服修改！<br/>
+4、	微信号必须实名认证（即微信号绑定银行卡号）<br/>
+5、	每天只能提现1次<br/>
+6、	可用余额不少于100元时，才能提现<br/>
+7、	备注和姓名必须填写<br/>
+8、	为保证您的资金安全，请在每日10:00-21:00时间段内提现<br/></span>
+        </div>
         </div>
         <div style="display:flex;text-align: center;justify-content:center">
             <input type="submit" class="btn btn-success" value="提现">

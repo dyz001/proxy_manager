@@ -1,42 +1,55 @@
 <include file="User:head"/>
 </head>
 <body>
+<switch name="proxy_tag">
+    <case value="0">
+        <a href="{$game_url}">回到游戏</a>
+    </case>
+    <case value="1">
+        <a href="{$game_url}">回到游戏</a>
+    </case>
+    <case value="2">
+        <a href="./main">返回主页</a>
+    </case>
+</switch>
+
 <div class="container">
     <div class="row">
-        <div class="col-xs-3 col-md-3">
-            <span>ID:</span>
+        <div class="col-xs-offset-2 col-md-offset-2 col-xs-3 col-md-3">
+            <span>代理ID:</span>
         </div>
         <div class="col-xs-7 col-md-7">
             <span>{$user.id}</span>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-3 col-md-3">
+        <div class="col-xs-offset-2 col-md-offset-2 col-xs-3 col-md-3">
             <span>昵称:</span>
         </div>
         <div class="col-xs-7 col-md-7">
             <span>{$user.nickname}</span>
         </div>
     </div>
-    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
-        <div style="width:150px;height:150px;background-color: grey">
-            <img src="{$qrcode}" width="150" height="150"/>
-        </div>
+    <div class="row text-center center-block">
+        <img src="{$qrcode}" width="150" height="150"/>
     </div>
-    <div style="display:flex;justify-content: center;">
+    <div class="row text-center">
         <span>玩家人数：</span>
         <span>{$player_cnt}人</span>
     </div>
-    <div style="display:flex;justify-content: center;">
+    <div class="row text-center">
         <span>代理人数：</span>
         <span>{$proxy_cnt}人</span>
     </div>
-    <div style="display: flex;justify-content: center;margin-top: 20px;margin-bottom: 20px">
-        <div style="width:90%;height:100px;background-color: grey">
-            <span>规则说明区域</span>
+    <div class="row text-left center-block">
+        <div style="background-color: grey">
+            <span>1.	所发展的下级代理或者玩家达到10人，才可申请提升为代理<br/>
+2.	所累积的推广费达到100元以上，才可申请提升为代理<br/>
+3.	每日推广费可累积<br/>
+4.	他人微信，扫此界面的二维码即可完成绑定<br/></span>
         </div>
     </div>
-    <div style="display: flex;justify-content: center" id="oper_area">
+    <div class="row text-center" id="oper_area">
         <switch name="proxy_tag">
             <case value="0">
                 <input type="button" class="btn btn-success" ontap="apply_proxy({$user.id})" value="申请提升为代理">
@@ -46,7 +59,6 @@
             </case>
             <case value="2"></case>
         </switch>
-
     </div>
 </div>
 </body>
