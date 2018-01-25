@@ -28,6 +28,7 @@ class AdminbaseController extends AppframeController {
 		//$this->load_app_admin_menu_lang();
 
 		$session_admin_id=session('ADMIN_ID');
+		$from = I('get.from');
 		if(!empty($session_admin_id)){
 			$users_obj= M("User");
 			$user=$users_obj->where(array('id'=>$session_admin_id))->find();
@@ -35,11 +36,12 @@ class AdminbaseController extends AppframeController {
 				$this->error("您没有访问权限！");
 			}
 			session("user", $user);
+			if($from){
+				session('user_from', $from);
+			}
 			$this->assign("admin",$user);
 		}else{
 			$token = I('get.token');
-			$from = I('get.from');
-
 			if($token){
 				$redis = get_redis();
 				$user_model = new UserModel();
@@ -54,7 +56,9 @@ class AdminbaseController extends AppframeController {
 							'last_login_time'=>time()
 						));
 						session("user", $user_entity);
-						C('USER_FROM', $from);
+						if($from){
+							session('user_from', $from);
+						}
 						if($user_model->EPlayer == (int)$user_entity['user_type']){
 							redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
 						}

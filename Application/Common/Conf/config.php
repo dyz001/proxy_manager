@@ -95,15 +95,15 @@ return array(
 	'DB_CHARSET'=> 'utf8', // 字符集
 	'DB_DEBUG'  =>  TRUE, // 数据库调试模式 开启后可以记录SQL日志
 	'RECORD_URL'=>'http://192.168.1.127:8599/getRecord.nd',
-	'FISH_RECORD_URL'=>'http://fish.quanjianyou.com/sfangapi/GetBetRecord2.php',
+	'FISH_RECORD_URL'=>'http://fish.498wan.com/sfangapi/GetBetRecord2.php',
 	'FISH_SUM_RECORD_URL'=>'http://45.126.122.22/sfangapi/GetBetRecordSum.php',
 	'FISH_PAGE_LIMIT'=>500,
 	'DETAIL_NUM_PER_PAGE'=>20,
 	'RECORD_NUM_PER_PAGE'=>20,
 	'FISH_KEY'=>'2eacd42073d0a1a7ade614fb4d6f733b',
 	'APP_SECRET_KEY'=>'cebd5797b878f251af304a8e693aee17',
-	'GAME_URL' => 'http://auth.quanjianyou.com/redirect/v1/xkqp/H5/WEIXIN/redirect_uri/',
-	'H5_ENTER_URL' => 'http://cdn.xk.quanjianyou.com/h5/2L/index.html?t=1516694463',
+	'GAME_URL' => 'http://auth.498wan.com/redirect/v1/xkqp/H5/WEIXIN/redirect_uri/',
+	'H5_ENTER_URL' => 'http://cdn.xk.498wan.com/h5/2L/index.html?t=1516694463',
 	'APP_WAKE_UP' => 'yuexiangapp://link',
 	'WX_AUTH_URL' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
 	'APP_ID' => 'wxb1bc54f79905e4f7',

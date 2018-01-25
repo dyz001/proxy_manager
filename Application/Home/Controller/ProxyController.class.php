@@ -37,9 +37,9 @@ class ProxyController extends AdminbaseController
 		if($user_model->EPlayer == (int)$user['user_type']){
 			redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
 		}else{
-			if('H5' == C('USER_FROM')){
+			if('H5' == session('user_from')){
 				$this->assign('game_url', C('GAME_URL'));
-			}elseif('APP' == C('USER_FROM')){
+			}elseif('APP' == session('user_from')){
 				$this->assign('game_url', C('APP_WAKE_UP'));
 			}
 			$this->display();
@@ -80,9 +80,9 @@ class ProxyController extends AdminbaseController
 		}
 		$player_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type = 4')->count('id');
 		$proxy_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type < 4')->count('id');
-		if('H5' == C('USER_FROM')){
+		if('H5' == session('user_from')){
 			$this->assign('game_url', C('GAME_URL'));
-		}elseif('APP' == C('USER_FROM')){
+		}elseif('APP' == session('user_from')){
 			$this->assign('game_url', C('APP_WAKE_UP'));
 		}
 		$this->assign('qrcode', './Public/QRCode/'.$user['pid'].'.png');
@@ -95,7 +95,7 @@ class ProxyController extends AdminbaseController
 	public function bind_code()
 	{
 		$parent_id = $_GET['id'];
-		$user = seesion('user');
+		$user = session('user');
 		if($user['parent_id'] != 0)
 		{
 			//已经绑定过代理
