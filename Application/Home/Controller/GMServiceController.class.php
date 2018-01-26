@@ -17,6 +17,7 @@ use Think\Controller;
 use Think\Log;
 use Common\Controller\GMAdminbaseController;
 use Home\Model\ApplyProxyModel;
+use Think\Exception;
 class GMServiceController extends GMAdminbaseController {
 	public function query_all_order(){
 		$get_money_record = new GetMoneyRecordModel();
@@ -548,6 +549,22 @@ class GMServiceController extends GMAdminbaseController {
 		$this->display();
 	}
 
+	public function platform_config(){
+		$params = I('');
+		$record_tag_model = new RecordTagModel();
+		$config_model = $record_tag_model->getRecordModel('config');
+		if(count($params) > 1){
+			foreach ($params as $key=>$value){
+				$config_model->where('name=\''.$key.'\'')->save(array(
+					'value' => $value
+				));
+			}
+		}
+		$platform_conf = $record_tag_model->getRecordModel('config')->select();
+		$this->assign('select', $platform_conf);
+		$this->display();
+	}
+
 	public function grant_proxy()
 	{
 		$player_id = I("post.player_id");
@@ -583,17 +600,20 @@ class GMServiceController extends GMAdminbaseController {
 		trace('======proxy_grant======');
 		$user = session('user');
 		$proxy_entity = new ApplyProxyModel();
-		$total_cnt = $proxy_entity->count('id');
+		$total_cnt = $proxy_entity->where('parent_id=0')->count('id');
 		$p = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
-		$list = $proxy_entity->field('apply_proxy.id, user_id, apply_proxy.parent_id, apply_time, nickname, status')
+		$list = $proxy_entity->field('apply_proxy.id, user_id, pid, apply_proxy.parent_id, apply_time, nickname, status')
 		                     ->join('user on apply_proxy.user_id = user.id')
 		                     ->where('apply_proxy.parent_id=0')
 		                     ->order('id desc')->limit($p->firstRow, $p->listRows)->select();
 		$display_data = [];
+		$user_model = new UserModel();
 		foreach($list as $entity){
 			$data['id'] = $entity['id'];
 			$data['user_id'] = $entity['user_id'];
 			$data['parent_id'] = $entity['parent_id'];
+			$player_cnt = $user_model->query('select count(id) as cnt from user where pid='.$entity['pid']);
+			$data['player_cnt'] = $player_cnt[0]['cnt'];
 			$data['apply_time'] = date('Y-m-d H:i:s', $entity['apply_time']);
 			$data['status'] = $entity['status'];
 			$data['nickname'] = $entity['nickname'];

@@ -31,6 +31,10 @@ class ApplyProxyModel extends \Common\Model\CommonModel
 		if(!$player_data)
 		{
 			$this->add(array('user_id'=>$player_id, 'parent_id'=>$parent_id, 'apply_time'=>time(), 'status'=>$this->EApplying));
+		}else{
+			$this->where('user_id='.$player_id)->save(array(
+				'status'=>$this->EApplying
+			));
 		}
 		return true;
 	}
@@ -55,5 +59,14 @@ class ApplyProxyModel extends \Common\Model\CommonModel
 			return false;
 		}
 		return true;
+	}
+
+	public function can_apply($player_id){
+		$user_data= $this->where('user_id = '.$player_id)->find();
+		if(!$user_data || $user_data['status'] == $this->ERefuse)
+		{
+			return true;
+		}
+		return false;
 	}
 }

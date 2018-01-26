@@ -10,6 +10,7 @@ use Common\Controller\HomebaseController;
 use Home\Model\UserExtraInfoModel;
 use Think\Log;
 use Home\Model\UserModel;
+use Think\Exception;
 
 class LoginController extends HomebaseController
 {
@@ -148,6 +149,56 @@ class LoginController extends HomebaseController
 		), 'json');
 	}
 
+	public function create_wxaccount(){
+		$open_id = I('get.openId');
+		$token = I('get.accessToken');
+		$gameId = I('get.gameId');
+		$channelId = I('get.channelId');
+		$state = I('get.state');
+		$res_data = $this->http(C('GET_WX_USER_INFO'),array(
+		'gameId'=>$gameId,
+			'channelId'=>$channelId,
+			'openId'=>$open_id,
+			'accessToken'=>$token
+		), 'POST');
+		if(!$res_data){
+			trace('data not return:');
+		}
+		$res_data_obj = json_decode($res_data);
+		if(!$res_data_obj){
+			trace('data decode error:'.$res_data);
+		}
+		if(!$res_data_obj->user){
+			trace('user info not found');
+			//用户信息拉取失败
+		}
+		if(!$res_data_obj->loginUser){
+			trace('wx userinfo not found');
+		}
+		$user_model = new UserModel();
+		$user_data = $user_model->where('pid = '.$res_data_obj->user->pid)->find();
+		if(!$user_data){
+			$user_model->add(array(
+				'pid'=>$res_data_obj->user->pid,
+				'user_type'=>$user_model->EPlayer,
+				'create_time'=>time(),
+				'last_login_time'=>time(),
+				'nickname'=>$res_data_obj->user->pid,
+				'wx_open_id'=>$res_data_obj->loginUser->openid,
+				'parent_id'=>$state,
+				'account'=>'user'.$res_data_obj->user->pid,
+				'wx_unionid'=>$res_data_obj->loginUser->unionid
+			));
+			$user_data = $user_model->where('pid = '.$res_data_obj->user->pid)->find();
+		}
+		session('ADMIN_ID', $user_data['id']);
+		if($user_data['user_type'] != $user_model->EPlayer){
+			redirect('http://'.$_SERVER['HTTP_HOST'].'/main');
+		}else{
+			redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
+		}
+	}
+
 	public function get_access_token(){
 		$user_id = I('post._id');
 		$nickname = I('post.name');
@@ -184,5 +235,40 @@ class LoginController extends HomebaseController
 		$data['status'] = 1;
 		$data['token'] = $token;
 		$this->ajaxReturn($data, 'json');
+	}
+
+	protected function http($url, $params, $method = 'GET', $header = array(), $multi = false){
+		$opts = array(
+			CURLOPT_TIMEOUT        => 30,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_HTTPHEADER     => $header
+		);
+
+		/* 根据请求类型设置特定参数 */
+		switch(strtoupper($method)){
+			case 'GET':
+				$opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+				break;
+			case 'POST':
+				//判断是否传输文件
+				$params = $multi ? $params : http_build_query($params);
+				$opts[CURLOPT_URL] = $url;
+				$opts[CURLOPT_POST] = 1;
+				$opts[CURLOPT_POSTFIELDS] = $params;
+				break;
+			default:
+				throw new Exception('不支持的请求方式！');
+		}
+
+		/* 初始化并执行curl请求 */
+		$ch = curl_init();
+		curl_setopt_array($ch, $opts);
+		$data  = curl_exec($ch);
+		$error = curl_error($ch);
+		curl_close($ch);
+		if($error) throw new Exception('请求发生错误：' . $error);
+		return  $data;
 	}
 }

@@ -70,11 +70,12 @@ class ProxyController extends AdminbaseController
 		$apply_proxy = new ApplyProxyModel();
 		$user_model  = new UserModel();
 		if ( $user_model->EPlayer == $user['user_type'] ) {
-			if ( $apply_proxy->exist( $user['id'] ) ) {
-				$this->assign( 'proxy_tag', 1 );
-			} else {
+			if ( $apply_proxy->can_apply( $user['id'] ) ) {
 				$this->assign( 'proxy_tag', 0 );
 			}
+//			else {
+//				$this->assign( 'proxy_tag', 0 );
+//			}
 		} else {
 			$this->assign( 'proxy_tag', 2 );
 		}

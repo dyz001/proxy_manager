@@ -64,6 +64,7 @@ return array(
         'gm_withdraw_record'=>'Home/GMService/withdraw_record',
 		'gm_grant_proxy'=>'Home/GMService/grant_proxy',
 		'gm_reset_password'=>'Home/GMService/reset_password',
+		'gm_platform_config' => 'Home/GMService/platform_config',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process
@@ -106,6 +107,7 @@ return array(
 	'H5_ENTER_URL' => 'http://cdn.xk.498wan.com/h5/2L/index.html?t=1516694463',
 	'APP_WAKE_UP' => 'yuexiangapp://link',
 	'WX_AUTH_URL' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
+	'GET_WX_USER_INFO' => 'http://auth.498wan.com/channel/weixin/v1/userinfo/',
 	'APP_ID' => 'wxb1bc54f79905e4f7',
 	'redis_host'=>'192.168.1.36',
 	'redis_port'=>6379,
