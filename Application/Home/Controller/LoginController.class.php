@@ -149,6 +149,10 @@ class LoginController extends HomebaseController
 		), 'json');
 	}
 
+	public function miss_page(){
+		$this->display();
+	}
+
 	public function create_wxaccount(){
 		$open_id = I('get.openId');
 		$token = I('get.accessToken');
@@ -156,24 +160,39 @@ class LoginController extends HomebaseController
 		$channelId = I('get.channelId');
 		$state = I('get.state');
 		$res_data = $this->http(C('GET_WX_USER_INFO'),array(
-		'gameId'=>$gameId,
+		    'gameId'=>$gameId,
 			'channelId'=>$channelId,
 			'openId'=>$open_id,
 			'accessToken'=>$token
 		), 'POST');
 		if(!$res_data){
 			trace('data not return:');
+			return;
 		}
 		$res_data_obj = json_decode($res_data);
 		if(!$res_data_obj){
 			trace('data decode error:'.$res_data);
+			echo 'data decode error'.$res_data;
+			return;
 		}
+		if($res_data_obj->data){
+			if($res_data_obj->data->relogin){
+				trace('user info get error');
+				echo 'user info get error';
+				return;
+			}
+		}
+		$res_data_obj = $res_data_obj->data;
 		if(!$res_data_obj->user){
 			trace('user info not found');
+			echo 'user info not found';
+			return;
 			//用户信息拉取失败
 		}
 		if(!$res_data_obj->loginUser){
 			trace('wx userinfo not found');
+			echo 'wx userinfo not found';
+			return;
 		}
 		$user_model = new UserModel();
 		$user_data = $user_model->where('pid = '.$res_data_obj->user->pid)->find();
@@ -190,6 +209,16 @@ class LoginController extends HomebaseController
 				'wx_unionid'=>$res_data_obj->loginUser->unionid
 			));
 			$user_data = $user_model->where('pid = '.$res_data_obj->user->pid)->find();
+			$res_data = $this->http(C('CREATE_ACCOUNT_URL'), array(
+				'playerId'=>$res_data_obj->user->pid,
+				'name'=> base64_decode($res_data_obj->loginUser->nickname),
+				'sex'=>$res_data_obj->loginUser->sex,
+				'headurl'=>$res_data_obj->loginUser->headurl,
+				'openid'=>$res_data_obj->loginUser->openid,
+				'unionid'=>$res_data_obj->loginUser->unionid,
+				'proxyid'=>$state,
+				'ip'=>'',
+			),'POST');
 		}
 		session('ADMIN_ID', $user_data['id']);
 		if($user_data['user_type'] != $user_model->EPlayer){
@@ -197,6 +226,25 @@ class LoginController extends HomebaseController
 		}else{
 			redirect('http://'.$_SERVER['HTTP_HOST'].'/qr_code');
 		}
+	}
+
+	public function ttt(){
+		echo 'asdfasdfasdf';
+	}
+
+	public function douyanzhao(){
+		$res_data = $this->http(C('CREATE_ACCOUNT_URL'), array(
+			'playerId'=>12396,
+			'name'=>'王侯将相宁有种乎',
+			'sex'=>0,
+			'headurl'=>'http://hahaha.com',
+			'openid'=>'asdfwefasdfasf',
+			'unionid'=>'asdfwefasdfasdfasdf',
+			'proxyid'=>5478,
+			'ip'=>'',
+		),'POST');
+
+		echo $res_data;
 	}
 
 	public function get_access_token(){

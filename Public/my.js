@@ -153,3 +153,13 @@ function randPassword()
     }
     return pw;
 }
+function runApp(url)
+{
+    var ifr = document.createElement('iframe');
+    ifr.src = url;
+    ifr.style.display = 'none';
+    document.body.appendChild(ifr);
+    window.setTimeout(function(){
+        document.body.removeChild(ifr);
+    },3000);
+}

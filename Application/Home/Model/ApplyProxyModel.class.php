@@ -39,13 +39,16 @@ class ApplyProxyModel extends \Common\Model\CommonModel
 		return true;
 	}
 
-	public function refuse_apply($player_id)
+	public function refuse_apply($player_id, $remark)
 	{
 		trace('=====refuse apply');
 		$user_data = $this->where('user_id = '.$player_id)->find();
 		if($user_data)
 		{
-			$this->where('user_id = '.$player_id)->save(array('status'=>$this->ERefuse));
+			$this->where('user_id = '.$player_id)->save(array(
+				'status'=>$this->ERefuse,
+				'remark'=>$remark
+				));
 			return true;
 		}
 		return false;

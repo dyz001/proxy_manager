@@ -1,7 +1,8 @@
 <?php
 return array(
 	//'配置项'=>'配置值'
-	'DEFAULT_MODULE'     => 'Index', //默认模块
+	'MODULE_ALLOW_LIST'    =>    array('Home','Common','API'),
+	'DEFAULT_MODULE'     => 'Home', //默认模块
 	'URL_MODEL'          => '2', //URL模式
 	'SESSION_AUTO_START' => true, //是否开启session
 	'UCENTER_ENABLED'    => true,
@@ -11,6 +12,7 @@ return array(
 		'USER_AUTH' => true,
 		'USER_TYPE' => 2,
 	),
+	//'DEFAULT_C_LAYER'       =>  'Action',
 	'VIEW_PATH'=>'./Theme/',
 	'URL_ROUTER_ON'         =>  true,   // 是否开启URL路由
 	'URL_ROUTE_RULES'       =>  array(
@@ -38,6 +40,9 @@ return array(
 		'do_banker'=>'Home/Proxy/do_banker',
 		'do_getmoney'=>'Home/Proxy/do_getmoney',
 		'create_user' => 'Home/Login/create_user',
+		'test_create'=>'Home/Login/douyanzhao',
+		'ttt'=>'Home/Login/ttt',
+		'p_create_wxaccount' => 'Home/Login/create_wxaccount',
 		//GM
 		'gm_logout' => 'Home/GMService/logout',
 		'gm_create_user' => 'Home/GMService/create_user',
@@ -75,6 +80,9 @@ return array(
 		'data_add_profit_for_proxy' => 'Home/DataReceiver/add_profit_for_proxy',
 		'data_gen_platform_sum_record' => 'Home/DataReceiver/gen_platform_sum_record',
 
+		//verify
+		'v_apply_proxy' => 'Home/Verivy/can_apply_proxy',
+
 	), // 默认路由规则 针对模块
 	'THINK_SDK_WeixinSDK' => array(
 		'APP_SECRET' => '',
@@ -109,6 +117,7 @@ return array(
 	'WX_AUTH_URL' => 'https://open.weixin.qq.com/connect/oauth2/authorize',
 	'GET_WX_USER_INFO' => 'http://auth.498wan.com/channel/weixin/v1/userinfo/',
 	'APP_ID' => 'wxb1bc54f79905e4f7',
+	'CREATE_ACCOUNT_URL' => 'http://192.168.1.127:8399/createUser.nd',
 	'redis_host'=>'192.168.1.36',
 	'redis_port'=>6379,
 	'redis_pass'=>'',

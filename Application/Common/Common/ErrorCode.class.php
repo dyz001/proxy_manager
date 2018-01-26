@@ -15,5 +15,6 @@ class ErrorCode extends Enum
 	const MOBILE_EMPTY = 104;//手机号为空
 	const PASSWORD_EMPTY = 105;//登录密码为空
 	const WITH_DRAW_PASS_EMPTY = 106;//提现密码为空
+	const PLAYER_CNT_NOT_ENOUGH = 107;//推广人数不足
 
 }

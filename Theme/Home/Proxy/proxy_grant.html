@@ -7,6 +7,18 @@
     <h3>申请列表</h3>
 </div>
 <div class="container">
+    <div id="input_remark" class="form-horizontal text-center" role="form">
+        <div class="form-group" style="margin:10px">
+            <span class="col-md-2">备注:</span>
+            <div class="col-md-9">
+                <input type="text" name="remark" id="remark" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="button" id="btn_reject" value="确定" class="btn btn-primary"/>
+            <input type="button" id="btn_cancel" value="取消" class="btn btn-primary" onclick="hide_remark();"/>
+        </div>
+    </div>
     <table class="table table-bordered text-center">
         <thead>
         <tr>
@@ -47,27 +59,40 @@
 </body>
 <script>
     init_tap_event();
+    function hide_remark(){
+        $('#remark').val('');
+        $('#input_remark').hide();
+    }
     function reject(user_id, parent_id){
-        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy', {player_id:user_id, parent_id:parent_id, op_type:2}, function(data){
-            var json_obj = data;
-            if(json_obj.state == "success"){
-                $('#'+user_id).children('[name=\"oper\"]').html('<span>已拒绝</span>');
-            }
-        }, function(){
-
+        $('#input_remark').show();
+        $('#btn_reject').click(function(){
+            postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy',
+                {player_id:user_id, parent_id:parent_id, remark:$('#remark').val(),op_type:2}, function(data){
+                    if(data.state === "success"){
+                        $('#'+user_id).children('[name=\"oper\"]').html('<span>已拒绝</span>');
+                        $('#remark').val('');
+                        $('#input_remark').hide();
+                    }
+                }, function(){
+                    $('#remark').val('');
+                    $('#input_remark').hide();
+                });
         });
-        //var child=$('#'+user_id).children('[name=\"oper\"]').html('<span>已拒绝</span>');
-        //$('#'+user_id).removeChild(child);
     }
     function agree(user_id,parent_id){
-        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy', {player_id:user_id, parent_id:parent_id, op_type:1}, function(data){
-            var json_obj = data;
-            if(json_obj.state == "success"){
-                $('#'+user_id).children('[name=\"oper\"]').html('<span>已同意</span>');
-            }
-        }, function(){
+        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/grant_proxy',
+            {player_id:user_id, parent_id:parent_id, remark:$('#remark').val(), op_type:1}, function(data){
+                if(data.state === "success"){
+                    $('#'+user_id).children('[name=\"oper\"]').html('<span>已同意</span>');
+                }
+            }, function(){
 
-        });
+            });
     }
+
+    $('#input_remark').hide();
+    $('#input_remark').css({'position':'absolute','top':'10%',
+         'background-color':'#c8e5bc', 'border-radius':'5px'});
+
 </script>
 </html>

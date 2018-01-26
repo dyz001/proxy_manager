@@ -11,9 +11,7 @@ use Home\Model\GetMoneyRecordModel;
 use Home\Model\RecordTagModel;
 use Home\Model\UserExtraInfoModel;
 use Home\Model\UserModel;
-use Home\Model\WaterRecordModel;
-use Common\Controller\HomebaseController;
-use Think\Controller;
+use Common\Common\ErrorCode;
 use Think\Log;
 use Common\Controller\GMAdminbaseController;
 use Home\Model\ApplyProxyModel;
@@ -569,6 +567,7 @@ class GMServiceController extends GMAdminbaseController {
 	{
 		$player_id = I("post.player_id");
 		$op_type = I('post.op_type');
+		$remark = I('post.remark');
 		$user = session('user');
 		$user_entity = new UserModel();
 		if($user['user_type'] == $user_entity->EPlayer){
@@ -585,7 +584,7 @@ class GMServiceController extends GMAdminbaseController {
 			}else{
 				$proxy_entity = new ApplyProxyModel();
 				if($op_type == $proxy_entity->ERefuse){
-					$proxy_entity->refuse_apply($player_id);
+					$proxy_entity->refuse_apply($player_id, $remark);
 				}else if($op_type == $proxy_entity->EAgreeStatus){
 					$proxy_entity->agree_apply($player_id);
 				}
@@ -595,6 +594,8 @@ class GMServiceController extends GMAdminbaseController {
 		$data['status'] = 1;
 		$this->ajaxReturn($data);
 	}
+
+
 
 	public function proxy_grant(){
 		trace('======proxy_grant======');
