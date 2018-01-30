@@ -1,0 +1,37 @@
+<include file="Home:GMService:head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <h3 class="text-center">玩家背包操作记录查询</h3>
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>玩家id</th>
+            <th>昵称</th>
+            <th>物品id</th>
+            <th>物品名称</th>
+            <th>数量</th>
+            <th>操作人</th>
+            <th>操作时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="select" item="record">
+            <tr class="content">
+                <td>{$record.pid}</td>
+                <td>{$record.nickname}</td>
+                <td>{$record.item_id}</td>
+                <td>{$record.item_name}</td>
+                <td>{$record.item_cnt}</td>
+                <td>{$record.operator}</td>
+                <td>{$record.oper_time}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+</html>

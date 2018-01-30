@@ -15,15 +15,19 @@ class WXController extends HomebaseController
 		$access_token = '';
 		$nonceStr = 'yuexiang';
 		$url = I('post.src_url');
+		$url = str_replace('&amp;','&', $url);
 		$ticket = '';
 		$data['status'] = 1;
-		$res_data = $this->http(C('ACCESS_TOKEN_URL'), array(
-						'grant_type'=>'client_credential',
-						'appid' => C('APP_ID'),
-						'secret' => C('APP_SECRET')
-					));
 		$access_data = $redis->get(C('WX_TOKEN_KEY'));
-		if(!$access_token || json_decode($access_token)->expires_in < time()){
+		if($access_data && json_decode($access_data)->expires_in > time()){
+			$access_token = json_decode($access_data)->access_token;
+			trace('token exist:'.$access_token);
+		}else{
+			$res_data = $this->http(C('ACCESS_TOKEN_URL'), array(
+				'grant_type'=>'client_credential',
+				'appid' => C('APP_ID'),
+				'secret' => C('APP_SECRET')
+			));
 			if(!$res_data){
 				trace('res data is empty');
 				$data['status'] = 0;
@@ -40,15 +44,17 @@ class WXController extends HomebaseController
 						'expires_in' => $res_data_obj->expires_in + time(),
 					);
 					$redis->set(C('WX_TOKEN_KEY'), json_encode($wx_token));
+					$access_token = $res_data_obj->access_token;
 				}
 			}
-		}else{
-			$access_token = json_decode($access_token)->access_token;
 		}
 
 		if($access_token){
 			$js_ticket_data = $redis->get(C('TICKET_KEY'));
-			if(!$js_ticket_data || json_decode($js_ticket_data)->expires_in < time()){
+			if($js_ticket_data && json_decode($js_ticket_data)->expires_in > time()){
+				$ticket = json_decode($js_ticket_data)->ticket;
+				trace('ticket exist:'.$ticket);
+			}else{
 				$res_data = $this->http(C('JSAPI_TICKET_URL'), array(
 					'access_token'=>$access_token,
 					'type'=>'jsapi'
@@ -67,18 +73,17 @@ class WXController extends HomebaseController
 						$redis->set(C('TICKET_KEY'), json_encode($ticket_data));
 					}
 				}
-			}else{
-				$ticket = json_decode($js_ticket_data)->ticket;
 			}
 		}
 		$time_stamp = time();
-		$query_string = 'jsapi_ticket='.$ticket.'&noncestr='.$nonceStr. '&timestamp='.$time_stamp.'&url='.urldecode($url);
+		$query_string = 'jsapi_ticket='.$ticket.'&noncestr='.$nonceStr. '&timestamp='.$time_stamp.'&url='.$url;
 		$sign = sha1($query_string);
 		$data['signature'] = $sign;
 		$data['nonceStr'] = $nonceStr;
 		$data['timestamp'] = $time_stamp;
 		$data['appId'] = C('APP_ID');
-		$this->ajaxReturn($data);
+		trace('signature:'.$sign.', nonceStr:'.$nonceStr.', timestamp:'.$time_stamp.',url:'.$url);
+		$this->ajaxReturn($data, 'json');
 	}
 	protected function http($url, $params, $method = 'GET', $header = array(), $multi = false){
 		$opts = array(

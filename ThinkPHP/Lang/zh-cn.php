@@ -57,4 +57,8 @@ return array(
 	'_WITH_DRAW_NOT_ENOUGH_'  => '金额不足，无法提现',
 	'_WITH_DRAW_PASS_ERROR_' => '提现密码错误',
 	'_PROXY_PASSWORD_RESET_' => '代理密码已经重置',
+	'_USER_NOT_FOUND_'=>'用户未找到',
+	'_USER_GOLD_NOT_ENOUGH_' => '用户金币不足',
+	'_MAIL_GOLD_NOT_CONFIG_' => '邮件金币数据未设置',
+	'_VIP_NOT_ENOUGH_' => '用户等级不足',
 );

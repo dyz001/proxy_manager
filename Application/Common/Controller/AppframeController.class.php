@@ -28,6 +28,9 @@ class AppframeController extends Controller {
 			case 'JSON' :
 				// 返回JSON数据格式到客户端 包含状态信息
 				header('Content-Type:application/json; charset=utf-8');
+				header('Access-Control-Allow-Origin: *');
+                header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+                header('Access-Control-Allow-Methods: GET, POST, PUT');
 				exit(json_encode($data,$json_option));
 			case 'XML'  :
 				// 返回xml格式数据
@@ -37,6 +40,7 @@ class AppframeController extends Controller {
 				// 返回JSON数据格式到客户端 包含状态信息
 				header('Content-Type:application/json; charset=utf-8');
 				$handler  =   isset($_GET[C('VAR_JSONP_HANDLER')]) ? $_GET[C('VAR_JSONP_HANDLER')] : C('DEFAULT_JSONP_HANDLER');
+				trace('data :'.json_encode($data,$json_option));
 				exit($handler.'('.json_encode($data,$json_option).');');
 			case 'EVAL' :
 				// 返回可执行的js脚本

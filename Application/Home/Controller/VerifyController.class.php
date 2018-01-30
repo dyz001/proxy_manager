@@ -6,10 +6,11 @@
  * Time: 17:03
  */
 namespace Home\Controller;
+use Common\Controller\HomebaseController;
 use Think\Controller;
 use Home\Model\RecordTagModel;
 use Common\Common\ErrorCode;
-class VerifyController extends Controller
+class VerifyController extends HomebaseController
 {
 	public function can_apply_proxy(){
 		$player_id = I('get.player_id');

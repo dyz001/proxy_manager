@@ -8,7 +8,7 @@
 <body>
 <include file="Home:GMService:left_menu"/>
 <div class="col-md-10">
-    <input type="button" class="btn btn-primary" value="测试" onclick="test()">
+    <!--<input type="button" class="btn btn-primary" value="测试" onclick="test()"/>-->
     <div id="input_remark" class="form-horizontal text-center" role="form">
         <div class="form-group" style="margin:10px">
             <span class="col-md-2">备注:</span>
@@ -63,6 +63,38 @@
 <include file="Home:GMService:left_menu_tail"/>
 </body>
 <script>
+    function test(){
+        $.ajax({
+            type:"post",    //请求方式
+            async:true,    //是否异步
+            url:'',
+            data:{src_url:'http://www.baidu.com'},    //请求参数
+
+            beforeSend: function() {
+                //请求前的处理
+                console.log("before send");
+            },
+
+            success: function(data) {
+                //请求成功处理，和本地回调完全一样
+                console.log("success");
+                if(success)
+                    success(data);
+            },
+
+            complete: function() {
+                console.log("complete");
+                //请求完成的处理
+            },
+
+            error: function(a) {
+                //请求出错处理
+                console.log("error ");
+                if(error)
+                    error();
+            }
+        });
+    }
     init_tap_event();
     function hide_remark(){
         $('#remark').val('');
@@ -84,36 +116,6 @@
             });
         });
     }
-    function test(){
-        $.ajax({
-            type:"post",    //请求方式
-            async:true,    //是否异步
-            url:'http://proxy.498wan.com:4848/API/get_js_auth_config',
-            data:{src_url:'http://www.baidu.com'},    //请求参数
-
-            beforeSend: function() {
-                //请求前的处理
-                console.log("before send");
-            },
-
-            success: function(data) {
-                //请求成功处理，和本地回调完全一样
-                console.log("success" + JSON.stringify(data));
-            },
-
-            complete: function() {
-                console.log("complete");
-                //请求完成的处理
-            },
-
-            error: function(a) {
-                //请求出错处理
-                console.log("error ");
-                if(error)
-                    error();
-            }
-        });
-    }
     function agree(user_id,parent_id){
         postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/gm_grant_proxy',
             {player_id:user_id, parent_id:parent_id, remark:$('#remark').val(), op_type:1}, function(data){
@@ -127,5 +129,8 @@
     $('#input_remark').hide();
     $('#input_remark').css({'position':'absolute','left':'200px','top':'100px',
         'width':'650px', 'height':'100px', 'background-color':'#c8e5bc', 'border-radius':'5px'});
+//    setTimeout(function(){
+//        location.href='http://{$_SERVER["HTTP_HOST"]}/gm_proxy_grant';
+//    }, 10000);
 </script>
 </html>

@@ -14,6 +14,7 @@ use Home\Model\UserModel;
 use Home\Model\UserWithDrawModel;
 use Home\Model\UserExtraInfoModel;
 use Common\Common\ErrorCode;
+use Think\Exception;
 
 class ProxyController extends AdminbaseController
 {
@@ -42,6 +43,24 @@ class ProxyController extends AdminbaseController
 			}elseif('APP' == session('user_from')){
 				$this->assign('game_url', C('APP_WAKE_UP'));
 			}
+			$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
+				'method' => 'all',
+				'account'=>$user['account']
+			), 'post');
+			$user_json_obj = json_decode($user_json);
+			if($user_json_obj->count == 0){
+				$this->error(L('_USER_NOT_FOUND_'));
+			}
+			$user_cnt = count($user_json_obj->list);
+			if($user_cnt == 0){
+				$this->error(L('_USER_NOT_FOUND_'));
+			}
+			if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
+				$this->assign('mail_tag', 0);
+			}else{
+				$this->assign('mail_tag', 1);
+			}
+
 			$this->display();
 		}
 	}
@@ -55,42 +74,85 @@ class ProxyController extends AdminbaseController
 			//$data = $_SERVER['HTTP_HOST'] . '/bind_code/code/' . $user['id'];
 			$data = C('WX_AUTH_URL') .'?appid=' . C('APP_ID') . '&redirect_uri=' . urlencode(C('GAME_URL')) .
 			        '&response_type=code&scope=snsapi_userinfo&state=pidXXX'.$user['pid'] . '#wechat_redirect';
-			// 纠错级别：L、M、Q、H
 			$level = 'L';
-			// 点的大小：1到10,用于手机端4就可以了
 			$size = 4;
-			// 下面注释了把二维码图片保存到本地的代码,如果要保存图片,用$fileName替换第二个参数false
-			//$path = "images/";
-			// 生成的文件名
-			//$fileName = $path.$size.'.png';
 			\QRcode::png( $data, PUBLIC_PATH . '/QRCode/' . $user['pid'] . '.png', $level, $size );
-		} else {
-
 		}
 		$apply_proxy = new ApplyProxyModel();
 		$user_model  = new UserModel();
+		$tip_msg = '';
+		$player_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type = 4')->count('id');
+		$proxy_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type < 4')->count('id');
+		$user_data= $apply_proxy->where('user_id = '.$user['id'])->find();
 		if ( $user_model->EPlayer == $user['user_type'] ) {
-			if ( $apply_proxy->can_apply( $user['id'] ) ) {
-				$this->assign( 'proxy_tag', 0 );
+			$res_data = $this->http(C('VERIFY_URL').C('CAN_APPLY_PROXY'),array(
+				'player_id'=>$user['id'],
+				'player_cnt'=>$player_cnt+$proxy_cnt
+			));
+			$res_data_obj = json_decode($res_data);
+			if($res_data_obj->code == ErrorCode::SUCCESS){
+				if ( !$user_data) {
+					$this->assign( 'proxy_tag', 0 );
+				}elseif($user_data['status'] == $apply_proxy->ERefuse){
+					$tip_msg = $user_data['remark'];
+					$this->assign( 'proxy_tag', 0 );
+				}elseif($user_data['status'] == $apply_proxy->EApplying){
+					$this->assign( 'proxy_tag', 1 );
+				}
+			}elseif($res_data_obj->code == ErrorCode::PLAYER_CNT_NOT_ENOUGH){
+				$tip_msg = '下级人数不足，不能申请';
+				$this->assign( 'proxy_tag', 3);
 			}
-//			else {
-//				$this->assign( 'proxy_tag', 0 );
-//			}
 		} else {
 			$this->assign( 'proxy_tag', 2 );
 		}
-		$player_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type = 4')->count('id');
-		$proxy_cnt = $user_model->where('parent_id='.$user['pid'].' and user_type < 4')->count('id');
+
 		if('H5' == session('user_from')){
 			$this->assign('game_url', C('GAME_URL'));
 		}elseif('APP' == session('user_from')){
 			$this->assign('game_url', C('APP_WAKE_UP'));
 		}
+		$this->assign('tip_msg', $tip_msg);
 		$this->assign('qrcode', './Public/QRCode/'.$user['pid'].'.png');
 		$this->assign('user',$user);
 		$this->assign('player_cnt', $player_cnt);
 		$this->assign('proxy_cnt', $proxy_cnt);
 		$this->display();
+	}
+
+	protected function http($url, $params, $method = 'GET', $header = array(), $multi = false){
+		$opts = array(
+			CURLOPT_TIMEOUT        => 30,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_HTTPHEADER     => $header
+		);
+
+		/* 根据请求类型设置特定参数 */
+		switch(strtoupper($method)){
+			case 'GET':
+				$opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+				break;
+			case 'POST':
+				//判断是否传输文件
+				$params = $multi ? $params : http_build_query($params);
+				$opts[CURLOPT_URL] = $url;
+				$opts[CURLOPT_POST] = 1;
+				$opts[CURLOPT_POSTFIELDS] = $params;
+				break;
+			default:
+				throw new Exception('不支持的请求方式！');
+		}
+
+		/* 初始化并执行curl请求 */
+		$ch = curl_init();
+		curl_setopt_array($ch, $opts);
+		$data  = curl_exec($ch);
+		$error = curl_error($ch);
+		curl_close($ch);
+		if($error) throw new Exception('请求发生错误：' . $error);
+		return  $data;
 	}
 
 	public function bind_code()
@@ -113,12 +175,13 @@ class ProxyController extends AdminbaseController
 	//代理授权
 	public function grant_proxy()
 	{
-		$player_id = I("post.player_id");
-		$parent_id = I("post.parent_id");
-		$op_type = I('post.op_type');
+		$player_id =  I("post.player_id");
+		$parent_id =  I("post.parent_id");
+		$op_type =  I('post.op_type');
+		$remark = I('post.remark');
 		$user = session('user');
 		$user_entity = new UserModel();
-		if($user['id'] != $parent_id)
+		if($user['pid'] != $parent_id)
 		{
 			//不是该玩家的代理，不能直接授权，如果是管理员，可以授权
 			trace("user parent not found");
@@ -135,7 +198,7 @@ class ProxyController extends AdminbaseController
 				$data['status'] = 0;
 				$this->ajaxReturn($data);
 			}else{
-				$parent_data = $user_entity->where('id='.$parent_id)->find();
+				$parent_data = $user_entity->where('pid='.$parent_id)->find();
 				if(!$parent_data){
 					//代理未找到
 					$data['status'] = 0;
@@ -144,7 +207,7 @@ class ProxyController extends AdminbaseController
 				}else{
 					$proxy_entity = new ApplyProxyModel();
 					if($op_type == $proxy_entity->ERefuse){
-						$proxy_entity->refuse_apply($player_id);
+						$proxy_entity->refuse_apply($player_id, $remark);
 					}else if($op_type == $proxy_entity->EAgreeStatus){
 						$proxy_entity->agree_apply($player_id);
 					}
@@ -242,9 +305,9 @@ class ProxyController extends AdminbaseController
 		$user = session('user');
 		$data_list = [];
 		$user_model = new UserModel();
-		$count = $user_model->where('parent_id='.$user['id'])->count("id");
+		$count = $user_model->where('parent_id='.$user['pid'])->count("id");
 		$p = $this->page($count,10);
-		$list = $user_model->field(true)->where('parent_id='.$user['id'])
+		$list = $user_model->field(true)->where('parent_id='.$user['pid'])
 		                ->order('id')->limit($p->firstRow, $p->listRows)->select();
 
 
@@ -266,9 +329,9 @@ class ProxyController extends AdminbaseController
 		$user = session('user');
 		$data_list = [];
 		$user_model = new UserModel();
-		$count = $user_model->where('parent_id='.$user['id'])->count("id");
+		$count = $user_model->where('parent_id='.$user['pid'])->count("id");
 		$p = $this->page($count,10);
-		$list = $user_model->field(true)->where('parent_id='.$user['id'].' and user_type < '.$user_model->EPlayer)
+		$list = $user_model->field(true)->where('parent_id='.$user['pid'].' and user_type < '.$user_model->EPlayer)
 		                   ->order('id')->limit($p->firstRow, $p->listRows)->select();
 
 
@@ -290,9 +353,9 @@ class ProxyController extends AdminbaseController
 		$user = session('user');
 		$data_list = [];
 		$user_model = new UserModel();
-		$count = $user_model->where('parent_id='.$user['id'])->count("id");
+		$count = $user_model->where('parent_id='.$user['pid'])->count("id");
 		$p = $this->page($count,10);
-		$list = $user_model->field(true)->where('parent_id='.$user['id'].' and user_type = '.$user_model->EPlayer)
+		$list = $user_model->field(true)->where('parent_id='.$user['pid'].' and user_type = '.$user_model->EPlayer)
 		                   ->order('id')->limit($p->firstRow, $p->listRows)->select();
 
 
@@ -312,11 +375,11 @@ class ProxyController extends AdminbaseController
 		trace('======proxy_grant======');
 		$user = session('user');
 		$proxy_entity = new ApplyProxyModel();
-		$total_cnt = $proxy_entity->where('parent_id='.$user['id'])->count('id');
+		$total_cnt = $proxy_entity->where('parent_id='.$user['pid'])->count('id');
 		$p = $this->page($total_cnt, 10);
 		$list = $proxy_entity->field('apply_proxy.id, user_id, apply_proxy.parent_id, apply_time, nickname, status')
 		                     ->join('user on apply_proxy.user_id = user.id')
-		                     ->where('apply_proxy.parent_id='.$user['id'])
+		                     ->where('apply_proxy.parent_id='.$user['pid'])
 		                ->order('id desc')->limit($p->firstRow, $p->listRows)->select();
 		$display_data = [];
 		foreach($list as $entity){
@@ -549,4 +612,65 @@ class ProxyController extends AdminbaseController
 		$this->assign('select', $game_list);
 		$this->display();
 	}
+
+	public function send_mail(){
+		$user = session('user');
+		$mail_title = I('post.mail_title');
+		$mail_content = I('post.mail_content');
+		$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
+			'method' => 'all',
+			'account'=>$user['account']
+		), 'post');
+		$user_json_obj = json_decode($user_json);
+		if($user_json_obj->count == 0){
+			$this->error(L('_USER_NOT_FOUND_'));
+		}
+		$user_cnt = count($user_json_obj->list);
+		if($user_cnt == 0){
+			$this->error(L('_USER_NOT_FOUND_'));
+		}
+		$record_tag_model = new RecordTagModel();
+		$config_model = $record_tag_model->getRecordModel('config');
+		$mail_entity = $config_model->where('name=\'mail_cost_gold\'')->find();
+		if(!$mail_entity){
+			$this->error(L('_MAIL_GOLD_NOT_CONFIG_'));
+		}
+		if($user_json_obj->list[0]->gold < (int)$mail_entity['value']){
+			$this->error(L('_USER_GOLD_NOT_ENOUGH_'));
+		}
+		if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
+			$this->error(L('_VIP_NOT_ENOUGH_'));
+		}
+		if($mail_entity['value'] > $user_json_obj->list[0]->gold){
+			$this->assign('gold_tag', 0);
+		}else{
+			$this->assign('gold_tag', 1);
+		}
+		$this->assign('cost_gold', $mail_entity['value']);
+		$this->assign('user_gold', $user_json_obj->list[0]->gold);
+		if($mail_title){
+			$mail_response = $this->http(C('GAME_SERVER_URL').'/sendMail.nd', array(
+				'playerId' => 'all',
+				'sendId' => $user['pid'],
+				'title' => $mail_title,
+				'mailcontent' => $mail_content . 'lubian'
+			), 'post');
+			if($mail_response == 'success'){
+				$pay_gold = $this->http(C('GAME_SERVER_URL').'/addgold.nd', array(
+					'gold' => -$mail_entity['value'],
+					'account' => $user['account']
+				));
+				if($pay_gold != 'success'){
+					$this->error($pay_gold);
+				}else{
+					$this->success('邮件发送成功');
+				}
+			}else{
+				$this->error($mail_response);
+			}
+		}else{
+			$this->display();
+		}
+	}
+
 }

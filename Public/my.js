@@ -66,7 +66,7 @@ function postJsonp(url, data1, success, error){
 
         success: function(data) {
             //请求成功处理，和本地回调完全一样
-            console.log("success");
+            console.log("success:" + data);
             if(success)
                 success(data);
         },
@@ -111,7 +111,7 @@ var touch_target = null;
 function init_tap_event() {
     if(browser.versions.mobile){
         document.addEventListener('touchstart',touch, false);
-        document.addEventListener('touchmove',touch, false);
+       // document.addEventListener('touchmove',touch, false);
         document.addEventListener('touchend',touch, false);
         function touch (event){
             var event = event || window.event;

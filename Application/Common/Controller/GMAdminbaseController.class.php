@@ -30,6 +30,7 @@ class GMAdminbaseController extends AppframeController{
 				$this->error("您没有访问权限！");
 			}
 			session("gm_user", $user);
+			$this->assign('role_id', $user['role_id']);
 			$this->assign("gm_user",$user);
 		}else{
 			if(IS_AJAX){

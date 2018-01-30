@@ -1,0 +1,106 @@
+<include file="Home:GMService:head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <div id="input_remark" class="form-horizontal text-center" role="form">
+        <div class="form-group" style="margin:10px">
+            <span class="col-md-3">数量：</span>
+            <div class="col-md-8">
+                <input type="text" name="item_cnt" id="item_cnt" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="button" id="btn_confirm" value="确定" class="btn btn-primary"/>
+            <input type="button" id="btn_cancel" value="取消" class="btn btn-primary" onclick="hide_remark();"/>
+        </div>
+    </div>
+    <h3 class="row text-center">玩家背包数据</h3>
+    <form class="form-horizontal text-center" role="form" action="./gm_player_bag_oper" method="post">
+        <div class="form-group">
+            <span class="col-md-offset-1 col-md-2">玩家id：</span>
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="user_id" id="user_id" value="{$user_id}"/>
+            </div>
+            <div class="col-md-2">
+                <input type="submit" value="查询" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>物品id</th>
+            <th>名称</th>
+            <th>价格</th>
+            <th>持有数据</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record' >
+            <tr class="content">
+                <td>&nbsp;{$record.item_id}</td>
+                <td>{$record.name}</td>
+                <td>{$record.price}</td>
+                <td id="{$record.item_id}">{$record.count}</td>
+                <td>
+                    <input type="button" value="扣除" class="btn btn-primary" onclick="remove_item({$record.item_id});">
+                    <input type="button" value="添加" class="btn btn-primary" onclick="add_item({$record.item_id});">
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+<script>
+    function jsonpReturn(){
+
+    }
+    var input_remark = $('#input_remark');
+    input_remark.hide();
+    input_remark.css({'position':'absolute', 'width':'350px', 'z-index':'999', 'background-color':'#c8e5bc','border-radius':'5px'});
+    function add_item(param_item_id){
+        input_remark.show();
+        var target_id = $('#' + param_item_id);
+        input_remark.css({'left': target_id.offset().left + 'px', 'top':target_id.offset().top + 'px'});
+        var btn_confirm = $('#btn_confirm');
+        btn_confirm.attr('onclick', 'add_bug_item(' + param_item_id + ', 1);');
+    }
+    function add_bug_item(param_item_id, tag){
+        var param_item_cnt = $('#item_cnt').val();
+        if(tag === 0){
+            param_item_cnt = -param_item_cnt;
+        }
+        postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/gm_add_bag_item',
+            {user_id: $('#user_id').val(), item_id:param_item_id, item_cnt:param_item_cnt}, function(data){
+                console.log(JSON.stringify(data));
+                if(data.state === "success"){
+                    alert('操作成功, 物品id:' + param_item_id);
+                    var item = $('#' + param_item_id);
+                    var src_cnt = parseInt(item.html());
+                    var item_cnt = parseInt(data.item_cnt);
+                    item.html(src_cnt + item_cnt);
+                }
+                $('#item_cnt').val('');
+                $('#input_remark').hide();
+            }, function(){
+                $('#item_cnt').val('');
+                $('#input_remark').hide();
+            });
+    }
+    function remove_item(param_item_id){
+        input_remark.show();
+        var target_id = $('#' + param_item_id);
+        input_remark.css({'left': target_id.offset().left + 'px', 'top':target_id.offset().top + 'px'});
+        var btn_confirm = $('#btn_confirm');
+        btn_confirm.attr('onclick', 'add_bug_item(' + param_item_id + ', 0);');
+    }
+    function hide_remark(){
+        $('#remark').val('');
+        $('#input_remark').hide();
+    }
+</script>
+</html>

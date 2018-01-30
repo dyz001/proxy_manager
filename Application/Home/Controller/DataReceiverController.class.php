@@ -21,12 +21,11 @@ class DataReceiverController extends HomebaseController{
 			trace('error parameter '.$pid.', '.$game_code.', '.$pump_water.','.$spreader);
 			return 'error parameter '.$pid.', '.$game_code.', '.$pump_water.','.$spreader;
 		}
+		trace('pid:'.$pid.',game_code:'.$game_code.',pump_water:'.$pump_water,',spreader:'.$spreader);
 		$record_tag_model = new RecordTagModel();
 		$ret_arr = $record_tag_model->procedure('call save_water_record(' .
 		                                        $pid . ','.$spreader. ', \'' . $game_code . '\', ' . $pump_water
 		                                        . ')', false);
-//		$json_ret['code'] = 200;
-//		$json_ret['id'] = $ret_arr[0][0]['id'];
 		return 'ok';
 	}
 	public function gen_fish_sum_record(){

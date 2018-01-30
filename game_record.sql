@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2018-01-20 22:13:23
+Date: 2018-01-29 20:44:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +26,7 @@ CREATE TABLE `config` (
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '备注信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of config
@@ -37,24 +37,8 @@ INSERT INTO `config` VALUES ('3', '1', 'system_third', '5', '平台代理三级�
 INSERT INTO `config` VALUES ('4', '2', 'fish_first', '40', '捕鱼一级分成');
 INSERT INTO `config` VALUES ('5', '2', 'fish_second', '15', '捕鱼二级分成');
 INSERT INTO `config` VALUES ('6', '2', 'fish_third', '5', '捕鱼三级分成');
-
--- ----------------------------
--- Table structure for fish_record
--- ----------------------------
-DROP TABLE IF EXISTS `fish_record`;
-CREATE TABLE `fish_record` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '产生记录时间',
-  `cost_coin` bigint(20) NOT NULL DEFAULT '0' COMMENT '消耗的金币',
-  `get_coin` bigint(20) NOT NULL DEFAULT '0' COMMENT '收益',
-  `user_id` varchar(255) NOT NULL DEFAULT '' COMMENT '用户id',
-  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户账号',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of fish_record
--- ----------------------------
+INSERT INTO `config` VALUES ('7', '0', 'proxy_min_players', '20', '申请代理的最小人数');
+INSERT INTO `config` VALUES ('8', '0', 'mail_cost_gold', '100', '发送邮件消耗的金币');
 
 -- ----------------------------
 -- Table structure for fish_record_sum_201801
@@ -68,37 +52,37 @@ CREATE TABLE `fish_record_sum_201801` (
   `bonus_sum` float DEFAULT '0' COMMENT '收益总额',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '记录产生时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of fish_record_sum_201801
 -- ----------------------------
-INSERT INTO `fish_record_sum_201801` VALUES ('2', '9e688c58a5487b8eaf69c9e1005ad0bf', '140071', '0.3', '0', '1516244044');
-INSERT INTO `fish_record_sum_201801` VALUES ('3', 'ca3236c19f2f3d46b4f00b296061f058', '140066', '3679.5', '3537', '1516244044');
-INSERT INTO `fish_record_sum_201801` VALUES ('4', 'f6a3de599c2053f9e2f252c51d1c40f6', '140070', '12401.3', '10263.8', '1516244044');
-INSERT INTO `fish_record_sum_201801` VALUES ('5', 'nbs001', '140068', '426', '399.3', '1516244044');
-INSERT INTO `fish_record_sum_201801` VALUES ('6', 'nbs002', '140069', '1185120', '1084200', '1516244045');
-INSERT INTO `fish_record_sum_201801` VALUES ('7', 'test001', '140034', '219614', '194954', '1516244045');
-INSERT INTO `fish_record_sum_201801` VALUES ('36', '0cb988d042a7f28dd5fe2b55b3f5ac7a', '140072', '71', '64.7', '1516327537');
-INSERT INTO `fish_record_sum_201801` VALUES ('37', '9e688c58a5487b8eaf69c9e1005ad0bf', '140071', '9.1', '11.4', '1516327537');
-INSERT INTO `fish_record_sum_201801` VALUES ('38', 'eccbc87e4b5ce2fe28308fd9f2a7baf3', '140087', '4441.4', '2928.1', '1516327537');
-INSERT INTO `fish_record_sum_201801` VALUES ('39', 'user1', '140082', '106.3', '86.9', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('40', 'user34', '140075', '4335.5', '3300.5', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('41', 'user37', '140090', '61.6', '41.3', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('42', 'user51', '140079', '3504.4', '2851.2', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('43', 'user52', '140074', '459.4', '259.8', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('44', 'user53', '140073', '75432.2', '60419.2', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('45', 'user54', '140076', '15376.6', '13180.5', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('46', 'user58', '140078', '2720.8', '2526.8', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('47', 'user60', '140077', '1285.5', '1603.3', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('48', 'user62', '140080', '1100.3', '654.5', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('49', 'user74', '140085', '3238.3', '2237.1', '1516327538');
-INSERT INTO `fish_record_sum_201801` VALUES ('53', 'user51', '140079', '91.9', '71.4', '1516426458');
-INSERT INTO `fish_record_sum_201801` VALUES ('54', 'user52', '140074', '4756.1', '3961', '1516426458');
-INSERT INTO `fish_record_sum_201801` VALUES ('55', 'user53', '140073', '46242', '29117', '1516426458');
-INSERT INTO `fish_record_sum_201801` VALUES ('56', 'user54', '140076', '31563.2', '28307.8', '1516426458');
-INSERT INTO `fish_record_sum_201801` VALUES ('57', 'user55', '140099', '7384.7', '4414.3', '1516426458');
-INSERT INTO `fish_record_sum_201801` VALUES ('58', 'user58', '140078', '2649', '2146', '1516426459');
+INSERT INTO `fish_record_sum_201801` VALUES ('59', 'sftest001', '140139', '51.12', '50.03', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('60', 'user124', '140150', '2276.4', '1812.02', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('61', 'user125', '140151', '4039.63', '3193.12', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('62', 'user135', '140155', '1774.23', '1335.76', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('63', 'user136', '140156', '1660.76', '1307.83', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('64', 'user141', '140182', '244.56', '192.05', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('65', 'user147', '140159', '1.95', '0.96', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('66', 'user148', '140162', '5.81', '5.11', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('67', 'user149', '140161', '10124.7', '8420.63', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('68', 'user150', '140160', '3.78', '1.82', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('69', 'user151', '140163', '1', '0', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('70', 'user163', '140176', '1.07', '0.07', '1516773188');
+INSERT INTO `fish_record_sum_201801` VALUES ('71', 'user164', '140177', '1841.73', '1556.62', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('72', 'user165', '140178', '176.4', '155.6', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('73', 'user173', '140183', '1', '0', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('74', 'user179', '140181', '3.99', '5.53', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('75', 'user24', '140180', '53.55', '52.15', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('76', 'user34', '140114', '1632.11', '1382.91', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('77', 'user37', '140125', '6098.48', '5174', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('78', 'user61', '140122', '328.8', '304.4', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('79', 'user69', '140124', '21.57', '20.9', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('80', 'user74', '140140', '0.14', '0', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('81', 'user88', '140138', '1.96', '0.98', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('82', 'user89', '140134', '94.78', '91.21', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('83', 'user95', '140112', '1583.2', '1391.6', '1516773189');
+INSERT INTO `fish_record_sum_201801` VALUES ('84', 'ww001', '140172', '179.3', '79.3', '1516773189');
 
 -- ----------------------------
 -- Table structure for game_record
@@ -117,6 +101,129 @@ CREATE TABLE `game_record` (
 -- ----------------------------
 -- Records of game_record
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for item_config
+-- ----------------------------
+DROP TABLE IF EXISTS `item_config`;
+CREATE TABLE `item_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '物品id',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '物品名称',
+  `price` bigint(20) NOT NULL,
+  `img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '物品图标',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of item_config
+-- ----------------------------
+INSERT INTO `item_config` VALUES ('1', '10', '50元话费卡', '550000', 'sell_item_10.png');
+INSERT INTO `item_config` VALUES ('2', '20', '100元话费卡', '1050000', 'sell_item_20.png');
+INSERT INTO `item_config` VALUES ('3', '30', '200元话费卡', '2100000', 'sell_item_30.png');
+INSERT INTO `item_config` VALUES ('4', '40', '500元话费卡', '5250000', 'sell_item_40.png');
+INSERT INTO `item_config` VALUES ('5', '50', '100元话费卡', '10500000', 'sell_item_50.png');
+INSERT INTO `item_config` VALUES ('6', '60', '美的扫地机器人', '10500000', 'sell_item_60.png');
+INSERT INTO `item_config` VALUES ('7', '70', 'DELSEY-20寸拉杆箱', '15750000', 'sell_item_70.png');
+INSERT INTO `item_config` VALUES ('8', '80', '茶叶', '21000000', 'sell_item_80.png');
+INSERT INTO `item_config` VALUES ('9', '90', 'Ipad-32G', '31500000', 'sell_item_90.png');
+INSERT INTO `item_config` VALUES ('10', '100', 'Iphone7-32G', '52500000', 'sell_item_100.png');
+INSERT INTO `item_config` VALUES ('11', '110', 'Iphone8 Plus-64G', '73500000', 'sell_item_110.png');
+
+-- ----------------------------
+-- Table structure for item_oper_record
+-- ----------------------------
+DROP TABLE IF EXISTS `item_oper_record`;
+CREATE TABLE `item_oper_record` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户的pid',
+  `item_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '物品id',
+  `item_cnt` int(11) NOT NULL DEFAULT '0' COMMENT '操作数量',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `oper_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '客服',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of item_oper_record
+-- ----------------------------
+INSERT INTO `item_oper_record` VALUES ('1', '135829611', '10', '12', '1517221468', 'admin');
+INSERT INTO `item_oper_record` VALUES ('2', '135829611', '10', '-24', '1517221654', 'admin');
+INSERT INTO `item_oper_record` VALUES ('3', '135829611', '20', '-7', '1517221974', 'admin');
+INSERT INTO `item_oper_record` VALUES ('4', '135829611', '30', '-7', '1517222144', 'admin');
+INSERT INTO `item_oper_record` VALUES ('5', '135829611', '40', '-5', '1517222274', 'admin');
+INSERT INTO `item_oper_record` VALUES ('6', '135829611', '50', '-5', '1517222288', 'admin');
+INSERT INTO `item_oper_record` VALUES ('7', '135829611', '60', '-4', '1517222314', 'admin');
+INSERT INTO `item_oper_record` VALUES ('8', '135829611', '10', '4', '1517222414', 'admin');
+INSERT INTO `item_oper_record` VALUES ('9', '135829611', '10', '4', '1517222420', 'admin');
+INSERT INTO `item_oper_record` VALUES ('10', '135829611', '20', '4', '1517222420', 'admin');
+INSERT INTO `item_oper_record` VALUES ('11', '135829611', '10', '4', '1517222458', 'admin');
+INSERT INTO `item_oper_record` VALUES ('12', '135829611', '20', '4', '1517222459', 'admin');
+INSERT INTO `item_oper_record` VALUES ('13', '135829611', '30', '4', '1517222459', 'admin');
+INSERT INTO `item_oper_record` VALUES ('14', '135829611', '40', '1', '1517222632', 'admin');
+INSERT INTO `item_oper_record` VALUES ('15', '135829611', '40', '2', '1517222638', 'admin');
+INSERT INTO `item_oper_record` VALUES ('16', '135829611', '40', '2', '1517222638', 'admin');
+INSERT INTO `item_oper_record` VALUES ('17', '135829611', '40', '1', '1517222644', 'admin');
+INSERT INTO `item_oper_record` VALUES ('18', '135829611', '40', '1', '1517222645', 'admin');
+INSERT INTO `item_oper_record` VALUES ('19', '135829611', '50', '1', '1517222645', 'admin');
+INSERT INTO `item_oper_record` VALUES ('20', '135829611', '10', '-2', '1517222749', 'admin');
+INSERT INTO `item_oper_record` VALUES ('21', '135829611', '10', '-3', '1517222757', 'admin');
+INSERT INTO `item_oper_record` VALUES ('22', '135829611', '40', '3', '1517222757', 'admin');
+INSERT INTO `item_oper_record` VALUES ('23', '135829611', '10', '3', '1517222822', 'admin');
+INSERT INTO `item_oper_record` VALUES ('24', '135829611', '10', '2', '1517222827', 'admin');
+INSERT INTO `item_oper_record` VALUES ('25', '135829611', '30', '2', '1517222828', 'admin');
+INSERT INTO `item_oper_record` VALUES ('26', '135829611', '20', '1', '1517224359', 'admin');
+INSERT INTO `item_oper_record` VALUES ('27', '135829611', '20', '1', '1517224370', 'admin');
+INSERT INTO `item_oper_record` VALUES ('28', '135829611', '50', '1', '1517224370', 'admin');
+INSERT INTO `item_oper_record` VALUES ('29', '135829611', '20', '1', '1517224458', 'admin');
+INSERT INTO `item_oper_record` VALUES ('30', '135829611', '50', '1', '1517224458', 'admin');
+INSERT INTO `item_oper_record` VALUES ('31', '135829611', '60', '1', '1517224458', 'admin');
+INSERT INTO `item_oper_record` VALUES ('32', '135829611', '10', '1', '1517224458', 'admin');
+INSERT INTO `item_oper_record` VALUES ('33', '135829611', '40', '1', '1517224803', 'admin');
+INSERT INTO `item_oper_record` VALUES ('34', '135829611', '40', '1', '1517224809', 'admin');
+INSERT INTO `item_oper_record` VALUES ('35', '135829611', '30', '1', '1517224809', 'admin');
+INSERT INTO `item_oper_record` VALUES ('36', '135829611', '30', '5', '1517224816', 'admin');
+INSERT INTO `item_oper_record` VALUES ('37', '135829611', '40', '5', '1517224816', 'admin');
+INSERT INTO `item_oper_record` VALUES ('38', '135829611', '30', '-5', '1517224816', 'admin');
+INSERT INTO `item_oper_record` VALUES ('39', '135829611', '40', '5', '1517224826', 'admin');
+INSERT INTO `item_oper_record` VALUES ('40', '135829611', '30', '5', '1517224826', 'admin');
+INSERT INTO `item_oper_record` VALUES ('41', '135829611', '30', '-5', '1517224826', 'admin');
+INSERT INTO `item_oper_record` VALUES ('42', '135829611', '30', '-5', '1517224826', 'admin');
+INSERT INTO `item_oper_record` VALUES ('43', '135829611', '40', '1', '1517224849', 'admin');
+INSERT INTO `item_oper_record` VALUES ('44', '135829611', '30', '-1', '1517224850', 'admin');
+INSERT INTO `item_oper_record` VALUES ('45', '135829611', '30', '1', '1517224850', 'admin');
+INSERT INTO `item_oper_record` VALUES ('46', '135829611', '30', '-1', '1517224850', 'admin');
+INSERT INTO `item_oper_record` VALUES ('47', '135829611', '30', '-1', '1517224850', 'admin');
+INSERT INTO `item_oper_record` VALUES ('48', '135829611', '40', '1', '1517224859', 'admin');
+INSERT INTO `item_oper_record` VALUES ('49', '135829611', '30', '1', '1517224859', 'admin');
+INSERT INTO `item_oper_record` VALUES ('50', '135829611', '30', '-1', '1517224859', 'admin');
+INSERT INTO `item_oper_record` VALUES ('51', '135829611', '30', '1', '1517225117', 'admin');
+INSERT INTO `item_oper_record` VALUES ('52', '135829611', '30', '2', '1517225122', 'admin');
+INSERT INTO `item_oper_record` VALUES ('53', '135829611', '30', '2', '1517225122', 'admin');
+INSERT INTO `item_oper_record` VALUES ('54', '135829611', '30', '1', '1517225129', 'admin');
+INSERT INTO `item_oper_record` VALUES ('55', '135829611', '30', '1', '1517225129', 'admin');
+INSERT INTO `item_oper_record` VALUES ('56', '135829611', '40', '1', '1517225129', 'admin');
+INSERT INTO `item_oper_record` VALUES ('57', '135829611', '30', '-3', '1517225215', 'admin');
+INSERT INTO `item_oper_record` VALUES ('58', '135829611', '20', '1', '1517227140', 'admin');
+INSERT INTO `item_oper_record` VALUES ('59', '135829611', '70', '1', '1517227140', 'admin');
+INSERT INTO `item_oper_record` VALUES ('60', '135829611', '90', '1', '1517227140', 'admin');
+INSERT INTO `item_oper_record` VALUES ('61', '135829611', '10', '1', '1517227140', 'admin');
+INSERT INTO `item_oper_record` VALUES ('62', '135829611', '20', '1', '1517227140', 'admin');
+INSERT INTO `item_oper_record` VALUES ('63', '135829611', '10', '1', '1517227141', 'admin');
+INSERT INTO `item_oper_record` VALUES ('64', '135829611', '20', '2', '1517227146', 'admin');
+INSERT INTO `item_oper_record` VALUES ('65', '135829611', '70', '2', '1517227146', 'admin');
+INSERT INTO `item_oper_record` VALUES ('66', '135829611', '90', '2', '1517227146', 'admin');
+INSERT INTO `item_oper_record` VALUES ('67', '135829611', '10', '2', '1517227146', 'admin');
+INSERT INTO `item_oper_record` VALUES ('68', '135829611', '20', '2', '1517227147', 'admin');
+INSERT INTO `item_oper_record` VALUES ('69', '135829611', '10', '2', '1517227147', 'admin');
+INSERT INTO `item_oper_record` VALUES ('70', '135829611', '20', '2', '1517227147', 'admin');
+INSERT INTO `item_oper_record` VALUES ('71', '135829611', '10', '1', '1517227243', 'admin');
+INSERT INTO `item_oper_record` VALUES ('72', '135829611', '10', '2', '1517227247', 'admin');
+INSERT INTO `item_oper_record` VALUES ('73', '135829611', '30', '2', '1517227248', 'admin');
+INSERT INTO `item_oper_record` VALUES ('74', '135829611', '10', '1', '1517227501', 'admin');
+INSERT INTO `item_oper_record` VALUES ('75', '135829611', '10', '2', '1517227506', 'admin');
+INSERT INTO `item_oper_record` VALUES ('76', '135829611', '40', '2', '1517227506', 'admin');
+INSERT INTO `item_oper_record` VALUES ('77', '58312338', '100', '10', '1517227712', 'admin');
 
 -- ----------------------------
 -- Table structure for platform_water_record
@@ -241,12 +348,12 @@ CREATE TABLE `proxy_profit` (
   `end_time` int(11) NOT NULL DEFAULT '0' COMMENT '汇总记录结束时间',
   `create_time` float NOT NULL DEFAULT '0' COMMENT '记录产生时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of proxy_profit
 -- ----------------------------
-INSERT INTO `proxy_profit` VALUES ('1', '5', '0', '8', '1516291200', '1516377599', '1516460000');
+INSERT INTO `proxy_profit` VALUES ('3', '0', '0', '0', '1516636800', '1516723199', '1516780000');
 
 -- ----------------------------
 -- Table structure for proxy_profit_record
@@ -290,14 +397,12 @@ CREATE TABLE `record_tag` (
   `platform_sum_end` bigint(20) NOT NULL DEFAULT '0' COMMENT '平台收益结束值',
   `platform_sum_time` int(11) NOT NULL DEFAULT '0' COMMENT '平台收益汇总时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of record_tag
 -- ----------------------------
-INSERT INTO `record_tag` VALUES ('4', '1516118400', '1516204799', '', '', '2', '7', '0', '0', '1516244045', '0', '\0', '0', '0', '0', '\0', '0', '0', '0');
-INSERT INTO `record_tag` VALUES ('7', '1516204800', '1516291199', '', '\0', '36', '49', '0', '0', '1516327538', '0', '\0', '0', '0', '0', '\0', '0', '0', '0');
-INSERT INTO `record_tag` VALUES ('8', '1516291200', '1516377599', '', '\0', '50', '66', '0', '0', '1516426459', '0', '', '1516291200', '1516377599', '1516455939', '', '1516291200', '1516377599', '1516455931');
+INSERT INTO `record_tag` VALUES ('9', '1516636800', '1516723199', '', '\0', '59', '84', '0', '0', '1516773190', '0', '\0', '0', '0', '0', '\0', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for system_profit
@@ -311,12 +416,11 @@ CREATE TABLE `system_profit` (
   `start_time` int(11) NOT NULL DEFAULT '0' COMMENT '汇总起始时间',
   `end_time` int(11) NOT NULL DEFAULT '0' COMMENT '汇总结束时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of system_profit
 -- ----------------------------
-INSERT INTO `system_profit` VALUES ('1', '1516455939', '0', '33015.99973528832', '1516291200', '1516377599');
 
 -- ----------------------------
 -- Table structure for third_game
@@ -366,45 +470,21 @@ INSERT INTO `transfer_record` VALUES ('4', '5', '14', '250', '无', '无', '1516
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `pid` bigint(20) NOT NULL DEFAULT '0' COMMENT '对应于游戏账户的id',
-  `user_type` tinyint(4) NOT NULL DEFAULT '4' COMMENT '代理类型：1:总代, 2:特别代理, 3:普通代理, 4:普通玩家',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '账号创建时间',
-  `last_login_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
-  `password` varchar(255) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '用户密码',
-  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
-  `wx_open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '微信平台内唯一id',
-  `parent_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '绑定id',
-  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '游戏账号',
-  `wx_unionid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '微信应用间统一id',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `pid` (`pid`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL DEFAULT '0',
+  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '登录使用的账号名称',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '密码',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `last_login_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('3', '11', '3', '1515228702', '1515228702', 'e10adc3949ba59abbe56e057f20f883e', 'douyanzhao', '', '0', 'dyz', '');
-INSERT INTO `user` VALUES ('4', '12', '3', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan', '', '3', 'xxx', '');
-INSERT INTO `user` VALUES ('5', '13', '3', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan1', '', '3', 'zhangsan1', '');
-INSERT INTO `user` VALUES ('6', '14', '4', '1515230007', '1515230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan2', '', '3', 'zhangsan2', '');
-INSERT INTO `user` VALUES ('7', '15', '4', '151230007', '151230007', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan3', '', '3', 'zhangsan3', '');
-INSERT INTO `user` VALUES ('8', '16', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan4', '', '3', 'zhangsan4', '');
-INSERT INTO `user` VALUES ('9', '17', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'zhangsan5', '', '3', 'zhangsan5', '');
-INSERT INTO `user` VALUES ('10', '18', '3', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi', '', '3', 'lisi', '');
-INSERT INTO `user` VALUES ('11', '19', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi1', '', '3', 'lisi1', '');
-INSERT INTO `user` VALUES ('12', '20', '4', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi2', '', '3', 'lisi2', '');
-INSERT INTO `user` VALUES ('13', '21', '3', '1515413570', '1515413570', 'e10adc3949ba59abbe56e057f20f883e', 'lisi3', '', '3', 'lisi3', '');
-INSERT INTO `user` VALUES ('14', '22', '3', '1515413570', '1515413570', '', 'lisi4', '', '3', 'lisi4', '');
-INSERT INTO `user` VALUES ('15', '23', '4', '1515413570', '1515413570', '', 'lisi5', '', '3', 'lisi5', '');
-INSERT INTO `user` VALUES ('20', '3', '4', '1516182513', '1516182513', '', '测试1', 'oJrSh1V6km5M61juwDq1EKytNLF0', '0', 'fish01', 'oyS9XwLx2-_vG96DOQqPnmRJ-kwM');
-INSERT INTO `user` VALUES ('21', '4', '3', '1516182513', '1516182513', '', 'test1', '', '0', 'test1', '');
-INSERT INTO `user` VALUES ('22', '5', '3', '1516182513', '1516182513', '', 'test2', '', '4', 'test2', '');
-INSERT INTO `user` VALUES ('23', '6', '3', '1516182513', '1516182513', '', 'test3', '', '5', 'test3', '');
-INSERT INTO `user` VALUES ('24', '7', '3', '1516182513', '1516182513', '', 'test4', '', '0', 'test4', '');
-INSERT INTO `user` VALUES ('25', '8', '4', '1516182513', '1516182513', '', 'test5', '', '6', 'test5', '');
-INSERT INTO `user` VALUES ('26', '9', '3', '1516182513', '1516182513', '', 'test6', '', '7', 'test6', '');
-INSERT INTO `user` VALUES ('27', '10', '4', '1516182513', '1516182513', '', 'test7', '', '9', 'test6', '');
+INSERT INTO `user` VALUES ('1', '1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0', '1517221019');
+INSERT INTO `user` VALUES ('2', '1', 'douyanzhao', 'e10adc3949ba59abbe56e057f20f883e', '1516685484', '1516685692');
+INSERT INTO `user` VALUES ('3', '2', 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', '1517043271', '1517043499');
 
 -- ----------------------------
 -- Table structure for user_rule
@@ -412,21 +492,68 @@ INSERT INTO `user` VALUES ('27', '10', '4', '1516182513', '1516182513', '', 'tes
 DROP TABLE IF EXISTS `user_rule`;
 CREATE TABLE `user_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(255) DEFAULT NULL,
-  `rule` varchar(255) DEFAULT NULL,
+  `role_name` varchar(255) NOT NULL DEFAULT '',
+  `rule` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_rule
 -- ----------------------------
+INSERT INTO `user_rule` VALUES ('1', '管理员', '');
+INSERT INTO `user_rule` VALUES ('2', '客服', '');
+INSERT INTO `user_rule` VALUES ('3', '财务', '');
+
+-- ----------------------------
+-- Procedure structure for add_profit_for_proxy
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `add_profit_for_proxy`;
+DELIMITER ;;
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `add_profit_for_proxy`(in start_time int, in end_time int)
+begin
+declare i int default 0;
+declare maxCnt int default 0;
+DROP TABLE IF EXISTS `tmp_proxy_profit`;
+create TEMPORARY table tmp_proxy_profit(
+`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `proxy_id` varchar(255) NOT NULL,
+  `money` double NOT NULL,
+  `fish_money` double not null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+set @t_sql = concat('insert into tmp_proxy_profit (`proxy_id`, `money`, `fish_money`) select proxy_id, money, fish_money from proxy_profit where start_time=', start_time,
+' and end_time=', end_time);
+PREPARE stmp from @t_sql;
+EXECUTE stmp;
+select min(`id`) into i from tmp_proxy_profit;
+select max(`id`) into maxCnt from tmp_proxy_profit;
+update_loop : loop
+if i > maxCnt THEN
+     leave update_loop;
+end if;
+set @exist_tag = 0;
+set @money = 0;
+set @fish_money=0;
+set @proxy_id = 0;
+select proxy_id, pump_water into @proxy_id, @money, @fish_money from tmp_proxy_profit where id=i;
+select 1, proxy_id into @exist_tag, @proxy_id from h5proxy.user_with_draw where proxy_id = @proxy_id and last_update_time = start_time;
+set i = i + 1;
+if @exist_tag != 0 THEN
+	ITERATE update_loop;
+end IF;
+update h5proxy.user_with_draw set with_draw = with_draw + @money, fish_with_draw = fish_with_draw + @fish_money, last_update_time = start_time where proxy_id = @proxy_id;
+end loop update_loop;
+drop table tmp_proxy_profit;
+end
+;;
+DELIMITER ;
 
 -- ----------------------------
 -- Procedure structure for compute_proxy_frofit
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `compute_proxy_frofit`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `compute_proxy_frofit`()
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `compute_proxy_frofit`()
 BEGIN
 
 declare d_fish_key_start INT DEFAULT 0;
@@ -466,7 +593,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `save_fish_game_record`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `save_fish_game_record`(IN memeber_id varchar(255), IN scene_sn bigint, IN cost double, IN bonus double, IN start_time varchar(255), IN end_time varchar(255), IN version_key bigint, IN version_key_end bigint, IN game_type int)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `save_fish_game_record`(IN memeber_id varchar(255), IN scene_sn bigint, IN cost double, IN bonus double, IN start_time varchar(255), IN end_time varchar(255), IN version_key bigint, IN version_key_end bigint, IN game_type int)
 BEGIN
 	set @date_str = DATE_FORMAT(now(),'%Y%m');
   set @table_name = concat('fish_record_', @date_str);
@@ -500,7 +627,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `save_fish_game_sum_record`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `save_fish_game_sum_record`(IN memeber_id varchar(255), IN account_id int, IN cost_sum float, IN bonus_sum float)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `save_fish_game_sum_record`(IN memeber_id varchar(255), IN account_id int, IN cost_sum float, IN bonus_sum float)
 BEGIN
 	set @date_str = DATE_FORMAT(now(),'%Y%m');
   set @table_name = concat('fish_record_sum_', @date_str);
@@ -530,7 +657,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `save_game_record`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `save_game_record`(IN pid bigint, IN unionid varchar(255), IN water bigint)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `save_game_record`(IN pid bigint, IN unionid varchar(255), IN water bigint)
 BEGIN
 	set @date_str = DATE_FORMAT(now(),'%Y%m');
   set @table_name = concat('game_record_', @date_str);
@@ -556,7 +683,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `save_water_record`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `save_water_record`(IN pid bigint, IN spreader bigint, IN game_code varchar(255), IN pump_water bigint)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `save_water_record`(IN pid bigint, IN spreader bigint, IN game_code varchar(255), IN pump_water bigint)
 BEGIN
 insert into platform_water_record (pid, parent_id, game_code, pump_water, create_time) values (pid, spreader, game_code, pump_water,UNIX_TIMESTAMP());
 select LAST_INSERT_ID() as id;
@@ -569,7 +696,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sum_fish_profit`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `sum_fish_profit`(IN start_record bigint, IN end_record bigint)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `sum_fish_profit`(IN start_record bigint, IN end_record bigint)
 label:BEGIN
 DECLARE maxCnt INT DEFAULT 0;  
 DECLARE i INT DEFAULT 0;  
@@ -638,14 +765,14 @@ set @exist_tag = 0;
 set @user_id = 0;
 select account, pump_water into t_account, t_water from general_game_record_tmp where id=i;
 select 1, pid, parent_id, user_type,id into @exist_tag, t_pid, t_parent, t_user_type, @user_id from h5proxy.user where account=t_account;
+set i = i + 1;
 if @exist_tag = 0 THEN
-    select 102 as code, t_account as account;-- 账号未找到
+    -- select 102 as code, t_account as account;-- 账号未找到
     set t_error_tag = 101;
-    leave label;
+    iterate visit_loop;
 end if;
 set @delta = t_water * (1 - t_system_first_rate - t_system_second_rate - t_system_third_rate);
 set t_system_profit = t_system_profit + @delta;
-set i = i + 1;
 -- 玩家是代理
 if t_user_type <> 4 then
     set @exist_tag = 0;
@@ -819,6 +946,8 @@ end if;
 drop table general_game_record_tmp;
 drop table user_tmp;
 update record_tag set fish_sum_tag = TRUE, fish_sum_start = start_record, fish_sum_end = end_record, fish_sum_time = UNIX_TIMESTAMP() where start=start_record and end = end_record;
+
+select 0 as code; 
 END
 ;;
 DELIMITER ;
@@ -828,7 +957,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sum_platform_profit`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `sum_platform_profit`(IN start_record bigint, IN end_record bigint)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `sum_platform_profit`(IN start_record bigint, IN end_record bigint)
 label:BEGIN
 DECLARE maxCnt INT DEFAULT 0;  
 DECLARE i INT DEFAULT 0;  
@@ -888,13 +1017,13 @@ end if;
 set @exist_tag = 0;
 select pid, pump_water into t_pid, t_water from general_game_record_tmp where id=i;
  select 1, parent_id, user_type into @exist_tag, t_parent, t_user_type from h5proxy.user where pid=t_pid;
+set i = i + 1;
 if @exist_tag = 0 THEN
-select 102 as code, t_pid as pid;
-leave label;
+-- select 102 as code, t_pid as pid;
+ITERATE visit_loop;
 end if;
 set @delta = t_water * (1 - t_system_first_rate - t_system_second_rate - t_system_third_rate);
 set t_system_profit = t_system_profit + @delta;
-set i = i + 1;
 -- 玩家是代理
 if t_user_type <> 4 then
     -- 个人收益
@@ -1052,6 +1181,8 @@ end if;
 drop table general_game_record_tmp;
 drop table user_tmp;
 update record_tag set platform_sum_tag = TRUE, platform_sum_start = start_record, platform_sum_end = end_record, platform_sum_time = UNIX_TIMESTAMP() where start=start_record and end = end_record;
+
+select 0 as code;
 END
 ;;
 DELIMITER ;
@@ -1061,7 +1192,7 @@ DELIMITER ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sum_platform_profit_internal`;
 DELIMITER ;;
-CREATE DEFINER=`xkqp`@`%` PROCEDURE `sum_platform_profit_internal`(IN start_record bigint, IN end_record bigint)
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `sum_platform_profit_internal`(IN start_record bigint, IN end_record bigint)
 BEGIN
 DECLARE maxCnt INT DEFAULT 0;  
 DECLARE i INT DEFAULT 0;  
@@ -1261,6 +1392,19 @@ else
 end if;
 drop table general_game_record_tmp;
 -- update record_tag set platform_sum_tag = TRUE, platform_sum_start = record_start, platform_sum_end = record_end where 
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for test_proc
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `test_proc`;
+DELIMITER ;;
+CREATE DEFINER=`douyanzhao`@`%` PROCEDURE `test_proc`()
+begin
+select sleep(10) as code;
+-- select 10 as code;
 END
 ;;
 DELIMITER ;

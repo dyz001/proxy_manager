@@ -26,7 +26,7 @@
     </style>
 
 </head>
-<a href="#" onclick="openUrl('{$game_url}')">进入游戏</a>
+<a href="#" onclick="open_url('{$game_url}')">进入游戏</a>
 <!--<a href="./logout">退出登录</a>-->
 <body>
 <div class="container">
@@ -79,8 +79,17 @@
             </div>
             <span>三方游戏</span>
         </div>
-        <!--<div class="col-md-1 col-xs-1"></div>-->
-        <!--<div class="col-md-4 col-xs-4 item" ontap="open_url('./qr_code');"></div>-->
+        <switch name="mail_tag">
+            <case value="0"></case>
+            <case value="1">
+                <div class="col-md-5 col-xs-5 item text-center">
+                    <div class="bkimg">
+                        <img src="http://{$_SERVER['HTTP_HOST']}/Public/img/send_mail.png"  ontap="open_url('http://{$_SERVER['HTTP_HOST']}/send_mail');"/>
+                    </div>
+                    <span>邮件发送</span>
+                </div>
+            </case>
+        </switch>
     </div>
 </div>
 </body>

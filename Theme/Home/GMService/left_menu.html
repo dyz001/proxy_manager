@@ -4,6 +4,9 @@
             <a class="navbar-brand" href="/main" id="logo">客服后台管理
             </a>
         </div>
+        <div class="text-center">
+            <span>登录账号：{$gm_user.account}</span>
+        </div>
     </div>
 </div>
 <div class="container-fluid">
@@ -16,22 +19,27 @@
                         首页
                     </a>
                 </li>
-                <li>
-                    <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        抽水汇总
-                        <span class="pull-right glyphicon glyphicon-chevron-down"></span>
-                    </a>
-                    <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
-                        <li><a href="./gm_general_proxy_profit"><i class="glyphicon glyphicon-user"></i>代理抽水汇总</a></li>
-                        <li><a href="./gm_general_system_profit"><i class="glyphicon glyphicon-th-list"></i>平台抽水汇总</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="./gm_platform_config" class="glyphicon glyphicon-user" >
-                        平台配置
-                    </a>
-                </li>
+                <switch name="role_id">
+                    <case value="1">
+                        <li>
+                            <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                抽水汇总
+                                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                            <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                                <li><a href="./gm_general_proxy_profit"><i class="glyphicon glyphicon-user"></i>代理抽水汇总</a></li>
+                                <li><a href="./gm_general_system_profit"><i class="glyphicon glyphicon-th-list"></i>平台抽水汇总</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="./gm_platform_config" class="glyphicon glyphicon-user" >
+                                平台配置
+                            </a>
+                        </li>
+                    </case>
+                </switch>
+
                 <li>
                     <a href="#proxyWithDraw" class="nav-header collapsed" data-toggle="collapse">
                         <i class="glyphicon glyphicon-plus"></i>
@@ -62,10 +70,30 @@
                         提现审批记录查询
                     </a>
                 </li>
+                <switch name="role_id">
+                    <case value="1">
+                        <li>
+                            <a href="./gm_create_user">
+                                <i class="glyphicon glyphicon-credit-card"></i>
+                                账号创建
+                            </a>
+                        </li>
+                    </case>
+                </switch>
+                <switch name="role_id">
+                    <case value="1">
+                        <li>
+                            <a href="./gm_bag_oper_record">
+                                <i class="glyphicon glyphicon-credit-card"></i>
+                                物品回收记录查询
+                            </a>
+                        </li>
+                    </case>
+                </switch>
                 <li>
-                    <a href="./gm_create_user">
+                    <a href="./gm_player_bag_oper">
                         <i class="glyphicon glyphicon-credit-card"></i>
-                        账号创建
+                        物品回收
                     </a>
                 </li>
                 <li>

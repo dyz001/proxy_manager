@@ -191,6 +191,8 @@ class GMServiceController extends GMAdminbaseController {
 	}
 
 	public function main(){
+		$user = session('gm_user');
+		$this->assign('gm_user', $user);
 		$this->display();
 	}
 
@@ -568,26 +570,24 @@ class GMServiceController extends GMAdminbaseController {
 		$player_id = I("post.player_id");
 		$op_type = I('post.op_type');
 		$remark = I('post.remark');
-		$user = session('user');
 		$user_entity = new UserModel();
-		if($user['user_type'] == $user_entity->EPlayer){
-			//普通玩家不可对代理授权
+		$user_data = $user_entity->where('id='.$player_id)->find();
+		if(!$user_data){
+			//玩家未找到
 			$data['status'] = 0;
-			trace("user type is not a proxy");
 			$this->ajaxReturn($data);
 		}else{
-			$user_data = $user_entity->where('id='.$player_id)->find();
-			if(!$user_data){
-				//玩家未找到
-				$data['status'] = 0;
-				$this->ajaxReturn($data);
-			}else{
-				$proxy_entity = new ApplyProxyModel();
-				if($op_type == $proxy_entity->ERefuse){
-					$proxy_entity->refuse_apply($player_id, $remark);
-				}else if($op_type == $proxy_entity->EAgreeStatus){
-					$proxy_entity->agree_apply($player_id);
-				}
+			$proxy_entity = new ApplyProxyModel();
+			if($op_type == $proxy_entity->ERefuse){
+				$proxy_entity->refuse_apply($player_id, $remark);
+			}else if($op_type == $proxy_entity->EAgreeStatus){
+				$proxy_entity->agree_apply($player_id);
+				//send mail
+				$mail_res = $this->http(C('GAME_SERVER_URL').'/sendMail.nd', array(
+					'playerId' => $user_data['pid'],
+					'title' => '恭喜玩家 '.$user_data['name'].'， 成为悦想棋牌的代理。',
+					'mailcontent'=>''
+				), 'post');
 			}
 		}
 		$data['player_id'] = $player_id;
@@ -599,7 +599,6 @@ class GMServiceController extends GMAdminbaseController {
 
 	public function proxy_grant(){
 		trace('======proxy_grant======');
-		$user = session('user');
 		$proxy_entity = new ApplyProxyModel();
 		$total_cnt = $proxy_entity->where('parent_id=0')->count('id');
 		$p = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
@@ -624,5 +623,109 @@ class GMServiceController extends GMAdminbaseController {
 		$this->assign('page', $p->show());
 		$this->display();
 		trace('======proxy_grant end======');
+	}
+
+	public function bag_oper_record(){
+		trace('========bag_oper_record==========');
+		$gm_user = session('gm_user');
+		$record_tag_model = new RecordTagModel();
+		$item_oper_record = $record_tag_model->getRecordModel('item_oper_record');
+		$record_cnt = $item_oper_record->count('id');
+		$p = $this->page($record_cnt, C('RECORD_NUM_PER_PAGE'));
+		$list = $item_oper_record->alias('a')->field('a.user_id, a.item_id, a.item_cnt, a.create_time, a.oper_user, b.nickname, c.item_name')
+			->join('h5proxy.user b on a.user_id == b.pid')
+			->join('item_config c on a.item_id == c.item_id')
+			->order('a.create_time desc')->limit($p->firstRow, $p->listRows)->select();
+		$cnt = count($list);
+		for($i = 0; $i < $cnt; ++$i){
+			$list[$i]['create_time'] = date('Ymd H:i:s', $list[$i]['create_time']);
+		}
+		$this->assign('select', $list);
+		$this->assign('page', $p->show());
+		$this->display();
+	}
+
+	public function player_bag_oper(){
+		$user_id = I('post.user_id');
+		if($user_id){
+			$res_bag_data = $this->http(C('GAME_SERVER_URL').'/getBagInfo.nd', array(
+				'uid'=>$user_id.''
+			), 'post');
+			$record_tag_model = new RecordTagModel();
+			$item_bags = $record_tag_model->getRecordModel('item_config');
+			$select = [];
+			$item_list = $item_bags->select();
+
+			if($res_bag_data){
+				$res_bag_obj = json_decode($res_bag_data);
+				foreach($item_list as $item){
+					$item['count'] = 0;
+					foreach ($res_bag_obj->bag as $name=>$value){
+						if($name == $item['item_id']){
+							$item['count'] = $value;
+						}
+					}
+					$select[] = $item;
+				}
+//				if($res_bag_obj->bag){
+//					foreach($res_bag_obj->bag as $name=>$value){
+//						$item_data = $item_bags->where('item_id='.$name)->find();
+//						$bag_data['item_id'] = $item_data['item_id'];
+//						$bag_data['name'] = $item_data['name'];
+//						$bag_data['price'] = $item_data['price'];
+//						$bag_data['count'] = $value;
+//						$select[] = $bag_data;
+//					}
+//				}
+			}
+			$this->assign('select', $select);
+			$this->assign('user_id', $user_id);
+		}else{
+			$this->assign('select', []);
+			$this->assign('user_id', '');
+		}
+		$this->display();
+	}
+
+	public function add_bag_item(){
+		$user_id = I('post.user_id');
+		$item_id = I('post.item_id');
+		$item_cnt = I('post.item_cnt');
+		$gm_user = session('gm_user');
+		trace('send item_id:'.$item_id);
+		if(!$user_id || !$item_id || !$item_cnt){
+			$this->ajaxReturn(array(
+				'status' => 0,
+				'msg' => 'parameter is null or not enough'
+			));
+		}
+		$target_url = C('GAME_SERVER_URL').'/addBagItem.nd';
+		if($item_cnt < 0){
+			$target_url = C('GAME_SERVER_URL').'/removeBagItem.nd';
+		}
+		$res_oper = $this->http($target_url, array(
+			'uid'=>$user_id,
+			'id'=>$item_id,
+			'num'=>$item_cnt
+		), 'post');
+		$res_oper_obj = json_decode($res_oper);
+		if($res_oper_obj->code == 200){
+			$record_tag_model = new RecordTagModel();
+			$item_record_model = $record_tag_model->getRecordModel('item_oper_record');
+			$item_record_model->add(array(
+				'user_id'=>$user_id,
+				'item_id'=>$item_id,
+				'item_cnt'=>$item_cnt,
+				'create_time'=>time(),
+				'oper_user'=>$gm_user['account']
+			));
+		}
+		trace('return item_id:'.$item_id);
+		$this->ajaxReturn(array(
+			'status' => 1,
+			'user_id' => $user_id,
+			'item_id_1' => $item_id,
+			'item_cnt' => $item_cnt
+		));
 	}
 }

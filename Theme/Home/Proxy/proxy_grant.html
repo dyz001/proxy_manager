@@ -1,24 +1,24 @@
 <include file="User:head"/>
-
 </head>
 <body>
 <a href="/main">返回主页</a>
 <div style="display:flex;justify-content: center">
     <h3>申请列表</h3>
 </div>
-<div class="container">
-    <div id="input_remark" class="form-horizontal text-center" role="form">
-        <div class="form-group" style="margin:10px">
-            <span class="col-md-2">备注:</span>
-            <div class="col-md-9">
-                <input type="text" name="remark" id="remark" class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="button" id="btn_reject" value="确定" class="btn btn-primary"/>
-            <input type="button" id="btn_cancel" value="取消" class="btn btn-primary" onclick="hide_remark();"/>
+<div id="input_remark" class="form-horizontal text-center" role="form">
+    <div class="form-group" style="margin:10px">
+        <span class="col-md-2">备注:</span>
+        <div class="col-md-9">
+            <input type="text" name="remark" id="remark" class="form-control"/>
         </div>
     </div>
+    <div class="form-group">
+        <input type="button" id="btn_reject" value="确定" class="btn btn-primary"/>
+        <input type="button" id="btn_cancel" value="取消" class="btn btn-primary" onclick="hide_remark();"/>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
     <table class="table table-bordered text-center">
         <thead>
         <tr>
@@ -56,6 +56,7 @@
     </table>
     {$page}
 </div>
+</div>
 </body>
 <script>
     init_tap_event();
@@ -89,7 +90,6 @@
 
             });
     }
-
     $('#input_remark').hide();
     $('#input_remark').css({'position':'absolute','top':'10%',
          'background-color':'#c8e5bc', 'border-radius':'5px'});

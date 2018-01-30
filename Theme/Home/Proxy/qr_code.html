@@ -3,13 +3,16 @@
 <body>
 <switch name="proxy_tag">
     <case value="0">
-        <a href="#" onclick="openUrl('{$game_url}')">回到游戏</a>
+        <a href="#" onclick="open_url('{$game_url}')">回到游戏</a>
     </case>
     <case value="1">
-        <a href="#" onclick="openUrl('{$game_url}')">回到游戏</a>
+        <a href="#" onclick="open_url('{$game_url}')">回到游戏</a>
     </case>
     <case value="2">
         <a href="./main">返回主页</a>
+    </case>
+    <case value="3">
+        <a href="#" onclick="open_url('{$game_url}')">回到游戏</a>
     </case>
 </switch>
 
@@ -52,12 +55,16 @@
     <div class="row text-center" id="oper_area">
         <switch name="proxy_tag">
             <case value="0">
+                <span>{$tip_msg}</span><br/>
                 <input type="button" class="btn btn-success" ontap="apply_proxy({$user.id})" value="申请提升为代理">
             </case>
             <case value="1">
                 <span>请求已经提交，等待审核</span>
             </case>
             <case value="2"></case>
+            <case value="3">
+                <span>{$tip_msg}</span><br/>
+            </case>
         </switch>
     </div>
 </div>
