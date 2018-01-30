@@ -586,7 +586,7 @@ class GMServiceController extends GMAdminbaseController {
 				$mail_res = $this->http(C('GAME_SERVER_URL').'/sendMail.nd', array(
 					'playerId' => $user_data['pid'],
 					'title' => '恭喜玩家 '.$user_data['name'].'， 成为悦想棋牌的代理。',
-					'mailcontent'=>''
+					'mailcontent'=>'not empty'
 				), 'post');
 			}
 		}
