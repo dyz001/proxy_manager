@@ -27,7 +27,7 @@ class Route {
         if(isset($maps[$regx])) {
             $var    =   self::parseUrl($maps[$regx]);
             $_GET   =   array_merge($var, $_GET);
-            return true;                
+            return true;
         }        
         // 动态路由处理
         $routes =   C('URL_ROUTE_RULES');
@@ -168,6 +168,7 @@ class Route {
     // 'news/:month/:day/:id'=>array('News/read?cate=1','status=1'),
     // 'new/:id'=>array('/new.php?id=:1',301), 重定向
     private static function parseRule($rule,$route,$regx) {
+    	define('CUR_RULE', $rule);
         // 获取路由地址规则
         $url   =  is_array($route)?$route[0]:$route;
         // 获取URL地址中的参数
