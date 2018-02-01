@@ -43,24 +43,24 @@ class ProxyController extends AdminbaseController
 			}elseif('APP' == session('user_from')){
 				$this->assign('game_url', C('APP_WAKE_UP'));
 			}
-			$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
-				'method' => 'all',
-				'account'=>$user['account']
-			), 'post');
-			$user_json_obj = json_decode($user_json);
-			if($user_json_obj->count == 0){
-				$this->error(L('_USER_NOT_FOUND_'));
-			}
-			$user_cnt = count($user_json_obj->list);
-			if($user_cnt == 0){
-				$this->error(L('_USER_NOT_FOUND_'));
-			}
-			if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
-				$this->assign('mail_tag', 0);
-			}else{
-				$this->assign('mail_tag', 1);
-			}
-
+//			$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
+//				'method' => 'all',
+//				'account'=>$user['account']
+//			), 'post');
+//			$user_json_obj = json_decode($user_json);
+//			if($user_json_obj->count == 0){
+//				$this->error(L('_USER_NOT_FOUND_'));
+//			}
+//			$user_cnt = count($user_json_obj->list);
+//			if($user_cnt == 0){
+//				$this->error(L('_USER_NOT_FOUND_'));
+//			}
+//			if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
+//				$this->assign('mail_tag', 0);
+//			}else{
+//				$this->assign('mail_tag', 1);
+//			}
+			$this->assign('mail_tag', 0);
 			$this->display();
 		}
 	}
@@ -68,15 +68,40 @@ class ProxyController extends AdminbaseController
 	public function qr_code() {
 		$user  = session( 'user' );
 		$admin = session( 'admin' );
-		trace( PUBLIC_PATH . '/Public/QRCode/' . $user['pid'] . '.png' );
+		$short_url = '';
+		$data = C('WX_AUTH_URL') .'?appid=' . C('APP_ID') . '&redirect_uri=' . urlencode(C('GAME_URL')) .
+		        '&response_type=code&scope=snsapi_userinfo&state=pidXXX'.$user['pid'] . '#wechat_redirect';
 		if ( ! file_exists( PUBLIC_PATH . '/QRCode/' . $user['pid'] . '.png' ) ) {
 			vendor( "phpqrcode.phpqrcode" );
-			//$data = $_SERVER['HTTP_HOST'] . '/bind_code/code/' . $user['id'];
-			$data = C('WX_AUTH_URL') .'?appid=' . C('APP_ID') . '&redirect_uri=' . urlencode(C('GAME_URL')) .
-			        '&response_type=code&scope=snsapi_userinfo&state=pidXXX'.$user['pid'] . '#wechat_redirect';
 			$level = 'L';
 			$size = 4;
-			\QRcode::png( $data, PUBLIC_PATH . '/QRCode/' . $user['pid'] . '.png', $level, $size );
+			$path = PUBLIC_PATH . '/QRCode/' . $user['pid'] . '.png';
+			\QRcode::png( $data, $path, $level, $size );
+			$QR = imagecreatefromstring(file_get_contents($path));
+			$logo = PUBLIC_PATH . '/QRCode/logo.png';
+			$logo = imagecreatefromstring(file_get_contents($logo));
+			$QR_width = imagesx($QR);//二维码图片宽度
+			$QR_height = imagesy($QR);//二维码图片高度
+			$logo_width = imagesx($logo);//logo图片宽度
+			$logo_height = imagesy($logo);//logo图片高度
+			$logo_qr_width = $QR_width / 5;
+			$scale = $logo_width/$logo_qr_width;
+			$logo_qr_height = $logo_height/$scale;
+			$from_width = ($QR_width - $logo_qr_width) / 2;
+			//重新组合图片并调整大小
+			imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width,
+				$logo_qr_height, $logo_width, $logo_height);
+			imagepng($QR, $path);
+		}
+		$short_res = $this->http('http://dwz.cn/create.php', array(
+			'url'=>$data,
+			'access_type'=>'web'
+		), 'post');
+		$short_res_obj = json_decode($short_res);
+		if($short_res_obj->err_msg){
+			$this->assign('short_url', $short_res_obj->err_msg);
+		}else{
+			$this->assign('short_url', $short_res_obj->tinyurl);
 		}
 		$apply_proxy = new ApplyProxyModel();
 		$user_model  = new UserModel();
@@ -112,6 +137,7 @@ class ProxyController extends AdminbaseController
 		}elseif('APP' == session('user_from')){
 			$this->assign('game_url', C('APP_WAKE_UP'));
 		}
+
 		$this->assign('tip_msg', $tip_msg);
 		$this->assign('qrcode', './Public/QRCode/'.$user['pid'].'.png');
 		$this->assign('user',$user);
@@ -287,7 +313,7 @@ class ProxyController extends AdminbaseController
 	public function spread_fee(){
 		$user = session('user');
 		$spread_fee_model = D('spread_fee');
-		$count = $spread_fee_model->where('proxy_id='.$user['id'])->count('id');
+		$count = $spread_fee_model->where('proxy_id='.$user['pid'])->count('id');
 		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
 		$data_list = $spread_fee_model->where('proxy_id='.$user['pid'])->order('id desc')->limit($page->firstRow, $page->listRows)->select();
 		$cnt = count($data_list);
@@ -450,9 +476,9 @@ class ProxyController extends AdminbaseController
 		$freeze_money = 0;
 		$wx_identity = '';
 		$last_settle = 0;
-		$with_draw_entity = $with_draw_model->where('user_id='.$user['id'])->find();
+		$with_draw_entity = $with_draw_model->where('proxy_id='.$user['pid'])->find();
 		if($with_draw_entity){
-			$money = $with_draw_entity['with_draw'] + $with_draw_entity['third_with_draw'];
+			$money = $with_draw_entity['with_draw'] + $with_draw_entity['fish_with_draw'];
 			$freeze_money = $with_draw_entity['freeze_money'];
 			$last_settle = $with_draw_entity['last_update_time'];
 		}
@@ -480,11 +506,11 @@ class ProxyController extends AdminbaseController
 			$this->error(L('_USER_INFO_NOT_BIND_'));
 		}
 		$with_draw_model = new UserWithDrawModel();
-		$with_draw_entity = $with_draw_model->where('user_id='.$user['id'])->find();
+		$with_draw_entity = $with_draw_model->where('proxy_id='.$user['pid'])->find();
 		if(!$with_draw_entity){
 			$this->error(L('_USER_INFO_NOT_BIND_'));
 		}
-		if($with_draw_entity['with_draw'] + $with_draw_entity['third_with_draw'] < $ipt_money_cnt){
+		if($with_draw_entity['with_draw'] + $with_draw_entity['fish_with_draw'] - $with_draw_entity['freeze_money'] < $ipt_money_cnt){
 			$this->error(L('_WITH_DRAW_NOT_ENOUGH_'));
 		}
 		if(md5($ipt_password) != $user_extra_entity['withdraw_pass']){

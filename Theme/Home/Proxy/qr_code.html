@@ -16,6 +16,10 @@
     </case>
 </switch>
 
+<div class="alert alert-warning" id="tip">
+    链接已经复制到剪贴板
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-xs-offset-2 col-md-offset-2 col-xs-3 col-md-3">
@@ -35,6 +39,12 @@
     </div>
     <div class="row text-center center-block">
         <img src="{$qrcode}" width="150" height="150"/>
+    </div>
+    <div class="row text-center">
+        <span class="col-md-10">推广链接: {$short_url}</span>
+        <div class="col-md-2">
+            <input type="button" value="复制" onclick="copy_txt('{$short_url}');">
+        </div>
     </div>
     <div class="row text-center">
         <span>玩家人数：</span>
@@ -75,6 +85,12 @@ function apply_proxy(user_id){
     postJsonp('http://{$_SERVER[\'HTTP_HOST\']}/apply_proxy', {user_id:user_id}, function(data){
         $('#oper_area').html('<span>请求已经提交，等待审核</span>');
     });
+}
+    $('#tip').hide();
+function copy_txt(txt){
+    copyTxtInWeb(txt);
+    $('#tip').show();
+    setTimeout(function(){$("#tip").hide()},1000);
 }
 </script>
 </html>

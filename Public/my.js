@@ -163,3 +163,25 @@ function runApp(url)
         document.body.removeChild(ifr);
     },3000);
 }
+
+function copyTxtInWeb(txt){
+    var temp = document.createElement('textarea');
+    temp.textContent = txt;
+    var s = temp.style;
+    s.position = 'fixed';
+    s.left = '-100%';
+    temp.select();
+    document.body.appendChild(temp);
+    if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+        var range = document.createRange();
+        range.selectNodeContents(temp);
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        temp.setSelectionRange(0, 999999);
+    }else{
+        temp.select();
+    }
+    var ret = document.execCommand('copy');
+    document.body.removeChild(temp);
+}
