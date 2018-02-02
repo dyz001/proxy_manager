@@ -11,6 +11,7 @@
             <th>开始时间</th>
             <th>结束时间</th>
             <th>统计时间</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@
                 <td>{$record.start_time}</td>
                 <td>{$record.end_time}</td>
                 <td>{$record.create_time}</td>
+                <td><a href="./gm_fish_detail/id/{$record.id}">查看细节</a></td>
             </tr>
         </foreach>
         </tbody>

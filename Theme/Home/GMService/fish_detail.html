@@ -2,29 +2,40 @@
 </head>
 <body>
 <include file="Home:GMService:left_menu"/>
-        <div class="col-md-10">
-            <table class="table table-bordered text-center">
-                <thead>
-                <tr>
-                    <th>账号</th>
-                    <th>捕鱼平台Id</th>
-                    <th>玩家消耗</th>
-                    <th>玩家赢取</th>
-                </tr>
-                </thead>
-                <tbody>
-                <foreach name='select' item='record' >
-                    <tr class="content">
-                        <td>&nbsp;{$record.member_id}</td>
-                        <td>&nbsp;{$record.account_id}</td>
-                        <td>&nbsp;{$record.cost_sum}</td>
-                        <td>&nbsp;{$record.bonus_sum}</td>
-                    </tr>
-                </foreach>
-                </tbody>
-            </table>
-            {$page}
+<div class="col-md-10">
+    <div class="container">
+        <div class="row">
+            <span class="col-md-2">玩家总消耗：</span>
+            <span class="col-md-2">{$total_cost}</span>
+            <span class="col-md-2">玩家总赢取：</span>
+            <span class="col-md-2">{$total_bonus}</span>
         </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>账号</th>
+            <th>昵称</th>
+            <th>捕鱼平台Id</th>
+            <th>玩家消耗</th>
+            <th>玩家赢取</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name='select' item='record'>
+            <tr class="content">
+                <td>&nbsp;{$record.member_id}</td>
+                <td>{$record.name}</td>
+                <td>&nbsp;{$record.account_id}</td>
+                <td>&nbsp;{$record.cost_sum}</td>
+                <td>&nbsp;{$record.bonus_sum}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
 <include file="Home:GMService:left_menu_tail"/>
 </body>
 </html>

@@ -14,7 +14,7 @@
         <div class="col-md-2">
             <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
                 <li class="active">
-                    <a href="/main">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/main">
                         <i class="glyphicon glyphicon-th-large"></i>
                         首页
                     </a>
@@ -28,12 +28,12 @@
                                 <span class="pull-right glyphicon glyphicon-chevron-down"></span>
                             </a>
                             <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
-                                <li><a href="./gm_general_proxy_profit"><i class="glyphicon glyphicon-user"></i>代理抽水汇总</a></li>
-                                <li><a href="./gm_general_system_profit"><i class="glyphicon glyphicon-th-list"></i>平台抽水汇总</a></li>
+                                <li><a href="http://{$_SERVER['HTTP_HOST']}/gm_general_proxy_profit"><i class="glyphicon glyphicon-user"></i>代理抽水汇总</a></li>
+                                <li><a href="http://{$_SERVER['HTTP_HOST']}/gm_general_system_profit"><i class="glyphicon glyphicon-th-list"></i>平台抽水汇总</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="./gm_platform_config" class="glyphicon glyphicon-user" >
+                            <a href="http://{$_SERVER['HTTP_HOST']}/gm_platform_config" class="glyphicon glyphicon-user" >
                                 平台配置
                             </a>
                         </li>
@@ -47,25 +47,31 @@
                         <span class="pull-right glyphicon glyphicon-chevron-down"></span>
                     </a>
                     <ul id="proxyWithDraw" class="nav nav-list collapse secondmenu" style="height: 0px;">
-                        <li><a href="./gm_query_all_order"><i class="glyphicon glyphicon-user"></i>全部订单</a></li>
-                        <li><a href="./gm_query_unsettle_order"><i class="glyphicon glyphicon-th-list"></i>未处理订单</a></li>
-                        <li><a href="./gm_query_settle_order"><i class="glyphicon glyphicon-th-list"></i>已处理订单</a></li>
+                        <li><a href="http://{$_SERVER['HTTP_HOST']}/gm_query_all_order"><i class="glyphicon glyphicon-user"></i>全部订单</a></li>
+                        <li><a href="http://{$_SERVER['HTTP_HOST']}/gm_query_unsettle_order"><i class="glyphicon glyphicon-th-list"></i>未处理订单</a></li>
+                        <li><a href="http://{$_SERVER['HTTP_HOST']}/gm_query_settle_order"><i class="glyphicon glyphicon-th-list"></i>已处理订单</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="./gm_apply_banker_list">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_player_num">
+                        <i class="glyphicon glyphicon-credit-card"></i>
+                        游戏房间人数
+                    </a>
+                </li>
+                <li>
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_apply_banker_list">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         游戏坐庄申请
                     </a>
                 </li>
                 <li>
-                    <a href="./gm_proxy_grant">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_proxy_grant">
                         <i class="glyphicon glyphicon-globe"></i>
                         代理申请列表
                     </a>
                 </li>
                 <li>
-                    <a href="./gm_withdraw_record">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_withdraw_record">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         提现审批记录查询
                     </a>
@@ -73,7 +79,7 @@
                 <switch name="role_id">
                     <case value="1">
                         <li>
-                            <a href="./gm_create_user">
+                            <a href="http://{$_SERVER['HTTP_HOST']}/gm_create_user">
                                 <i class="glyphicon glyphicon-credit-card"></i>
                                 账号创建
                             </a>
@@ -83,7 +89,7 @@
                 <switch name="role_id">
                     <case value="1">
                         <li>
-                            <a href="./gm_bag_oper_record">
+                            <a href="http://{$_SERVER['HTTP_HOST']}/gm_bag_oper_record">
                                 <i class="glyphicon glyphicon-credit-card"></i>
                                 物品回收记录查询
                             </a>
@@ -91,25 +97,25 @@
                     </case>
                 </switch>
                 <li>
-                    <a href="./gm_player_bag_oper">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_player_bag_oper">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         物品回收
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_trade_record">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         交易记录查询
                     </a>
                 </li>
                 <li>
-                    <a href="./gm_reset_password">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_reset_password">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         密码重置
                     </a>
                 </li>
                 <li>
-                    <a href="./gm_logout">
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_logout">
                         <i class="glyphicon glyphicon-credit-card"></i>
                         退出登录
                     </a>

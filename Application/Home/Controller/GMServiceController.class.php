@@ -237,13 +237,31 @@ class GMServiceController extends GMAdminbaseController {
 		$entity = $record_tag_model->where('id='.$id)->find();
 		$start = $entity['fish_key_start'];
 		$end = $entity['fish_key_end'];
-		$create_time = $entity['fish_create_time'];
+		$create_time = $entity['fish_sum_start'];
 		$table_detail = date('Ym', $create_time);
 		$fish_record_model = $record_tag_model->getRecordModel('fish_record_sum_'.$table_detail);
 		$count = $fish_record_model->where('id >= '.$start.' and id <='.$end)->count('id');
 		$page = $this->page($count, C('DETAIL_NUM_PER_PAGE'));
+		$old_list = $fish_record_model->where('id >= '.$start.' and id <='.$end)
+		                               ->order('id')->select();
+		$total_cost = 0;
+		$total_bonus = 0;
+		foreach ($old_list as $user_fish){
+			$total_cost += $user_fish['cost_sum'];
+			$total_bonus += $user_fish['bonus_sum'];
+		}
 		$data_list = $fish_record_model->where('id >= '.$start.' and id <='.$end)
 		                                            ->order('id')->limit($page->firstRow, $page->listRows)->select();
+		$row_cnt = count($data_list);
+		$user_model = new UserModel();
+		for($i = 0; $i < $row_cnt; $i++){
+			$user_entity = $user_model->where('account=\''.$data_list[$i]['member_id'].'\'')->find();
+			if($user_entity){
+				$data_list[$i]['name'] = $user_entity['nickname'];
+			}
+		}
+		$this->assign('total_cost',$total_cost);
+		$this->assign('total_bonus',$total_bonus);
 		$this->assign('select', $data_list);
 		$this->assign('page', $page->show());
 		$this->display();
@@ -727,5 +745,151 @@ class GMServiceController extends GMAdminbaseController {
 			'item_id_1' => $item_id,
 			'item_cnt' => $item_cnt
 		));
+	}
+
+	public function player_num(){
+		$dat_res_4_0 = $this->http(C('GAME_SERVER_URL').'/getSSSTablePlayerNum.nd', array(
+			'playerCount'=>4,
+			'withGhost' => 0,
+		),'post');
+		trace('a '.$dat_res_4_0);
+		$dat_res_7_0 = $this->http(C('GAME_SERVER_URL').'/getSSSTablePlayerNum.nd', array(
+			'playerCount'=>7,
+			'withGhost' => 0,
+		),'post');
+		$dat_res_4_1 = $this->http(C('GAME_SERVER_URL').'/getSSSTablePlayerNum.nd', array(
+			'playerCount'=>4,
+			'withGhost' => 1,
+		),'post');
+		$dat_res_7_1 = $this->http(C('GAME_SERVER_URL').'/getSSSTablePlayerNum.nd', array(
+			'playerCount'=>7,
+			'withGhost' => 1,
+		),'post');
+		$select = [];
+		$dat_res_4_0 = json_decode($dat_res_4_0);
+		if($dat_res_4_0->code == 200){
+			$data['player_cnt'] = 4;
+			$data['ghost'] = '无';
+			$data['base_50'] = 0;
+			$data['base_20000'] = 0;
+			$data['base_50000'] = 0;
+			$data['base_100000'] = 0;
+			$data['base_200000'] = 0;
+			$data['base_500000'] = 0;
+			foreach($dat_res_4_0->info as $key=>$value){
+				$data['base_'.$key] = $value;
+			}
+			$select[] = $data;
+		}
+		$dat_res_4_1 = json_decode($dat_res_4_1);
+		if($dat_res_4_1->code == 200){
+			$data['player_cnt'] = 4;
+			$data['ghost'] = '有';
+			$data['base_50'] = 0;
+			$data['base_20000'] = 0;
+			$data['base_50000'] = 0;
+			$data['base_100000'] = 0;
+			$data['base_200000'] = 0;
+			$data['base_500000'] = 0;
+			foreach($dat_res_4_1->info as $key=>$value){
+				$data['base_'.$key] = $value;
+			}
+			$select[] = $data;
+		}
+		$dat_res_7_0 = json_decode($dat_res_7_0);
+		if($dat_res_7_0->code == 200){
+			$data['player_cnt'] = 7;
+			$data['ghost'] = '无';
+			$data['base_50'] = 0;
+			$data['base_20000'] = 0;
+			$data['base_50000'] = 0;
+			$data['base_100000'] = 0;
+			$data['base_200000'] = 0;
+			$data['base_500000'] = 0;
+			foreach($dat_res_7_0->info as $key=>$value){
+				$data['base_'.$key] = $value;
+			}
+			$select[] = $data;
+		}
+		$dat_res_7_1 = json_decode($dat_res_7_1);
+		if($dat_res_7_1->code == 200){
+			$data['player_cnt'] = 7;
+			$data['ghost'] = '有';
+			$data['base_50'] = 0;
+			$data['base_20000'] = 0;
+			$data['base_50000'] = 0;
+			$data['base_100000'] = 0;
+			$data['base_200000'] = 0;
+			$data['base_500000'] = 0;
+			foreach($dat_res_7_1->info as $key=>$value){
+				$data['base_'.$key] = $value;
+			}
+			$select[] = $data;
+		}
+		$this->assign('select', $select);
+		$this->display();
+	}
+
+	public function trade_record(){
+		$start_time = I('get.dtp_input_start');
+		$end_time = I('get.dtp_input_end');
+		$seller = I('get.ipt_seller');
+		$buyer = I('get.ipt_buyer');
+		$item_id = I('get.item_id');
+		$cur_page = empty($_GET[C('VAR_PAGE')]) ? 1 : intval($_GET[C('VAR_PAGE')]);
+		$select = [];
+		$total_cnt = 0;
+		if($start_time){
+			$post_data = array(
+				'buyer'=>$buyer,
+				'seller'=>$seller,
+				'start_time'=> strtotime($start_time) * 1000,
+				'end_time'=> strtotime($end_time) * 1000,
+				'item_id'=>$item_id,
+				'cur_page'=>$cur_page,
+				'num_per_page'=>C('RECORD_NUM_PER_PAGE')
+			);
+			$res_trade = $this->http(C('GAME_SERVER_URL').'/selectDealRecord.nd', $post_data, 'post');
+			$res_trade_obj = json_decode($res_trade);
+			$record_tag_model = new RecordTagModel();
+			$item_config_model = $record_tag_model->getRecordModel('item_config');
+			$user_model = new UserModel();
+			if($res_trade_obj->code == 200){
+				foreach ($res_trade_obj->msg as $trade_obj){
+					$data['seller_id'] = $trade_obj->kefuId;
+					$data['buyer_id'] = $trade_obj->playerId;
+					$seller_obj = $user_model->where('pid='.$trade_obj->playerId)->find();
+					$buyer_obj = $user_model->where('pid='.$trade_obj->kefuId)->find();
+					$data['seller'] = '';
+					if($seller_obj){
+						$data['seller'] = $seller_obj['nickname'];
+					}
+					$data['buyer'] = '';
+					if($buyer_obj){
+						$data['buyer'] = $seller_obj['nickname'];
+					}
+					$data['item_name'] = '';
+					$data['trade_time'] = date('Ymd H:i:s', $trade_obj->time / 1000);
+					$item_obj = $item_config_model->where('item_id='.$trade_obj->itemId)->find();
+					if($item_obj){
+						$data['item_name'] = $item_obj['name'];
+					}
+					$data['item_id'] = $trade_obj->itemId;
+					$data['item_cnt'] = $trade_obj->itemNum;
+					$data['trade_ip'] = $trade_obj->ip;
+					$select[] = $data;
+				}
+				$total_cnt = $res_trade_obj->count;
+			}
+		}
+		$page = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
+		$this->assign('start_time', $start_time);
+		$this->assign('end_time', $end_time);
+		$this->assign('seller', $seller);
+		$this->assign('buyer', $buyer);
+		$this->assign('item_id', $item_id);
+		$this->assign('select', $select);
+		$this->assign('page', $page->show());
+		$this->display();
 	}
 }

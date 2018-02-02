@@ -1,4 +1,5 @@
 <include file="User:head"/>
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
 </head>
 <body>
 <switch name="proxy_tag">
@@ -41,9 +42,14 @@
         <img src="{$qrcode}" width="150" height="150"/>
     </div>
     <div class="row text-center">
-        <span class="col-md-10">推广链接: {$short_url}</span>
-        <div class="col-md-2">
+        <span class="col-xs-10">推广链接: <strong id="short_url">{$qr_code_url}</strong></span>
+        <div class="col-xs-2">
             <input type="button" value="复制" onclick="copy_txt('{$short_url}');">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 center-block text-center">
+            <input type="button" value="获取短链接" onclick="re_get_url();">
         </div>
     </div>
     <div class="row text-center">
@@ -87,10 +93,44 @@ function apply_proxy(user_id){
     });
 }
     $('#tip').hide();
-function copy_txt(txt){
-    copyTxtInWeb(txt);
-    $('#tip').show();
-    setTimeout(function(){$("#tip").hide()},1000);
-}
+    function copy_txt(txt){
+        var url_txt = $('#short_url').html();
+        url_txt = url_txt.replace(/&amp;/g,'&');
+        copyTxtInWeb(url_txt);
+        $('#tip').show();
+        setTimeout(function(){$("#tip").hide()},1000);
+    }
+    function re_get_url(){
+        console.log('http://{$_SERVER[\'HTTP_HOST\']}/get_short_url');
+        $.ajax({
+            type:"post",    //请求方式
+            async:true,    //是否异步
+            url:'http://{$_SERVER[\'HTTP_HOST\']}/get_short_url',
+            dataType:"jsonp",    //跨域json请求一定是jsonp
+            jsonp: "callbackparam",    //跨域请求的参数名，默认是callback
+            jsonpCallback:"jsonpReturn",    //自定义跨域参数值，回调函数名也是一样，默认为jQuery自动生成的字符串
+            data:{long_url:'{$qr_code_url}'},    //请求参数
+
+            beforeSend: function() {
+                //请求前的处理
+                console.log("before send");
+            },
+
+            success: function(data) {
+                //请求成功处理，和本地回调完全一样
+                $('#short_url').html(data.short_url);
+            },
+
+            complete: function() {
+                console.log("complete");
+                //请求完成的处理
+            },
+            error: function(a) {
+                //请求出错处理
+                console.log("error " + JSON.stringify(a));
+            }
+        });
+    }
+
 </script>
 </html>

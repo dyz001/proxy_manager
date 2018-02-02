@@ -1,0 +1,84 @@
+<include file="Home:GMService:head"/>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <div class="container">
+        <div class="row">
+            <div class="panel-title text-center">
+                <h3>游戏房间在线人数</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <input type="button" id="btn_toggle_refresh" class="btn btn-default" value="停止刷新" onclick="toggle_refresh()">
+            </div>
+            <span class="col-md-2">刷新倒计时：</span>
+            <span class="col-md-2" id="time_down"></span>
+        </div>
+        <div class="row bg-primary">
+            <span class="col-md-1 table-bordered">人数</span>
+            <span class="col-md-2 table-bordered">是否有鬼</span>
+            <span class="col-md-1 table-bordered">50底</span>
+            <span class="col-md-1 table-bordered">2万底</span>
+            <span class="col-md-1 table-bordered">5万底</span>
+            <span class="col-md-2 table-bordered">10万底</span>
+            <span class="col-md-2 table-bordered">20万底</span>
+            <span class="col-md-2 table-bordered">50万底</span>
+        </div>
+        <foreach name="select" item="record">
+            <div class="row">
+                <span class="col-md-1">{$record.player_cnt}</span>
+                <span class="col-md-2">{$record.ghost}</span>
+                <span class="col-md-1">{$record.base_50}</span>
+                <span class="col-md-1">{$record.base_20000}</span>
+                <span class="col-md-1">{$record.base_50000}</span>
+                <span class="col-md-2">{$record.base_100000}</span>
+                <span class="col-md-2">{$record.base_200000}</span>
+                <span class="col-md-2">{$record.base_500000}</span>
+            </div>
+        </foreach>
+    </div>
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+<script>
+    var start_time_out = new Date().getTime();
+    var time_handler = null;
+    var time_down_handler = null;
+    if(start_time_out){
+        time_handler = setTimeout(function(){
+                window.location.href = 'http://{$_SERVER[\'HTTP_HOST\']}/gm_player_num';
+            }, 5000);
+    }
+    time_down_anim();
+    function toggle_refresh(){
+        if(time_handler !== null){
+            console.log('stop refresh');
+            clearTimeout(time_handler);
+            clearTimeout(time_down_handler);
+            $('#time_down').html('0');
+            time_handler = null;
+            time_down_handler = null;
+            $('#btn_toggle_refresh').val('启用刷新');
+        }else{
+            time_handler = setTimeout(function(){
+                window.location.href = 'http://{$_SERVER[\'HTTP_HOST\']}/gm_player_num';
+            }, 5000);
+            start_time_out = new Date().getTime();
+            time_down_anim();
+            $('#btn_toggle_refresh').val('停止刷新');
+        }
+    }
+
+    function time_down_anim(){
+        if(time_handler !== 0){
+            $('#time_down').html(Math.floor((start_time_out + 5500 - (new Date().getTime())) / 1000));
+            time_down_handler = setTimeout(time_down_anim, 1000);
+        }else{
+            $('#time_down').html('');
+        }
+    }
+
+</script>
+</html>

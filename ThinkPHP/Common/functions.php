@@ -881,7 +881,6 @@ function layout($layout) {
 function U($url='',$vars='',$suffix=true,$domain=false) {
     // 解析URL
     $info   =  parse_url($url);
-    trace('info.'.$url.',path.'.$info['path']);
     $url    =  !empty($info['path'])?$info['path']:ACTION_NAME;
     if(isset($info['fragment'])) { // 解析锚点
         $anchor =   $info['fragment'];
@@ -927,7 +926,6 @@ function U($url='',$vars='',$suffix=true,$domain=false) {
     // URL组装
     $depr       =   C('URL_PATHINFO_DEPR');
     $urlCase    =   C('URL_CASE_INSENSITIVE');
-    trace('url===:'.$url);
     if($url) {
         if(0=== strpos($url,'/')) {// 定义路由
             $route      =   true;
@@ -1008,11 +1006,9 @@ function U($url='',$vars='',$suffix=true,$domain=false) {
             $url    =   strtolower($url);
         }
         if(!empty($vars)) { // 添加参数
-	        trace('vars before:'.$url);
             foreach ($vars as $var => $val){
                 if('' !== trim($val))   $url .= $depr . $var . $depr . urlencode($val);
             }
-	        trace('vars after:'.$url);
         }
         if($suffix) {
             $suffix   =  $suffix===true?C('URL_HTML_SUFFIX'):$suffix;

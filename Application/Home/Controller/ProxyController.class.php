@@ -43,25 +43,49 @@ class ProxyController extends AdminbaseController
 			}elseif('APP' == session('user_from')){
 				$this->assign('game_url', C('APP_WAKE_UP'));
 			}
-//			$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
-//				'method' => 'all',
-//				'account'=>$user['account']
-//			), 'post');
-//			$user_json_obj = json_decode($user_json);
-//			if($user_json_obj->count == 0){
-//				$this->error(L('_USER_NOT_FOUND_'));
-//			}
-//			$user_cnt = count($user_json_obj->list);
-//			if($user_cnt == 0){
-//				$this->error(L('_USER_NOT_FOUND_'));
-//			}
-//			if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
-//				$this->assign('mail_tag', 0);
-//			}else{
-//				$this->assign('mail_tag', 1);
-//			}
-			$this->assign('mail_tag', 0);
+			$user_json = $this->http(C('GAME_SERVER_URL').'/select.nd', array(
+				'method' => 'all',
+				'account'=>$user['account']
+			), 'post');
+			$user_json_obj = json_decode($user_json);
+			if($user_json_obj->count == 0){
+				$this->error(L('_USER_NOT_FOUND_'));
+			}
+			$user_cnt = count($user_json_obj->list);
+			if($user_cnt == 0){
+				$this->error(L('_USER_NOT_FOUND_'));
+			}
+			if($user_json_obj->list[0]->fyVip < C('MAIL_VIP')){
+				$this->assign('mail_tag', 0);
+			}else{
+				$this->assign('mail_tag', 1);
+			}
+			//$this->assign('mail_tag', 0);
 			$this->display();
+		}
+	}
+
+	public function get_short_url(){
+		$long_url = I('post.long_url');
+		$long_url = str_replace('&amp;', '&', $long_url);
+		$short_res = $this->http('http://dwz.cn/create.php', array(
+			'url'=>$long_url,
+			'access_type'=>'web'
+		), 'post');
+		trace($short_res);
+		$short_res_obj = json_decode($short_res);
+		if($short_res_obj->err_msg){
+			$this->ajaxReturn(array(
+				'status'=>1,
+				'short_url'=>'',
+				'error_msg'=>$short_res_obj->err_msg
+			));
+		}else{
+			$this->ajaxReturn(array(
+				'status'=>1,
+				'short_url'=>$short_res_obj->tinyurl,
+				'error_msg'=>''
+			));
 		}
 	}
 
@@ -93,6 +117,7 @@ class ProxyController extends AdminbaseController
 				$logo_qr_height, $logo_width, $logo_height);
 			imagepng($QR, $path);
 		}
+		$this->assign('qr_code_url', $data);
 		$short_res = $this->http('http://dwz.cn/create.php', array(
 			'url'=>$data,
 			'access_type'=>'web'

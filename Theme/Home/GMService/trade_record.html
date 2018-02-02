@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="http://{$_SERVER['HTTP_HOST']}/Public/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="http://{$_SERVER['HTTP_HOST']}/Public/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="http://{$_SERVER['HTTP_HOST']}/Public/my.js"></script>
+    <style>
+        .center-vertical{
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <div class="row">
+        <div class="col-md-12 center-vertical text-center">
+            <h2>物品交易查询</h2>
+        </div>
+    </div>
+    <form class="container" role="form" method="get">
+        <div class="row">
+            <label for="dtp_input_start" class="col-md-1 col-xs-1 control-label center-vertical">起始时间</label>
+            <div class="input-group date form_date col-md-3 center-vertical" data-date="" data-date-format="yyyy-MM-dd" data-link-field="dtp_input_start" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" value="{$start_time}" readonly="" type="text">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <div class="col-md-2">
+                <input id="dtp_input_start" name="dtp_input_start" value="{$start_time}" type="hidden">
+            </div>
+            <label for="dtp_it_end" class="col-md-1 control-label center-vertical">结束时间</label>
+            <div class="input-group date form_date col-md-3 center-vertical" data-date="" data-date-format="yyyy-MM-dd" data-link-field="dtp_input_end" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" value="{$end_time}" readonly="" type="text">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <div class="col-md-2">
+                <input id="dtp_input_end" name="dtp_input_end" value="{$end_time}" type="hidden">
+            </div>
+        </div>
+        <div class="row">
+            <label for="" class="col-md-1 control-label center-vertical">交易人id</label>
+            <div class="col-md-2 center-vertical">
+                <input id="ipt_seller" name="seller" class="form-control" value="{$seller}">
+            </div>
+            <label for="" class="col-md-2 control-label center-vertical">被交易人id</label>
+            <div class="col-md-2 center-vertical">
+                <input id="ipt_buyer" name="buyer" class="form-control" value="{$buyer}">
+            </div>
+            <label for="" class="col-md-1 control-label center-vertical">物品id</label>
+            <div class="col-md-2 center-vertical">
+                <input id="ipt_item" name="item_id" class="form-control" value="{$item_id}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-3">
+                <input type="submit" class="btn btn-lg btn-primary" value="查询">
+                <input type="button" class="btn btn-lg btn-primary" value="重置" onclick="reset_query()">
+            </div>
+        </div>
+    </form>
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>交易人Id</th>
+            <th>交易人</th>
+            <th>被交易人Id</th>
+            <th>被交易人</th>
+            <th>交易物品Id</th>
+            <th>交易物品</th>
+            <th>交易数量</th>
+            <th>交易时间</th>
+            <th>Ip</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="select" item="record">
+            <tr>
+                <td>{$record.seller_id}</td>
+                <td>{$record.seller}</td>
+                <td>{$record.buyer_id}</td>
+                <td>{$record.buyer}</td>
+                <td>{$record.item_id}</td>
+                <td>{$record.item_name}</td>
+                <td>{$record.item_cnt}</td>
+                <td>{$record.trade_time}</td>
+                <td>{$record.trade_ip}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    {$page}
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+<script>
+    $('#datetimepicker').datetimepicker({
+        format: 'yyyy-mm-dd'
+    });
+    $('.form_date').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+
+    function reset_query(){
+        $('#ipt_seller').val('');
+        $('#ipt_buyer').val('');
+        $('#ipt_item').val('');
+    }
+</script>
+</html>

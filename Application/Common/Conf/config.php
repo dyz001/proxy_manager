@@ -42,6 +42,7 @@ return array(
 		'create_user' => 'Home/Login/create_user',
 		'p_create_wxaccount' => 'Home/Login/create_wxaccount',
 		'send_mail' => 'Home/Proxy/send_mail',
+		'get_short_url'=>'Home/Proxy/get_short_url',
 		//GM
 		'gm_logout' => 'Home/GMService/logout',
 		'gm_create_user' => 'Home/GMService/create_user',
@@ -73,6 +74,10 @@ return array(
 		'gm_add_bag_item' => 'Home/GMService/add_bag_item',
 		'gm_player_bag_oper'=>'Home/GMService/player_bag_oper',
 		'gm_bag_oper_record'=>'Home/GMService/bag_oper_record',
+		'gm_player_num'=>'Home/GMService/player_num',
+		'gm_trade_record'=>'Home/GMService/trade_record',
+		'general_proxy_profit'=>'Home/GMService/general_proxy_profit',
+		'general_system_profit'=>'Home/GMService/general_system_profit',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process

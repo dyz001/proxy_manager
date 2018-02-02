@@ -33,7 +33,6 @@ class Dispatcher {
         }elseif(IS_CLI){ // CLI模式下 index.php module/controller/action/params/...
             $_SERVER['PATH_INFO'] = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : '';
         }
-
         // 开启子域名部署
         if(C('APP_SUB_DOMAIN_DEPLOY')) {
             $rules      = C('APP_SUB_DOMAIN_RULES');
@@ -90,6 +89,7 @@ class Dispatcher {
                         }                         
                     }                   
                     $_GET   =  array_merge($_GET,$parms);
+
                 }
             }
         }
@@ -119,7 +119,7 @@ class Dispatcher {
             define('__INFO__',trim($_SERVER['PATH_INFO'],'/'));
             // URL后缀
             define('__EXT__', strtolower(pathinfo($_SERVER['PATH_INFO'],PATHINFO_EXTENSION)));
-            $_SERVER['PATH_INFO'] = __INFO__;     
+            $_SERVER['PATH_INFO'] = __INFO__;
             if(!defined('BIND_MODULE') && (!C('URL_ROUTER_ON') || !Route::check())){
                 if (__INFO__ && C('MULTI_MODULE')){ // 获取模块名
                     $paths      =   explode($depr,__INFO__,2);
@@ -130,7 +130,7 @@ class Dispatcher {
                         $_SERVER['PATH_INFO']   =   isset($paths[1])?$paths[1]:'';
                     }
                 }
-            }             
+            }
         }
 
         // URL常量
@@ -232,6 +232,7 @@ class Dispatcher {
                 preg_replace_callback('/(\w+)\/([^\/]+)/', function($match) use(&$var){$var[$match[1]]=strip_tags($match[2]);}, implode('/',$paths));
             }
             $_GET   =  array_merge($var,$_GET);
+
         }
         // 获取控制器的命名空间（路径）
         define('CONTROLLER_PATH',   self::getSpace($varAddon,$urlCase));
@@ -291,6 +292,7 @@ class Dispatcher {
         $action   = !empty($_POST[$var]) ?
             $_POST[$var] :
             (!empty($_GET[$var])?$_GET[$var]:C('DEFAULT_ACTION'));
+	    trace('get action, var:'.$var.', urlcase:'.$urlCase.', action:'.$action.', '.$_POST[$var].','.$_GET[$var]);
         unset($_POST[$var],$_GET[$var]);
         if($maps = C('URL_ACTION_MAP')) {
             if(isset($maps[strtolower(CONTROLLER_NAME)])) {

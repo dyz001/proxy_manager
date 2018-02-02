@@ -78,7 +78,7 @@ class Page{
         if(0 == $this->totalRows) return '';
         /* 生成URL */
         $this->parameter[$this->p] = '[PAGE]';
-        $this->url = U('/'.CUR_RULE, $this->parameter);
+        $this->url = U('/'.C('CUR_RULE'), $this->parameter);
         /* 计算分页信息 */
         $this->totalPages = ceil($this->totalRows / $this->listRows); //总页数
         if(!empty($this->totalPages) && $this->nowPage > $this->totalPages) {
