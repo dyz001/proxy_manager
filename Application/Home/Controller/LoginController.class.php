@@ -319,4 +319,8 @@ class LoginController extends HomebaseController
 		if($error) throw new Exception('请求发生错误：' . $error);
 		return  $data;
 	}
+
+	public function modify_user(){
+
+	}
 }

@@ -338,6 +338,9 @@ class ProxyController extends AdminbaseController
 	public function spread_fee(){
 		$user = session('user');
 		$spread_fee_model = D('spread_fee');
+		$record_time = mktime(0,0,0, date('m'), date('d') - 1, date('Y'));
+		$today_money = $spread_fee_model->field('sum(money) as money')->where('proxy_id='.$user['pid'].' and create_time='.$record_time)->find();
+		$this->assign('today_money', $today_money['money']);
 		$count = $spread_fee_model->where('proxy_id='.$user['pid'])->count('id');
 		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
 		$data_list = $spread_fee_model->where('proxy_id='.$user['pid'])->order('id desc')->limit($page->firstRow, $page->listRows)->select();

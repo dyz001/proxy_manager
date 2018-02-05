@@ -19,13 +19,13 @@
         <tbody>
         <foreach name="select" item="record">
             <tr class="content">
-                <td>{$record.pid}</td>
+                <td>{$record.user_id}</td>
                 <td>{$record.nickname}</td>
                 <td>{$record.item_id}</td>
-                <td>{$record.item_name}</td>
+                <td>{$record.name}</td>
                 <td>{$record.item_cnt}</td>
-                <td>{$record.operator}</td>
-                <td>{$record.oper_time}</td>
+                <td>{$record.oper_user}</td>
+                <td>{$record.create_time}</td>
             </tr>
         </foreach>
         </tbody>

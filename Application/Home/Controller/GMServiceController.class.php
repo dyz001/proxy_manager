@@ -17,6 +17,26 @@ use Common\Controller\GMAdminbaseController;
 use Home\Model\ApplyProxyModel;
 use Think\Exception;
 class GMServiceController extends GMAdminbaseController {
+	protected $gold_tag = array(
+		'water'=>' 抽水  ',
+		'sssSettle'=>' 十三水比牌 ',
+		'sssForceLeave'=>'中途退出罚钱 ',
+		'niuniuSettle'=>'牛牛结算 ',
+		'goldenSettle'=>' 炸金花结算 ',
+		'niuniuDownBet'=>' 牛牛下注 ',
+		'goldenDownBet'=>' 炸金花下注 ',
+		'niuniuBackBet'=>'离开返回下注 ',
+		'goldenBackBet'=>'炸金花离开返回下注',
+		'recharge'=>'充值 ',
+		'rechargeReward'=>'充值奖励',
+		'jiuJiJin'=>' 领取救济金 ',
+		'taskReward'=>'任务奖励',
+		'storeBuy'=>'商城购买',
+		'diamondExchange'=>'钻石换金币',
+		'adoptBug'=>'采用建议',
+		'bindMobile'=>'绑定手机送金币',
+
+	);
 	public function query_all_order(){
 		$get_money_record = new GetMoneyRecordModel();
 		$count = $get_money_record->count('id');
@@ -262,6 +282,7 @@ class GMServiceController extends GMAdminbaseController {
 		}
 		$this->assign('total_cost',$total_cost);
 		$this->assign('total_bonus',$total_bonus);
+		$this->assign('total_profit', ($total_cost - $total_bonus));
 		$this->assign('select', $data_list);
 		$this->assign('page', $page->show());
 		$this->display();
@@ -650,9 +671,9 @@ class GMServiceController extends GMAdminbaseController {
 		$item_oper_record = $record_tag_model->getRecordModel('item_oper_record');
 		$record_cnt = $item_oper_record->count('id');
 		$p = $this->page($record_cnt, C('RECORD_NUM_PER_PAGE'));
-		$list = $item_oper_record->alias('a')->field('a.user_id, a.item_id, a.item_cnt, a.create_time, a.oper_user, b.nickname, c.item_name')
-			->join('h5proxy.user b on a.user_id == b.pid')
-			->join('item_config c on a.item_id == c.item_id')
+		$list = $item_oper_record->alias('a')->field('a.user_id, a.item_id, a.item_cnt, a.create_time, a.oper_user, b.nickname, c.name')
+			->join('h5proxy.user b on a.user_id = b.pid')
+			->join('item_config c on a.item_id = c.item_id')
 			->order('a.create_time desc')->limit($p->firstRow, $p->listRows)->select();
 		$cnt = count($list);
 		for($i = 0; $i < $cnt; ++$i){
