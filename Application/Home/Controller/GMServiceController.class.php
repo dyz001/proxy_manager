@@ -8,6 +8,7 @@
 
 namespace Home\Controller;
 use Home\Model\GetMoneyRecordModel;
+use Home\Model\GoldFlowModel;
 use Home\Model\RecordTagModel;
 use Home\Model\UserExtraInfoModel;
 use Home\Model\UserModel;
@@ -16,6 +17,7 @@ use Think\Log;
 use Common\Controller\GMAdminbaseController;
 use Home\Model\ApplyProxyModel;
 use Think\Exception;
+require 'vendor/autoload.php';
 class GMServiceController extends GMAdminbaseController {
 	protected $gold_tag = array(
 		'water'=>' 抽水  ',
@@ -35,6 +37,37 @@ class GMServiceController extends GMAdminbaseController {
 		'diamondExchange'=>'钻石换金币',
 		'adoptBug'=>'采用建议',
 		'bindMobile'=>'绑定手机送金币',
+
+	);
+
+	protected $pay_id = array(
+		"com.yuexiang.poker_10"=>100000.0.'金币',
+		"com.yuexiang.poker_30"=>300000.0.'金币',
+		"com.yuexiang.poker_50"=>500000.0.'金币',
+		"com.yuexiang.poker_100"=>1e+06.'金币',
+		"com.yuexiang.poker_250"=>2.5e+06.'金币',
+		"com.yuexiang.poker_500"=>5e+06.'金币',
+		"com.yuexiang.poker_1000"=>1e+07.'金币',
+		"com.yuexiang.poker_3000"=>3e+07.'金币',
+		"com.yuexiang.poker_6000"=>6e+07.'金币',
+		"com.yuexiang.poker_10000"=>1e+08.'金币',
+		"com.yuexiang.poker_10d"=>100.0.'钻石',
+		"com.yuexiang.poker_30d"=>300.0.'钻石',
+		"com.yuexiang.poker_50d"=>500.0.'钻石',
+		"com.yuexiang.poker_100d"=>1000.0.'钻石',
+		"com.yuexiang.poker_250d"=>2500.0.'钻石',
+		"com.yuexiang.poker_500d"=>5000.0.'钻石',
+		"com.yuexiang.poker_1000d"=>10000.0.'钻石',
+	);
+	protected $gameIds = array(
+		'10001'=>'金鲨银鲨',
+		'10002'=>'百人金花',
+		'10003'=>'百人牛牛',
+		'10006'=>'水果机',
+		'20003'=>'小丑',
+		'10004'=>'21点',
+		'20004'=>'十三水',
+		'0'=>'大厅'
 
 	);
 	public function query_all_order(){
@@ -865,7 +898,7 @@ class GMServiceController extends GMAdminbaseController {
 				'buyer'=>$buyer,
 				'seller'=>$seller,
 				'start_time'=> strtotime($start_time) * 1000,
-				'end_time'=> strtotime($end_time) * 1000,
+				'end_time'=> (strtotime($end_time) + 24*3600) * 1000,
 				'item_id'=>$item_id,
 				'cur_page'=>$cur_page,
 				'num_per_page'=>C('RECORD_NUM_PER_PAGE')
@@ -887,7 +920,7 @@ class GMServiceController extends GMAdminbaseController {
 					}
 					$data['buyer'] = '';
 					if($buyer_obj){
-						$data['buyer'] = $seller_obj['nickname'];
+						$data['buyer'] = $buyer_obj['nickname'];
 					}
 					$data['item_name'] = '';
 					$data['trade_time'] = date('Ymd H:i:s', $trade_obj->time / 1000);
@@ -902,10 +935,11 @@ class GMServiceController extends GMAdminbaseController {
 				}
 				$total_cnt = $res_trade_obj->count;
 			}
+		}else{
+			$this->assign('start_time', '2018-01-01');
+			$this->assign('end_time', '2018-05-01');
 		}
 		$page = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
-		$this->assign('start_time', $start_time);
-		$this->assign('end_time', $end_time);
 		$this->assign('seller', $seller);
 		$this->assign('buyer', $buyer);
 		$this->assign('item_id', $item_id);
@@ -913,4 +947,159 @@ class GMServiceController extends GMAdminbaseController {
 		$this->assign('page', $page->show());
 		$this->display();
 	}
+
+	public function proxy_grant_2(){
+		trace('======proxy_grant======');
+		$proxy_entity = new ApplyProxyModel();
+		$total_cnt = $proxy_entity->where('parent_id<>0')->count('id');
+		$p = $this->page($total_cnt, C('RECORD_NUM_PER_PAGE'));
+		$list = $proxy_entity->field('apply_proxy.id, user_id, pid, apply_proxy.parent_id, apply_time, nickname, status')
+		                     ->join('user on apply_proxy.user_id = user.id')
+		                     ->where('apply_proxy.parent_id<>0')
+		                     ->order('id desc')->limit($p->firstRow, $p->listRows)->select();
+		$display_data = [];
+		$user_model = new UserModel();
+		foreach($list as $entity){
+			$data['id'] = $entity['id'];
+			$data['user_id'] = $entity['user_id'];
+			$data['parent_id'] = $entity['parent_id'];
+			$player_cnt = $user_model->query('select count(id) as cnt from user where pid='.$entity['pid']);
+			$data['player_cnt'] = $player_cnt[0]['cnt'];
+			$data['apply_time'] = date('Y-m-d H:i:s', $entity['apply_time']);
+			$data['status'] = $entity['status'];
+			$data['nickname'] = $entity['nickname'];
+			$display_data[] = $data;
+		}
+		$this->assign('select', $display_data);
+		$this->assign('page', $p->show());
+		$this->display();
+		trace('======proxy_grant end======');
+	}
+
+	public function pay_record(){
+		$start_time = I('post.start_time');
+		$end_time = I('post.end_time');
+		$pid = I('post.user_id');
+		$param['endTime'] = $end_time;
+		$param['gameId'] = C('GAME_ID');
+		$param['pid'] = $pid;
+		$param['startTime'] = $start_time;
+		$param['t'] = time();
+		$param_str = 'endTime='.$end_time.'&gameId='.C('GAME_ID').'&pid='.$pid.'&startTime='.$start_time.'&t='.$param['t'];
+		$sign = md5($param_str.C('GAME_SECRET'));
+		$param['sign'] = $sign;
+		$select = [];
+		if($start_time){
+			if(!$pid){
+				$this->error('用户id不能为空');
+			}
+			//var_dump($param);
+			//echo('<br/>'.$param_str.'&sign='.$param['sign'].'<br/>');
+			$res_pay_record = $this->http(C('API_HOST').C('API_ORDERS_URI'), $param, 'post', array() );
+			//echo $res_pay_record;
+			$sum_money = 0;
+			$res_pay_record_obj = json_decode($res_pay_record);
+			if($res_pay_record_obj->code == 0){
+				$order_cnt = count($res_pay_record_obj->data->orders);
+				for($i = 0; $i < $order_cnt; ++$i){
+					$target_obj = $res_pay_record_obj->data->orders[$i];
+					$data = [];
+					foreach ($target_obj as $key=>$value){
+						if($key == 'gamePayId'){
+							$data[$key] = $this->pay_id[$value];
+						}else{
+							if($key == 'price') {
+								$sum_money += $value;
+							}
+							$data[$key] = $value;
+						}
+					}
+					$select[] = $data;
+				}
+				$this->assign('select', $select);
+				$this->assign('start_time', $start_time);
+				$this->assign('end_time', $end_time);
+				$this->assign('user_id', $pid);
+				$this->assign('sum_money', $sum_money);
+			}
+		}else{
+			$this->assign('select',$select);
+		}
+		$this->display();
+	}
+	public function gold_flow(){
+		$user_id = I('get.user_id');
+		$start_time = I('get.start_time');
+		$end_time = I('get.end_time');
+		$start_time_milisecond = strtotime($start_time) * 1000;
+		$end_time_milisecond = (strtotime($end_time) + 24*3600) * 1000;
+		$table_tail = date('Ymd',strtotime($start_time));
+		$gold_flow_model = new GoldFlowModel();
+		$test_model = $gold_flow_model->get_model('gold_'.$table_tail);
+		$this->assign('start_time', $start_time);
+		$this->assign('end_time', $end_time);
+		$this->assign('user_id', $user_id);
+		//$condition = ['pid'=>'eq '.$user_id,'actionTime'=>$start_time_milisecond],'lt'=>['actionTime'=>$end_time_milisecond]];
+		$condition = ['pid'=>['eq',$user_id],'actionTime'=>['between',$start_time_milisecond.','.$end_time_milisecond]];
+		//$condition = 'pid eq '.$user_id.'&actionTime gt '. $start_time_milisecond . '&actionTime lt '.$end_time_milisecond;
+		if($user_id){
+			$cnt = $test_model->mongo_count(['where'=>$condition]);
+			$page = $this->page($cnt, C('RECORD_NUM_PER_PAGE'));
+			$res_list = $test_model->where($condition)->order(['actionTime'=>-1])->
+			limit($page->firstRow, $page->listRows)->select();
+			$ret_count = count($res_list);
+			for($i = 0; $i < $ret_count; $i++){
+				$res_list[$i]['gameId'] = $this->gameIds[$res_list[$i]['gameId']];
+				$res_list[$i]['actionTime'] = date('Y-m-d H:i:s',$res_list[$i]['actionTime'] / 1000);
+				$res_list[$i]['type'] = $this->gold_tag[$res_list[$i]['type']];
+				$res_list[$i]['bgold'] = round($res_list[$i]['bgold']);
+				$res_list[$i]['agold'] = round($res_list[$i]['agold']);
+				$res_list[$i]['gold'] = round($res_list[$i]['gold']);
+			}
+			$this->assign('select',$res_list);
+			$this->assign('page',$page->show());
+		}else{
+			$this->assign('select',[]);
+			$this->assign('page','');
+		}
+		$this->display();
+	}
+
+	public function recharge_general(){
+		$start_time = I('get.start_time');
+		$end_time = I('get.end_time');
+
+		$param['endTime'] = $end_time;
+		$param['gameId'] = C('GAME_ID');
+		$param['startTime']= $start_time;
+		$param['t'] = time();
+		$param_str = 'endTime='.$end_time.'&gameId='.C('GAME_ID').'&startTime='.$start_time.'&t='.$param['t'];
+		$sign = md5($param_str.C('GAME_SECRET'));
+		$param['sign'] = $sign;
+		$select = [];
+		$sum_money = 0;
+		if($start_time){
+			$res_pay_record = $this->http(C('API_HOST').C('API_GAMEDATAS_URI'), $param, 'post', array() );
+			//echo $res_pay_record;
+			$sum_money = 0;
+			$res_pay_record_obj = json_decode($res_pay_record);
+			if($res_pay_record_obj->code == 0){
+				$order_cnt = count($res_pay_record_obj->data->gamedatas);
+				for($i = 0; $i < $order_cnt; ++$i){
+					$data = [];
+					foreach ($res_pay_record_obj->data->gamedatas[$i] as $key=>$value){
+						$data[$key] = $value;
+						if($key == 'recharge'){
+							$sum_money += $value;
+						}
+					}
+					$select[] = $data;
+				}
+			}
+		}
+		$this->assign('select', $select);
+		$this->assign('sum_money', round($sum_money, 2));
+		$this->display();
+	}
+
 }

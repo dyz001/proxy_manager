@@ -565,6 +565,7 @@ class Model {
         } elseif(false === $options){ // 用于子查询 不查询只返回SQL
         	$options['fetch_sql'] = true;
         }
+
         // 分析表达式
         $options    =  $this->_parseOptions($options);
         // 判断查询缓存
@@ -627,7 +628,6 @@ class Model {
     protected function _parseOptions($options=array()) {
         if(is_array($options))
             $options =  array_merge($this->options,$options);
-
         if(!isset($options['table'])){
             // 自动获取表名
             $options['table']   =   $this->getTableName();
@@ -1512,6 +1512,10 @@ class Model {
         return $this->db->commit();
     }
 
+    public function mongo_count($options=array()){
+    	return $this->db->count($options);
+    }
+
     /**
      * 事务回滚
      * @access public
@@ -1815,7 +1819,6 @@ class Model {
         }else{
             $this->options['where'] =   $where;
         }
-        
         return $this;
     }
 

@@ -10,7 +10,11 @@
 // +----------------------------------------------------------------------
 
 namespace Think\Db\Driver;
+use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Exception\RuntimeException;
 use Think\Db\Driver;
+use MongoDb\Driver\Exception\InvalidArgumentException;
+require 'vendor/autoload.php';
 
 /**
  * Mongo数据库驱动
@@ -22,7 +26,7 @@ class Mongo extends Driver {
     protected $_dbName          =   ''; // dbName
     protected $_collectionName  =   ''; // collectionName
     protected $_cursor          =   null; // MongoCursor Object
-    protected $comparison       =   array('neq'=>'ne','ne'=>'ne','gt'=>'gt','egt'=>'gte','gte'=>'gte','lt'=>'lt','elt'=>'lte','lte'=>'lte','in'=>'in','not in'=>'nin','nin'=>'nin');
+    protected $comparison       =   array('eq'=>'eq','neq'=>'ne','ne'=>'ne','gt'=>'gt','egt'=>'gte','gte'=>'gte','lt'=>'lt','elt'=>'lte','lte'=>'lte','in'=>'in','not in'=>'nin','nin'=>'nin');
 
     /**
      * 架构函数 读取数据库配置信息
@@ -30,7 +34,7 @@ class Mongo extends Driver {
      * @param array $config 数据库配置数组
      */
     public function __construct($config=''){
-        if ( !class_exists('mongoClient') ) {
+        if ( !class_exists('MongoDB\Client') ) {
             E(L('_NOT_SUPPORT_').':Mongo');
         }
         if(!empty($config)) {
@@ -50,7 +54,10 @@ class Mongo extends Driver {
             if(empty($config))  $config =   $this->config;
             $host = 'mongodb://'.($config['username']?"{$config['username']}":'').($config['password']?":{$config['password']}@":'').$config['hostname'].($config['hostport']?":{$config['hostport']}":'').'/'.($config['database']?"{$config['database']}":'');
             try{
-                $this->linkID[$linkNum] = new \mongoClient( $host,$this->config['params']);
+                $this->linkID[$linkNum] = new \MongoDB\Client( $host,$this->config['params']);
+                if($config['database']){
+	                $this->_mongo = $this->linkID[$linkNum]->selectDatabase($config['database']);
+                }
             }catch (\MongoConnectionException $e){
                 E($e->getmessage());
             }
@@ -73,7 +80,7 @@ class Mongo extends Driver {
             if(!empty($db)) { // 传人Db则切换数据库
                 // 当前MongoDb对象
                 $this->_dbName  =  $db;
-                $this->_mongo = $this->_linkID->selectDb($db);
+                $this->_mongo = $this->_linkID->selectDatabase($db);
             }
             // 当前MongoCollection对象
             if($this->config['debug']) {
@@ -87,7 +94,7 @@ class Mongo extends Driver {
                 $this->debug(false);
                 $this->_collectionName  = $collection; // 记录当前Collection名称
             }
-        }catch (MongoException $e){
+        }catch (InvalidArgumentException $e){
             E($e->getMessage());
         }
     }
@@ -131,8 +138,11 @@ class Mongo extends Driver {
                 S($key,$result,$cache['expire'],$cache['type']);
             }
             return $result;
-        } catch (\MongoCursorException $e) {
+        } catch (InvalidArgumentException $e) {
             E($e->getMessage());
+        }
+        catch(\RuntimeException $e){
+        	E($e->getMessage());
         }
     }
 
@@ -144,17 +154,18 @@ class Mongo extends Driver {
      * @return mixed
      */
     public function execute($code,$args=array()) {
-        $this->executeTimes++;
-        N('db_write',1); // 兼容代码
-        $this->debug(true);
-        $this->queryStr = 'execute:'.$code;
-        $result   = $this->_mongo->execute($code,$args);
-        $this->debug(false);
-        if($result['ok']) {
-            return $result['retval'];
-        }else{
-            E($result['errmsg']);
-        }
+    	E('not support operation');
+//        $this->executeTimes++;
+//        N('db_write',1); // 兼容代码
+//        $this->debug(true);
+//        $this->queryStr = 'execute:'.$code;
+//        $result   = $this->_mongo->execute($code,$args);
+//        $this->debug(false);
+//        if($result['ok']) {
+//            return $result['retval'];
+//        }else{
+//            E($result['errmsg']);
+//        }
     }
 
     /**
@@ -163,7 +174,7 @@ class Mongo extends Driver {
      */
     public function close() {
         if($this->_linkID) {
-            $this->_linkID->close();
+            //$this->_linkID->close();
             $this->_linkID = null;
             $this->_mongo = null;
             $this->_collection =  null;
@@ -177,9 +188,10 @@ class Mongo extends Driver {
      * @return string
      */
     public function error() {
-        $this->error = $this->_mongo->lastError();
-        trace($this->error,'','ERR');
-        return $this->error;
+    	E('error not support');
+//        $this->error = $this->_mongo->lastError();
+//        trace($this->error,'','ERR');
+//        return $this->error;
     }
 
     /**
@@ -204,7 +216,7 @@ class Mongo extends Driver {
         }
         try{
             $this->debug(true);
-            $result =  $replace?   $this->_collection->save($data):  $this->_collection->insert($data);
+            $result =  $this->_collection->insertOne($data);
             $this->debug(false);
             if($result) {
                $_id    = $data['_id'];
@@ -214,8 +226,12 @@ class Mongo extends Driver {
                $this->lastInsID    = $_id;
             }
             return $result;
-        } catch (\MongoCursorException $e) {
+        } catch (InvalidArgumentException $e) {
             E($e->getMessage());
+        }catch(BulkWriteException $e){
+        	E($e->getMessage());
+        }catch(RuntimeException $e){
+        	E($e->getMessage());
         }
     }
 
@@ -235,11 +251,15 @@ class Mongo extends Driver {
         N('db_write',1); // 兼容代码        
         try{
             $this->debug(true);
-            $result =  $this->_collection->batchInsert($dataList);
+            $result =  $this->_collection->insertMany($dataList);
             $this->debug(false);
             return $result;
-        } catch (\MongoCursorException $e) {
+        } catch (InvalidArgumentException $e) {
             E($e->getMessage());
+        }catch(BulkWriteException $e){
+        	E($e->getMessage());
+        }catch(RuntimeException $e){
+        	E($e->getMessage());
         }
     }
 
@@ -250,18 +270,19 @@ class Mongo extends Driver {
      * @return integer
      */
     public function getMongoNextId($pk) {
-        if($this->config['debug']) {
-            $this->queryStr   =  $this->_dbName.'.'.$this->_collectionName.'.find({},{'.$pk.':1}).sort({'.$pk.':-1}).limit(1)';
-        }
-        try{
-            $this->debug(true);
-            $result   =  $this->_collection->find(array(),array($pk=>1))->sort(array($pk=>-1))->limit(1);
-            $this->debug(false);
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
-        }
-        $data = $result->getNext();
-        return isset($data[$pk])?$data[$pk]+1:1;
+    	E('not support getMongoNextId');
+//        if($this->config['debug']) {
+//            $this->queryStr   =  $this->_dbName.'.'.$this->_collectionName.'.find({},{'.$pk.':1}).sort({'.$pk.':-1}).limit(1)';
+//        }
+//        try{
+//            $this->debug(true);
+//            $result   =  $this->_collection->find(array(),array($pk=>1))->sort(array($pk=>-1))->limit(1);
+//            $this->debug(false);
+//        } catch (\MongoCursorException $e) {
+//            E($e->getMessage());
+//        }
+//        $data = $result->getNext();
+//        return isset($data[$pk])?$data[$pk]+1:1;
     }
 
     /**
@@ -292,11 +313,20 @@ class Mongo extends Driver {
             }else{
                 $multiple   =   array("multiple" => true);
             }
-            $result   = $this->_collection->update($query,$set,$multiple);
+            if($multiple['multiple']){
+	            $result   = $this->_collection->updateMany($query,$set);
+            }else{
+	            $result   = $this->_collection->updateOne($query,$set);
+            }
+
             $this->debug(false);
             return $result;
-        } catch (\MongoCursorException $e) {
+        } catch (InvalidArgumentException $e) {
             E($e->getMessage());
+        }catch(BulkWriteException $e){
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
     }
 
@@ -319,11 +349,15 @@ class Mongo extends Driver {
         }
         try{
             $this->debug(true);
-            $result   = $this->_collection->remove($query);
+            $result   = $this->_collection->deleteMany($query);
             $this->debug(false);
             return $result;
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
+        } catch (InvalidArgumentException $e) {
+	        E($e->getMessage());
+        }catch(BulkWriteException $e){
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
     }
 
@@ -348,8 +382,10 @@ class Mongo extends Driver {
             $result   =  $this->_collection->drop();
             $this->debug(false);
             return $result;
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
+        } catch (InvalidArgumentException $e) {
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
     }
 
@@ -365,7 +401,8 @@ class Mongo extends Driver {
         }
         $this->model  =   $options['model'];
         $this->queryTimes++;
-        N('db_query',1); // 兼容代码        
+        N('db_query',1); // 兼容代码
+	    $opts = array();
         $query  =  $this->parseWhere(isset($options['where'])?$options['where']:array());
         $field  =  $this->parseField(isset($options['field'])?$options['field']:array());
         try{
@@ -381,20 +418,27 @@ class Mongo extends Driver {
                 $this->queryStr  .=  ')';
             }
             $this->debug(true);
-            $_cursor   = $this->_collection->find($query,$field);
             if(!empty($options['order'])) {
                 $order   =  $this->parseOrder($options['order']);
                 if($this->config['debug']) {
                     $this->queryStr .= '.sort('.json_encode($order).')';
                 }
-                $_cursor =  $_cursor->sort($order);
+	            $opts['sort'] = $options['order'];
+	            //$opts = array_merge($opts, $field);
+	            //$_cursor   = $this->_collection->find($query,['sort'=>['actionTime'=>-1]]);
             }
             if(isset($options['page'])) { // 根据页数计算limit
                 list($page,$length)   =   $options['page'];
                 $page    =  $page>0 ? $page : 1;
                 $length  =  $length>0 ? $length : (is_numeric($options['limit'])?$options['limit']:20);
                 $offset  =  $length*((int)$page-1);
-                $options['limit'] =  $offset.','.$length;
+                $opts['skip'] = $offset;
+                $opts['limit'] = $length;
+                if(!empty($options['order'])){
+                	$opts['sort'] = $options['order'];
+                }
+	            $opts = array_merge($opts, $field);
+//	            $_cursor   = $this->_collection->find($query,$opts);
             }
             if(isset($options['limit'])) {
                 list($offset,$length) =  $this->parseLimit($options['limit']);
@@ -402,19 +446,27 @@ class Mongo extends Driver {
                     if($this->config['debug']) {
                         $this->queryStr .= '.skip('.intval($offset).')';
                     }
-                    $_cursor =  $_cursor->skip(intval($offset));
                 }
                 if($this->config['debug']) {
                     $this->queryStr .= '.limit('.intval($length).')';
                 }
-                $_cursor =  $_cursor->limit(intval($length));
+                $opts = array();
+                $opts['skip'] = (int)$offset;
+                $opts['limit'] = (int)$length;
+	            if(!empty($options['order'])){
+		            $opts['sort'] = $options['order'];
+	            }
+                //$opts = array_merge($opts, $field);
             }
+	        $_cursor   = $this->_collection->find($query,$opts);
             $this->debug(false);
             $this->_cursor =  $_cursor;
-            $resultSet  =  iterator_to_array($_cursor);
+            $resultSet  =  $_cursor->toArray();
             return $resultSet;
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
+        } catch (InvalidArgumentException $e) {
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
     }
 
@@ -454,49 +506,53 @@ class Mongo extends Driver {
             $count   = $this->_collection->count($query);
             $this->debug(false);
             return $count;
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
+        } catch (InvalidArgumentException $e) {
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
     }
 
     public function group($keys,$initial,$reduce,$options=array()){
-        if(isset($options['table']) && $this->_collectionName != $options['table']) {
-            $this->switchCollection($options['table'],'',false);
-        }
-        
-        $cache  =  isset($options['cache'])?$options['cache']:false;
-        if($cache) {
-            $key    =  is_string($cache['key'])?$cache['key']:md5(serialize($options));
-            $value  =  S($key,'','',$cache['type']);
-            if(false !== $value) {
-                return $value;
-            }
-        }
-        
-        $this->model  =   $options['model'];
-        $this->queryTimes++;
-        N('db_query',1); // 兼容代码        
-        $query  =  $this->parseWhere(isset($options['where'])?$options['where']:array());
-        
-        if($this->config['debug']) {
-            $this->queryStr   =  $this->_dbName.'.'.$this->_collectionName.'.group({key:'.json_encode($keys).',cond:'.
-            json_encode($options['condition']) . ',reduce:' .
-            json_encode($reduce).',initial:'.
-            json_encode($initial).'})';
-        }
-        try{
-            $this->debug(true);
-            $option = array('condition'=>$options['condition'], 'finalize'=>$options['finalize'], 'maxTimeMS'=>$options['maxTimeMS']);
-            $group = $this->_collection->group($keys,$initial,$reduce,$options);
-            $this->debug(false);
-            
-            if($cache && $group['ok'])
-                S($key,$group,$cache['expire'],$cache['type']);
-            
-            return $group;
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
-        }
+    	E('unsupport opration group');
+//        if(isset($options['table']) && $this->_collectionName != $options['table']) {
+//            $this->switchCollection($options['table'],'',false);
+//        }
+//
+//        $cache  =  isset($options['cache'])?$options['cache']:false;
+//        if($cache) {
+//            $key    =  is_string($cache['key'])?$cache['key']:md5(serialize($options));
+//            $value  =  S($key,'','',$cache['type']);
+//            if(false !== $value) {
+//                return $value;
+//            }
+//        }
+//
+//        $this->model  =   $options['model'];
+//        $this->queryTimes++;
+//        N('db_query',1); // 兼容代码
+//        $query  =  $this->parseWhere(isset($options['where'])?$options['where']:array());
+//
+//        if($this->config['debug']) {
+//            $this->queryStr   =  $this->_dbName.'.'.$this->_collectionName.'.group({key:'.json_encode($keys).',cond:'.
+//            json_encode($options['condition']) . ',reduce:' .
+//            json_encode($reduce).',initial:'.
+//            json_encode($initial).'})';
+//        }
+//        try{
+//            $this->debug(true);
+//            $option = array('condition'=>$options['condition'], 'finalize'=>$options['finalize'], 'maxTimeMS'=>$options['maxTimeMS']);
+//	        $group = $this->_collection->aggregate();
+//            $group = $this->_collection->group($keys,$initial,$reduce,$options);
+//            $this->debug(false);
+//
+//            if($cache && $group['ok'])
+//                S($key,$group,$cache['expire'],$cache['type']);
+//
+//            return $group;
+//        } catch (\MongoCursorException $e) {
+//            E($e->getMessage());
+//        }
     }
 
     /**
@@ -517,8 +573,10 @@ class Mongo extends Driver {
             $this->debug(true);
             $result   =  $this->_collection->findOne();
             $this->debug(false);
-        } catch (\MongoCursorException $e) {
-            E($e->getMessage());
+        } catch (InvalidArgumentException $e) {
+	        E($e->getMessage());
+        }catch(RuntimeException $e){
+	        E($e->getMessage());
         }
         if($result) { // 存在数据则分析字段
             $info =  array();
@@ -549,7 +607,7 @@ class Mongo extends Driver {
         $this->debug(false);
         $info =  array();
         foreach ($list as $collection){
-            $info[]   =  $collection->getName();
+            $info[]   =  $collection->getCollectionName();
         }
         return $info;
     }
@@ -658,18 +716,18 @@ class Mongo extends Driver {
             $_fields    = explode(',',$fields);
             $fields     = array();
             foreach ($_fields as $f)
-                $fields[$f] = true;
+                $fields[$f] = 1;
         }elseif(is_array($fields)) {
             $_fields    = $fields;
             $fields     = array();
             foreach ($_fields as $f=>$v) {
                 if(is_numeric($f))
-                    $fields[$v] = true;
+                    $fields[$v] = 1;
                 else
                     $fields[$f] = $v ? true : false;
             }
         }
-        return $fields;
+        return ['projection'=>$fields];
     }
 
     /**
@@ -754,7 +812,7 @@ class Mongo extends Driver {
                 }
                 break;
             case '_string':// MongoCode查询
-                $query['$where']  = new \MongoCode($val);
+                $query['$where']  = $val;
                 break;
         }
         //兼容 MongoClient OR条件查询方法
@@ -779,7 +837,7 @@ class Mongo extends Driver {
         if(is_array($val)) {
             if(is_string($val[0])) {
                 $con  =  strtolower($val[0]);
-                if(in_array($con,array('neq','ne','gt','egt','gte','lt','lte','elt'))) { // 比较运算
+                if(in_array($con,array('eq', 'neq','ne','gt','egt','gte','lt','lte','elt'))) { // 比较运算
                     $k = '$'.$this->comparison[$con];
                     $query[$key]  =  array($k=>$val[1]);
                 }elseif('like'== $con){ // 模糊查询 采用正则方式

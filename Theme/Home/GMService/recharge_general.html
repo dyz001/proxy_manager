@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="http://{$_SERVER['HTTP_HOST']}/Public/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="http://{$_SERVER['HTTP_HOST']}/Public/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="http://{$_SERVER['HTTP_HOST']}/Public/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="http://{$_SERVER['HTTP_HOST']}/Public/my.js"></script>
+</head>
+<body>
+<include file="Home:GMService:left_menu"/>
+<div class="col-md-10">
+    <div class="row">
+        <div class="col-md-12 center-vertical text-center">
+            <h2>玩家充值汇总</h2>
+        </div>
+    </div>
+    <div class="container">
+    <form role="form" action="./gm_recharge_general" method="get">
+        <div class="row">
+            <label for="dtp_input_start" class="col-md-1 col-xs-1 control-label center-vertical">起始时间</label>
+            <div class="input-group date form_date col-md-3 center-vertical" data-date="" data-date-format="yyyy-MM-dd" data-link-field="dtp_input_start" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" value="{$start_time}" readonly="" type="text">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <div class="col-md-2">
+                <input id="dtp_input_start" name="start_time" value="{$start_time}" type="hidden">
+            </div>
+            <label for="dtp_it_end" class="col-md-1 control-label center-vertical">结束时间</label>
+            <div class="input-group date form_date col-md-3 center-vertical" data-date="" data-date-format="yyyy-MM-dd" data-link-field="dtp_input_end" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" value="{$end_time}" readonly="" type="text">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <div class="col-md-2">
+                <input id="dtp_input_end" name="end_time" value="{$end_time}" type="hidden">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-3">
+                <input type="submit" class="btn btn-primary" value="查询">
+            </div>
+        </div>
+    </form>
+
+    </div>
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>登录人数</th>
+            <th>充值量</th>
+            <th>注册人数</th>
+            <th>日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        <foreach name="select" item="record">
+            <tr>
+                <td>{$record.login}</td>
+                <td>{$record.recharge}</td>
+                <td>{$record.register}</td>
+                <td>{$record.dt}</td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <h3>总充值数额：{$sum_money}</h3>
+</div>
+<include file="Home:GMService:left_menu_tail"/>
+</body>
+<script>
+    $('#datetimepicker').datetimepicker({
+        format: 'yyyy-mm-dd'
+    });
+    $('.form_date').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+</script>
+</html>
