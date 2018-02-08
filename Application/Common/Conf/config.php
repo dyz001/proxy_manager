@@ -78,6 +78,10 @@ return array(
 		'gm_trade_record'=>'Home/GMService/trade_record',
 		'general_proxy_profit'=>'Home/GMService/general_proxy_profit',
 		'general_system_profit'=>'Home/GMService/general_system_profit',
+		'gm_proxy_grant_2' => 'Home/GMService/proxy_grant_2',
+		'gm_pay_record' => 'Home/GMService/pay_record',
+		'gm_gold_flow' => 'Home/GMService/gold_flow',
+		'gm_recharge_general' => 'Home/GMService/recharge_general',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process

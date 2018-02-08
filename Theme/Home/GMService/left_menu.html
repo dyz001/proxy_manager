@@ -37,9 +37,24 @@
                                 平台配置
                             </a>
                         </li>
+                        <li>
+                            <a href="http://{$_SERVER['HTTP_HOST']}/gm_pay_record" class="glyphicon glyphicon-user" >
+                                玩家充值查询
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://{$_SERVER['HTTP_HOST']}/gm_recharge_general" class="glyphicon glyphicon-user" >
+                                玩家充值汇总查询
+                            </a>
+                        </li>
+
                     </case>
                 </switch>
-
+                <li>
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_gold_flow" class="glyphicon glyphicon-user" >
+                        玩家金币流向查询
+                    </a>
+                </li>
                 <li>
                     <a href="#proxyWithDraw" class="nav-header collapsed" data-toggle="collapse">
                         <i class="glyphicon glyphicon-plus"></i>
@@ -67,7 +82,13 @@
                 <li>
                     <a href="http://{$_SERVER['HTTP_HOST']}/gm_proxy_grant">
                         <i class="glyphicon glyphicon-globe"></i>
-                        代理申请列表
+                        代理申请列表（客服）
+                    </a>
+                </li>
+                <li>
+                    <a href="http://{$_SERVER['HTTP_HOST']}/gm_proxy_grant_2">
+                        <i class="glyphicon glyphicon-globe"></i>
+                        代理申请列表（代理）
                     </a>
                 </li>
                 <li>
