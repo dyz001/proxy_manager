@@ -61,6 +61,7 @@ return array(
 		'gm_query_settle_order'=>'Home/GMService/query_settle_order',
 		'gm_query_unsettle_order'=>'Home/GMService/query_unsettle_order',
 		'gm_apply_banker_list'=>'Home/GMService/apply_banker_list',
+		'gm_process_apply_banker'=>'Home/GMService/process_apply_banker',
 		'gm_general_proxy_profit'=>'Home/GMService/general_proxy_profit',
 		'gm_general_system_profit'=>'Home/GMService/general_system_profit',
 		'gm_sum_platform_profit'=>'Home/GMService/sum_platform_profit',

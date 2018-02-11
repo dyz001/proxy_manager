@@ -48,8 +48,8 @@
 </body>
 <script>
     function process_request(record_id, op_type){
-        postJsonp('./process_apply_banker', {record_id:record_id, op_type:op_type}, function(data){
-           var json_obj = JSON.parse(data);
+        postJsonp('./gm_process_apply_banker', {record_id:record_id, op_type:op_type}, function(data){
+           var json_obj = data;
            if(json_obj.code == 0){
                if(json_obj.op_type == 1){
                    $('#' + record_id).html('<span>已同意</span>')

@@ -1121,7 +1121,8 @@ class GMServiceController extends GMAdminbaseController {
 	public function recharge_general(){
 		$start_time = I('get.start_time');
 		$end_time = I('get.end_time');
-
+		$this->assign('start_time', $start_time);
+		$this->assign('end_time', $end_time);
 		$param['endTime'] = $end_time;
 		$param['gameId'] = C('GAME_ID');
 		$param['startTime']= $start_time;
