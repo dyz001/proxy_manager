@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9e616d57-c794-4f3e-90d1-465c5c8ec937" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Common/Conf/config.php" afterPath="$PROJECT_DIR$/Application/Common/Conf/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Home/Conf/config.php" afterPath="$PROJECT_DIR$/Application/Home/Conf/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Home/Controller/GMServiceController.class.php" afterPath="$PROJECT_DIR$/Application/Home/Controller/GMServiceController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theme/Home/GMService/left_menu.html" afterPath="$PROJECT_DIR$/Theme/Home/GMService/left_menu.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ThinkPHP/Library/Think/Dispatcher.class.php" afterPath="$PROJECT_DIR$/ThinkPHP/Library/Think/Dispatcher.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php" afterPath="$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Theme/Home/Proxy/proxy_players.html" afterPath="$PROJECT_DIR$/Theme/Home/Proxy/proxy_players.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -45,11 +41,21 @@
       <file leaf-file-name="ProxyController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="81" column="15" lean-forward="true" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
+            <state relative-caret-position="339">
+              <caret line="372" column="24" lean-forward="false" selection-start-line="372" selection-start-column="12" selection-end-line="372" selection-end-column="24" />
               <folding>
-                <marker date="1518330084368" expanded="true" signature="1075:1588" ph="..." />
+                <marker date="1518339832119" expanded="true" signature="1075:1588" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="proxy_players.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Theme/Home/Proxy/proxy_players.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="494">
+              <caret line="44" column="36" lean-forward="false" selection-start-line="44" selection-start-column="36" selection-end-line="44" selection-end-column="36" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -84,21 +90,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="player_num.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Theme/Home/GMService/player_num.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="14" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="10" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Home/Conf/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="49" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="49" />
+            <state relative-caret-position="190">
+              <caret line="10" column="2" lean-forward="true" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
               <folding />
             </state>
           </provider>
@@ -108,7 +104,7 @@
         <entry file="file://$PROJECT_DIR$/Theme/Home/GMService/recharge_general.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="570">
-              <caret line="63" column="37" lean-forward="true" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
+              <caret line="63" column="37" lean-forward="false" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -193,7 +189,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Theme/Home/GMService/bill_oper_record.html" />
         <option value="$PROJECT_DIR$/ThinkPHP/Lang/zh-cn.php" />
         <option value="$PROJECT_DIR$/Application/Common/Controller/AppframeController.class.php" />
         <option value="$PROJECT_DIR$/Application/Common/Controller/AdminbaseController.class.php" />
@@ -237,13 +232,14 @@
         <option value="$PROJECT_DIR$/Theme/Home/GMService/gold_flow.html" />
         <option value="$PROJECT_DIR$/Theme/Home/GMService/recharge_general.html" />
         <option value="$PROJECT_DIR$/Theme/Home/Proxy/spread_fee.html" />
-        <option value="$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php" />
         <option value="$PROJECT_DIR$/Theme/Home/GMService/left_menu.html" />
         <option value="$PROJECT_DIR$/Application/Home/Conf/config.php" />
         <option value="$PROJECT_DIR$/Application/Common/Conf/config.php" />
         <option value="$PROJECT_DIR$/ThinkPHP/Library/Think/Dispatcher.class.php" />
         <option value="$PROJECT_DIR$/Theme/Home/GMService/player_id_binding.html" />
         <option value="$PROJECT_DIR$/Application/Home/Controller/GMServiceController.class.php" />
+        <option value="$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php" />
+        <option value="$PROJECT_DIR$/Theme/Home/Proxy/proxy_players.html" />
       </list>
     </option>
   </component>
@@ -435,12 +431,12 @@
       <workItem from="1517792497360" duration="2674000" />
       <workItem from="1517799690496" duration="16114000" />
       <workItem from="1517833994182" duration="27101000" />
-      <workItem from="1518323131583" duration="10643000" />
+      <workItem from="1518323131583" duration="11417000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="584254000" />
+    <option name="totallyTimeSpent" value="585028000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -477,13 +473,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Application/Runtime/Cache/Home/63dda452feb85dd1ff809c64591b213f.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="97" column="0" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Demo/player_num.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="740">
@@ -831,7 +820,7 @@
     <entry file="file://$PROJECT_DIR$/Theme/Home/GMService/recharge_general.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
-          <caret line="63" column="37" lean-forward="true" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
+          <caret line="63" column="37" lean-forward="false" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
           <folding />
         </state>
       </provider>
@@ -855,20 +844,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Home/Conf/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="2" lean-forward="true" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Home/Controller/ProxyController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="81" column="15" lean-forward="true" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
+        <state relative-caret-position="339">
+          <caret line="372" column="24" lean-forward="false" selection-start-line="372" selection-start-column="12" selection-end-line="372" selection-end-column="24" />
           <folding>
-            <marker date="1518330084368" expanded="true" signature="1075:1588" ph="..." />
+            <marker date="1518339832119" expanded="true" signature="1075:1588" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Home/Conf/config.php">
+    <entry file="file://$PROJECT_DIR$/Theme/Home/Proxy/proxy_players.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="49" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="49" />
+        <state relative-caret-position="494">
+          <caret line="44" column="36" lean-forward="false" selection-start-line="44" selection-start-column="36" selection-end-line="44" selection-end-column="36" />
           <folding />
         </state>
       </provider>

@@ -370,6 +370,7 @@ class ProxyController extends AdminbaseController
 
 		foreach($list as $entity){
 			$data_entity['id'] = $entity['id'];
+			$data_entity['pid'] = $entity['pid'];
 			$data_entity['nickname'] = $entity['nickname'];
 			$data_entity['type'] = ($entity['user_type'] == $user_model->EPlayer ? '直接玩家' : '代理');
 			$data_list[] = $data_entity;
