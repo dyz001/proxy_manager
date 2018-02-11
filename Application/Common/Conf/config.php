@@ -82,6 +82,7 @@ return array(
 		'gm_pay_record' => 'Home/GMService/pay_record',
 		'gm_gold_flow' => 'Home/GMService/gold_flow',
 		'gm_recharge_general' => 'Home/GMService/recharge_general',
+		'gm_player_id_binding'=>'Home/GMService/player_id_binding',
 		//data_receiver
 		'data_receive_water' => 'Home/DataReceiver/receive_water',
 		//data_process

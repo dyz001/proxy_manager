@@ -1155,4 +1155,39 @@ class GMServiceController extends GMAdminbaseController {
 		$this->display();
 	}
 
+	public function player_id_binding(){
+		$old_pid = I('post.old_pid');
+		$new_pid = I('post.new_pid');
+		$remark = I('post.remark');
+		$user = session('gm_user');
+		if(!$old_pid){
+			$this->display();
+		}else{
+			$param['t'] = time();
+			$param['new_pid'] = $new_pid;
+			$param['old_pid'] = $old_pid;
+			$param['channel_id'] = 'H5-WEIXIN';
+			$param['gameId'] = C('GAME_ID');
+			$query_str = 'channel_id='.$param['channel_id'].'&gameId='.C('GAME_ID').'&new_pid='.$new_pid.'&old_pid='.$old_pid
+			             .'&t='.$param['t'];
+			$sign = md5($query_str.C('GAME_SECRET'));
+			$param['sign'] = $sign;
+			$res_api = $this->http(C('API_HOST').C('API_BINDING_ACCOUNT'), $param, 'post', array() );
+			$res_api_obj = json_decode($res_api);
+			if($res_api_obj->code != 0){
+				$this->error('code:'.$res_api_obj->code.', msg:'.$res_api_obj->msg);
+			}else{
+				$record_tag_model = new RecordTagModel();
+				$record_id_binding = $record_tag_model->getRecordModel('record_id_binding');
+				$record_id_binding->add(array(
+					'old_pid'=>$old_pid,
+					'new_pid'=>$new_pid,
+					'remark'=>$remark,
+					'operator'=>$user['account']
+				));
+				$this->success('绑定成功, 提示玩家重新登录即可');
+			}
+		}
+	}
+
 }

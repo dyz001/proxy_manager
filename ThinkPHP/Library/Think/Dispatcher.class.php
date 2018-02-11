@@ -292,7 +292,6 @@ class Dispatcher {
         $action   = !empty($_POST[$var]) ?
             $_POST[$var] :
             (!empty($_GET[$var])?$_GET[$var]:C('DEFAULT_ACTION'));
-	    trace('get action, var:'.$var.', urlcase:'.$urlCase.', action:'.$action.', '.$_POST[$var].','.$_GET[$var]);
         unset($_POST[$var],$_GET[$var]);
         if($maps = C('URL_ACTION_MAP')) {
             if(isset($maps[strtolower(CONTROLLER_NAME)])) {
