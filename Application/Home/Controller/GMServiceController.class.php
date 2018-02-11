@@ -38,7 +38,8 @@ class GMServiceController extends GMAdminbaseController {
 		'adoptBug'=>'采用建议',
 		'bindMobile'=>'绑定手机送金币',
 		'service'=>'服务费',
-
+		'niuniuService'=>'牛牛服务费',
+		'goldenService'=>'炸金花服务费',
 	);
 
 	protected $pay_id = array(
@@ -69,7 +70,6 @@ class GMServiceController extends GMAdminbaseController {
 		'10004'=>'21点',
 		'20004'=>'十三水',
 		'0'=>'大厅'
-
 	);
 	public function query_all_order(){
 		$get_money_record = new GetMoneyRecordModel();

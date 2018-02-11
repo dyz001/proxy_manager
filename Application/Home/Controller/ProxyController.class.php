@@ -345,7 +345,10 @@ class ProxyController extends AdminbaseController
 		$page = $this->page($count, C('RECORD_NUM_PER_PAGE'));
 		$data_list = $spread_fee_model->where('proxy_id='.$user['pid'])->order('id desc')->limit($page->firstRow, $page->listRows)->select();
 		$cnt = count($data_list);
+		$user_model = new UserModel();
 		for($i = 0; $i < $cnt; ++$i){
+			$user_entity = $user_model->where('id = '.$data_list[$i]['user_id'])->find();
+			$data_list[$i]['pid'] = $user_entity['pid'];
 			$data_list[$i]['create_time'] = date('Y-m-d', $data_list[$i]['create_time']);
 			$data_list[$i]['money'] = round($data_list[$i]['money'],3);
 		}
