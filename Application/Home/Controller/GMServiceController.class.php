@@ -37,6 +37,7 @@ class GMServiceController extends GMAdminbaseController {
 		'diamondExchange'=>'钻石换金币',
 		'adoptBug'=>'采用建议',
 		'bindMobile'=>'绑定手机送金币',
+		'service'=>'服务费',
 
 	);
 
@@ -1031,37 +1032,89 @@ class GMServiceController extends GMAdminbaseController {
 		$user_id = I('get.user_id');
 		$start_time = I('get.start_time');
 		$end_time = I('get.end_time');
+		$p = I('get.p');
+			
+		if (!$start_time){
+			$start_time = date("Y-m-d");
+		}
+
+		if (!$end_time){
+			$end_time = date("Y-m-d");
+		}
+		//如果用户ID不存在不允许做跨天联表查询
+		if (!$user_id){
+			$start_time = date("Y-m-d");
+			$end_time = date("Y-m-d");
+		}
+
+
+		#默认第一页
+		if (!$p || $p < 1){
+			$p = 1;
+		}
+
 		$start_time_milisecond = strtotime($start_time) * 1000;
-		$end_time_milisecond = (strtotime($end_time) + 24*3600) * 1000;
-		$table_tail = date('Ymd',strtotime($start_time));
-		$gold_flow_model = new GoldFlowModel();
-		$test_model = $gold_flow_model->get_model('gold_'.$table_tail);
+		$end_time_milisecond = (strtotime($end_time) + 24*3600) * 1000 ;
+
+		$select = [];
+		$cnt = 0;
+		$select_status = 0;
+
+		if 	($end_time_milisecond > $start_time_milisecond){
+			$gold_flow_model = new GoldFlowModel();
+
+			$dates = Array();
+
+			$dt_start = $start_time_milisecond / 1000;;
+			$dt_end = $end_time_milisecond / 1000 - 1;
+
+
+			while ($dt_start<=$dt_end){
+				#echo date('Ymd',$dt_start)."\n";
+				#array_unshift($dates, date('Ymd',$dt_start));
+				$test_model = $gold_flow_model->get_model('gold_'. date('Ymd',$dt_end));
+
+				$start_time_milisecond = ($dt_end - 86400) * 1000;
+				$end_time_milisecond = $dt_end  * 1000 ;
+				if ($user_id){
+					$condition = ['pid'=>['eq',$user_id],'actionTime'=>['between',$start_time_milisecond.','.$end_time_milisecond]];
+					$_cnt = $test_model->mongo_count(['where'=>$condition]);
+
+				} else {
+					$condition = ['actionTime'=>['between',$start_time_milisecond.','.$end_time_milisecond]];
+					$_cnt = $test_model->mongo_count(['where'=>$condition]);
+				}
+				
+				$start_cnt = ($p - 1) * C('RECORD_NUM_PER_PAGE') + 1;
+				$end_cnt = $p  * C('RECORD_NUM_PER_PAGE') ;
+
+
+				if (count($select) < C('RECORD_NUM_PER_PAGE')  && $start_cnt <= $cnt + $_cnt) {
+					$se= $test_model->where($condition)->order(['actionTime'=>-1])->limit($start_cnt + count($select)  - $cnt - 1, C('RECORD_NUM_PER_PAGE') - count($select) )->select();		
+					$select = array_merge($select, $se);
+				}
+
+				$cnt += $_cnt;
+				$dt_end = strtotime('-1 day',$dt_end);
+			}
+
+		}
+		$page = $this->page($cnt, C('RECORD_NUM_PER_PAGE'));
+
+		$ret_count = count($select);
+		for($i = 0; $i < $ret_count; $i++){
+			$select[$i]['gameId'] = $this->gameIds[$select[$i]['gameId']];
+			$select[$i]['actionTime'] = date('Y-m-d H:i:s',$select[$i]['actionTime'] / 1000);
+			$select[$i]['type'] = $this->gold_tag[$select[$i]['type']];
+			$select[$i]['bgold'] = round($select[$i]['bgold']);
+			$select[$i]['agold'] = round($select[$i]['agold']);
+			$select[$i]['gold'] = round($select[$i]['gold']);
+		}
 		$this->assign('start_time', $start_time);
 		$this->assign('end_time', $end_time);
 		$this->assign('user_id', $user_id);
-		//$condition = ['pid'=>'eq '.$user_id,'actionTime'=>$start_time_milisecond],'lt'=>['actionTime'=>$end_time_milisecond]];
-		$condition = ['pid'=>['eq',$user_id],'actionTime'=>['between',$start_time_milisecond.','.$end_time_milisecond]];
-		//$condition = 'pid eq '.$user_id.'&actionTime gt '. $start_time_milisecond . '&actionTime lt '.$end_time_milisecond;
-		if($user_id){
-			$cnt = $test_model->mongo_count(['where'=>$condition]);
-			$page = $this->page($cnt, C('RECORD_NUM_PER_PAGE'));
-			$res_list = $test_model->where($condition)->order(['actionTime'=>-1])->
-			limit($page->firstRow, $page->listRows)->select();
-			$ret_count = count($res_list);
-			for($i = 0; $i < $ret_count; $i++){
-				$res_list[$i]['gameId'] = $this->gameIds[$res_list[$i]['gameId']];
-				$res_list[$i]['actionTime'] = date('Y-m-d H:i:s',$res_list[$i]['actionTime'] / 1000);
-				$res_list[$i]['type'] = $this->gold_tag[$res_list[$i]['type']];
-				$res_list[$i]['bgold'] = round($res_list[$i]['bgold']);
-				$res_list[$i]['agold'] = round($res_list[$i]['agold']);
-				$res_list[$i]['gold'] = round($res_list[$i]['gold']);
-			}
-			$this->assign('select',$res_list);
-			$this->assign('page',$page->show());
-		}else{
-			$this->assign('select',[]);
-			$this->assign('page','');
-		}
+		$this->assign('select',$select);
+		$this->assign('page',$page->show());
 		$this->display();
 	}
 
